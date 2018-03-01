@@ -54,6 +54,16 @@ Lancez le terminal depuis le dossier principal et entrez :
 puis  
 `python3 run.py
 
+
+## Creation de la base de données "hoozhoo"
+Vous pouvez trouver dans le dossier Annexes le fichier "hoozhoo_modelb.sql". 
+
+Prérequis pour créer la base de données :
+MySQL installé sur votre ordinateur
+accès administrateur à cette base de données
+
+En utilisant MySQL Workbench, copiez le contenu du fichier "hoozhoo_modelb.sql" et exécutez-le. La base est installée. Si elle n'apparait pas dans le menu de gauche, faites "refresh".
+
 ## Contributeur.ices 
 - Ekaterina Batova
 - Alix Chagué
