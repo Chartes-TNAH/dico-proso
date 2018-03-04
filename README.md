@@ -28,10 +28,8 @@ Ce document contient l'ensemble des procédures d'installation pour utiliser cet
 
 ## Installation 
 ### OS X / Mac
-#### Pré-requis
-Assurez vous d'avoir Python, Mysql sur votre poste. Si oui passez à l'étape #### Première utilisation  
-
-#### Installation Python et Mysql
+#### Pré-requis : installation de Python et Mysql
+Vous devez avoir installé Python et Mysql sur votre poste.
 Avant l’installation de Python, vous devez installer le gestionnaire de paquets HomeBrew (équivalent apt-get sous linux)
 
 Installation de HomeBrew
@@ -70,6 +68,9 @@ puis
 
 
 ### Linux (Ubuntu/Debian)
+#### Pré-requis 
+Vous devez avoir installé MySQL sur votre poste. 
+
 #### Première utilisation  
 Vous aurez sûrement besoin d'installer **python3**, **virtualenv** et **pip**, pour cela, ouvrez un terminal et tapez :  
 `sudo apt-get install python3 libfreetype6-dev python3-pip python3-virtualenv`
