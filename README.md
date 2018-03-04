@@ -28,9 +28,49 @@ Ce document contient l'ensemble des procédures d'installation pour utiliser cet
 
 ## Installation 
 ### OS X / Mac
-[...]
+#### Pré-requis : installation de Python et Mysql
+Vous devez avoir installé Python et Mysql sur votre poste.
+Avant l’installation de Python, vous devez installer le gestionnaire de paquets HomeBrew (équivalent apt-get sous linux)
+
+Installation de HomeBrew
+Pour installer Homebrew, ouvrez le Terminal et exécutez
+`/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)`
+
+Maintenant, nous pouvons installer Python 3:
+`brew install python3`
+
+Installation virtualenv
+`pip install virtualenv`
+
+Installation Mysql
+`brew install mysql`
+
+#### Première utilisation  
+Lancez le dossier **dico-proso/** dans un terminal et tapez :  
+`virtualenv ~/.dicoproso -p python3`  
+Cela crée un environnement virtuel dans lequel pourront être installés les packages utilisés. Pour activer cet environnement virtuel, tapez :  
+`source ~/.dicoproso/bin/activate`  
+*Cette commande sera nécessaire à chaque fois que vous voudrez activer l'environnement virtuel pour utiliser l'application.*  
+  
+Dans le même terminal, tapez :  
+`pip install -r requirements.txt`  
+Cela installe les packages requis pour faire fonctionner l'application.  
+
+Pour lancer l'application, tapez :  
+`python3 run.py` 
+
+#### Utilisations ultérieures :
+Lancez le terminal depuis le dossier principal et entrez :  
+`source ~/.dicoproso/bin/activate`  
+puis  
+`python3 run.py`
+
+
 
 ### Linux (Ubuntu/Debian)
+#### Pré-requis 
+Vous devez avoir installé MySQL sur votre poste. 
+
 #### Première utilisation  
 Vous aurez sûrement besoin d'installer **python3**, **virtualenv** et **pip**, pour cela, ouvrez un terminal et tapez :  
 `sudo apt-get install python3 libfreetype6-dev python3-pip python3-virtualenv`
@@ -52,7 +92,7 @@ Pour lancer l'application, tapez :
 Lancez le terminal depuis le dossier principal et entrez :  
 `source ~/.dicoproso/bin/activate`  
 puis  
-`python3 run.py
+`python3 run.py`
 
 
 ## Creation de la base de données "hoozhoo"
@@ -63,6 +103,11 @@ MySQL installé sur votre ordinateur
 accès administrateur à cette base de données
 
 En utilisant MySQL Workbench, copiez le contenu du fichier "hoozhoo_modelb.sql" et exécutez-le. La base est installée. Si elle n'apparait pas dans le menu de gauche, faites "refresh".
+
+ou 
+
+dans le terminal (remplacer xxx par le chemin du repertoire ou se trouve le fichier sql.)
+mysql -uroot -p < xxxx/hoozhoo_modelb.sql
 
 ## Contributeur.ices 
 - Ekaterina Batova
