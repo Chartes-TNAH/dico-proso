@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS `hoozhoo`.`person` ;
 
 CREATE TABLE IF NOT EXISTS `hoozhoo`.`person` (
   `person_id` SMALLINT NOT NULL AUTO_INCREMENT COMMENT '	',
-  `person_name` TINYTEXT NOT NULL,
+  `person_name` TINYTEXT NULL,
   `person_firstname` TINYTEXT NULL,
   `person_nickname` TINYTEXT NULL,
   `person_description` TEXT NOT NULL,
@@ -80,30 +80,6 @@ CREATE TABLE IF NOT EXISTS `hoozhoo`.`relation_type` (
   PRIMARY KEY (`relation_type_id`))
 ENGINE = InnoDB;
 
--- -----------------------------------------------------
--- Table `hoozhoo`.`authorship_link`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `hoozhoo`.`authorship_link` ;
-
-CREATE TABLE IF NOT EXISTS `hoozhoo`.`authorship_link` (
-  `authorship_link_id` SMALLINT NOT NULL AUTO_INCREMENT,
-  `authorship_link_user_id` SMALLINT NOT NULL,
-  `authorship_link_link_id` SMALLINT NOT NULL,
-  `authorship_link_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`authorship_link_id`),
-  INDEX `fk_authorship_link_1_idx` (`authorship_link_link_id` ASC),
-  INDEX `fk_authorship_link_2_idx` (`authorship_link_user_id` ASC),
-  CONSTRAINT `fk_authorship_link_1`
-    FOREIGN KEY (`authorship_link_link_id`)
-    REFERENCES `hoozhoo`.`link` (`link_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_authorship_link_2`
-    FOREIGN KEY (`authorship_link_user_id`)
-    REFERENCES `hoozhoo`.`user` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `hoozhoo`.`link`
@@ -137,10 +113,33 @@ CONSTRAINT `fk_link_3`
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `hoozhoo`.`authorship_link`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hoozhoo`.`authorship_link` ;
+
+CREATE TABLE IF NOT EXISTS `hoozhoo`.`authorship_link` (
+  `authorship_link_id` SMALLINT NOT NULL AUTO_INCREMENT,
+  `authorship_link_user_id` SMALLINT NOT NULL,
+  `authorship_link_link_id` SMALLINT NOT NULL,
+  `authorship_link_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`authorship_link_id`),
+  INDEX `fk_authorship_link_1_idx` (`authorship_link_link_id` ASC),
+  INDEX `fk_authorship_link_2_idx` (`authorship_link_user_id` ASC),
+  CONSTRAINT `fk_authorship_link_1`
+    FOREIGN KEY (`authorship_link_link_id`)
+    REFERENCES `hoozhoo`.`link` (`link_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_authorship_link_2`
+    FOREIGN KEY (`authorship_link_user_id`)
+    REFERENCES `hoozhoo`.`user` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 
 DROP USER IF EXISTS hoozhoo_user;
 CREATE USER 'hoozhoo_user' IDENTIFIED BY 'password';
 GRANT INSERT, SELECT, UPDATE, DELETE ON `hoozhoo`.* TO 'hoozhoo_user';
-
-
-
