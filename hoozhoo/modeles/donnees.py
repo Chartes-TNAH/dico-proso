@@ -12,6 +12,10 @@ class Link(db.Model):
     link_person1_id = db.Column(db.Integer, db.ForeignKey('person.person_id'))
     link_person2_id = db.Column(db.Integer, db.ForeignKey('person.person_id'))
     link_relation_type_id = db.Column(db.Integer, db.ForeignKey('relation_type.relation_type_id'))
+# Jointure
+    relation = db.relationship("Relation_type", back_populates="type_link")
+    pers1 = db.relationship("Person", back_populates="link_pers1")
+    pers2 = db.relationship("Person", back_populates="link_pers2")
 
 class Authorship_link(db.Model):
     __tablename__ = "authorship_link"
@@ -22,6 +26,7 @@ class Authorship_link(db.Model):
     authorship_link_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 class Person(db.Model):
+    __tablename__ = "person"
     person_id = db.Column(db.Integer, unique=True, nullable=False, autoincrement=True, primary_key=True)
     person_name = db.Column(db.Text)
     person_firstname = db.Column(db.Text)
@@ -32,20 +37,24 @@ class Person(db.Model):
     person_gender = db.Column(db.Text, nullable=False)
     person_external_id = db.Column(db.String(45))
 # Jointure
-    authorship_person = db.relationship("Authorship_person", back_populates="person")
+    authorships_p = db.relationship("Authorship_person", back_populates="person")
+    link_pers1 = db.relationship("Link", back_populates="pers1")
+    link_pers2 =  db.relationship("Link", back_populates="pers2")
 
 class Relation_type(db.Model):
+    __tablename__ = "relation_type"
     relation_type_id = db.Column(db.Integer, unique=True, nullable=False, autoincrement=True, primary_key=True)
     relation_type_name = db.Column(db.String(45), nullable=False)
     relation_type_code = db.Column(db.String(45), nullable=False)
+# Jointure
+    type_link = db.relationship("Link", back_populates="relation")
 
 class Authorship_person(db.Model):
+    __tablename__ = "authorship_person"
     authorship_person_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
     authorship_person_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 # Jointure
-    authorship_person_user = db.Colum(db.Integer, db.ForeignKey('user.user_id'))
-    authorship_person_person = db.Column(db.Integer, db.ForeignKey('person.person_id'))
-# vérifier cette relation dans la table USER
-    user = db.relationship("User", back_populates="authorship_person")
-# vérifier cette relation dans la table Person
-    person = db.relationship("Person", back_populates="authorship_person")
+    authorship_person_user_id = db.Colum(db.Integer, db.ForeignKey('user.user_id'))
+    authorship_person_person_id = db.Column(db.Integer, db.ForeignKey('person.person_id'))
+    person = db.relationship("Person", back_populates="authorships_p")
+    user_p = db.relationship("User", back_populates="authorship_person") # changer le nom de ce back_populates
