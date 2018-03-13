@@ -8,11 +8,12 @@ from .. app import db, login
 
 class User(UserMixin, db.Model):
     user_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
-    user_nom = db.Column(db.Text, nullable=False)
+    user_name = db.Column(db.Text, nullable=False)
     user_login = db.Column(db.String(45), nullable=False, unique=True)
     user_email = db.Column(db.Text, nullable=False)
     user_password = db.Column(db.String(100), nullable=False)
-    authorships = db.relationship("Authorship", back_populates="user")
+    authorlink = db.relationship("Authorship_link", back_populates="user")
+    authorperson = db.relationship("Authorship_person", back_populates="user")
 
     @staticmethod
     def identification(login, motdepasse):
@@ -23,9 +24,9 @@ class User(UserMixin, db.Model):
         :returns: Si réussite, données de l'utilisateur. Sinon None
         :rtype: User or None
         """
-        utilisateur = User.query.filter(User.user_login == login).first()
-        if utilisateur and check_password_hash(utilisateur.user_password, motdepasse):
-            return utilisateur
+        user = User.query.filter(User.user_login == login).first()
+        if user and check_password_hash(user.user_password, motdepasse):
+            return user
         return None
 
     @staticmethod
@@ -45,9 +46,9 @@ class User(UserMixin, db.Model):
             erreurs.append("Le login fourni est vide")
         if not email:
             erreurs.append("L'email fourni est vide")
-        if not nom:
+        if not name:
             erreurs.append("Le nom fourni est vide")
-        if not motdepasse or len(motdepasse) < 6:
+        if not password or len(password) < 6:
             erreurs.append("Le mot de passe fourni est vide ou trop court")
 
         # On vérifie que personne n'a utilisé cet email ou ce login
@@ -63,7 +64,7 @@ class User(UserMixin, db.Model):
 
         # On crée un utilisateur
         utilisateur = User(
-            user_nom=nom,
+            user_name=name,
             user_login=login,
             user_email=email,
             user_password=generate_password_hash(motdepasse)
@@ -76,7 +77,7 @@ class User(UserMixin, db.Model):
             db.session.commit()
 
             # On renvoie l'utilisateur
-            return True, utilisateur
+            return True, user
         except Exception as erreur:
             return False, [str(erreur)]
 
