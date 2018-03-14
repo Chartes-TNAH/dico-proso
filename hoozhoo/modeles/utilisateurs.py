@@ -11,6 +11,7 @@ class User(UserMixin, db.Model):
     user_email = db.Column(db.Text, nullable=False)
     user_password = db.Column(db.String(100), nullable=False)
 # Jointure
-    authorships_person = db.relationship("Authorship_person", back_populates="user_p")
+    author_person = db.relationship("Authorship_person", back_populates="user_person")
+    author_link = db.relationship("Authorship_link", back_populates="user_link")
 
 # AJOUTER  LES METHODES STATIQUES
