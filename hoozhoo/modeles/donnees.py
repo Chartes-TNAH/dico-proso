@@ -40,6 +40,7 @@ class Link(db.Model):
     relations = db.relationship("Relation_type", back_populates="type_link")
     person1 = db.relationship("Person", back_populates="link_pers1")
     person2 = db.relationship("Person", back_populates="link_pers2")
+    authorships_l = db.relationship ("Authorship_link", back_populates="link_link")
 
 class Authorship_link(db.Model):
     __tablename__ = "authorship_link"
@@ -50,12 +51,13 @@ class Authorship_link(db.Model):
     authorship_link_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 # Jointure
     user_link = db.relationship("User", back_populates="author_link")
+    link_link = db.relationship("Link", back_populates="authorships_l")
 
 class Authorship_person(db.Model):
     __tablename__ = "authorship_person"
     authorship_person_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
     authorship_person_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    authorship_person_user_id = db.Colum(db.Integer, db.ForeignKey('user.user_id'))
+    authorship_person_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     authorship_person_person_id = db.Column(db.Integer, db.ForeignKey('person.person_id'))
 # Jointure
     person = db.relationship("Person", back_populates="authorships_p")
