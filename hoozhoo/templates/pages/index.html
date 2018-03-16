@@ -1,0 +1,10 @@
+
+{% block corps %}
+<h1>Bienvenue !</h1>
+    {% if personnes %}
+    <p>Il y a {{personnes|length}} personnes enregistrées :</p>
+
+    {% else %}
+        <p>La base de données est en cours de constitution</p>
+    {% endif %}
+{% endblock %}
