@@ -23,8 +23,8 @@ app = Flask(
 from .routes import generic
 from .routes import api
 
-
-def config_app(config_name="test"):
+#repris du modèle gazetteer ; remplacement du paramètre config_name = "test" en config_name = "production"
+def config_app(config_name="production"):
     """ Create the application """
     app.config.from_object(CONFIG[config_name])
 
