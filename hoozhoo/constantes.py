@@ -7,7 +7,7 @@ if SECRET_KEY == "JE SUIS UN SECRET !":
     warn("Le secret par défaut n'a pas été changé, vous devriez le faire", Warning)
 
 
-# Partie tirée de l'exemple 18 de l'application gazetteer, à corriger !
+# Partie tirée de l'exemple 18 de l'application gazetteer. Nous travaillons au départ uniquement en mode production.
 """
 class _TEST:
     SECRET_KEY = SECRET_KEY
@@ -23,6 +23,6 @@ class _PRODUCTION:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 CONFIG = {
-    "test": _TEST,
+    #"test": _TEST,
     "production": _PRODUCTION
 }
