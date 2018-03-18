@@ -10,8 +10,7 @@ from ..modeles.utilisateurs import User
 
 @app.route("/register", methods=["GET", "POST"])
 def inscription():
-    """ Route gérant les inscriptions
-    """
+
     
     if request.method == "POST":
         statut, donnees = User.creer(
