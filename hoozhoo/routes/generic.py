@@ -10,4 +10,7 @@ def debut():
     return "Hello"
 
 
+@app.route("/about")
+def about():
+    return render_template("pages/about.html")
 
