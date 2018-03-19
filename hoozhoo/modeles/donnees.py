@@ -27,6 +27,10 @@ class Relation_type(db.Model):
     relation_type_id = db.Column(db.Integer, unique=True, nullable=False, autoincrement=True, primary_key=True)
     relation_type_name = db.Column(db.String(45), nullable=False)
     relation_type_code = db.Column(db.String(45), nullable=False)
+    relation_type_first_snap = db.Column(db.String(45))
+    relation_type_second_snap = db.Column(db.String(45))
+    relation_type_third_snap = db.Column(db.String(45))
+    relation_type_fourth_snap = db.Column(db.String(45))
 # Jointure
     type_link = db.relationship("Link", back_populates="relations")
 
