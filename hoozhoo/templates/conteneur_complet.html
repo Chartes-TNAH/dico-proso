@@ -34,8 +34,7 @@
 				<button class="btn btn-secondary" type="submit">Rechercher <i class="fa fa-search"></i></button>
 				</form>
 			</nav>
-			{% block afternav %}{%endblock%}
-			<div class="container-fluid-expand">
+			<div class="container">
 				<!-- messages flash après une requête-->
 			{% with messages = get_flashed_messages(with_categories=true) %}
           	{% if messages %}
