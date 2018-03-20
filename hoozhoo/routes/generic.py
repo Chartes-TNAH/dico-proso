@@ -13,8 +13,6 @@ def debut():
 @app.route("/a-propos")
 def about():
     return render_template("pages/about.html")
-<<<<<<< HEAD
-=======
 
 @app.route("/index")
 def index():
@@ -34,5 +32,5 @@ def notice(identifier):
     """
     personne = Person.query.get(identifier)
     return render_template("pages/notice.html", personne=personne)
->>>>>>> dico-proso/master
+
 
