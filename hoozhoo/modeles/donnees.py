@@ -42,17 +42,13 @@ class Link(db.Model):
     link_relation_type_id = db.Column(db.Integer, db.ForeignKey('relation_type.relation_type_id'))
 # Jointure
     relations = db.relationship("Relation_type", back_populates="type_link")
-<<<<<<< HEAD
+
     person1 = db.relationship("Person", back_populates="link_pers1")
-    person2 = db.relationship("Person", back_populates="link_pers2")
-<<<<<<< HEAD
-=======
-=======
-    person1 = db.relationship("Person", foreign_keys=[link_person1_id])
+    person2 = db.relationship("Person", back_populates="link_pers2")person1 = db.relationship("Person", foreign_keys=[link_person1_id])
     person2 = db.relationship("Person", foreign_keys=[link_person2_id])
->>>>>>> dico-proso/master
+
     authorships_l = db.relationship ("Authorship_link", back_populates="link_link")
->>>>>>> dico-proso/master
+
 
 class Authorship_link(db.Model):
     __tablename__ = "authorship_link"
@@ -63,20 +59,19 @@ class Authorship_link(db.Model):
     authorship_link_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 # Jointure
     user_link = db.relationship("User", back_populates="author_link")
-<<<<<<< HEAD
-=======
+
     link_link = db.relationship("Link", back_populates="authorships_l")
->>>>>>> dico-proso/master
+
 
 class Authorship_person(db.Model):
     __tablename__ = "authorship_person"
     authorship_person_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
     authorship_person_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-<<<<<<< HEAD
+
     authorship_person_user_id = db.Colum(db.Integer, db.ForeignKey('user.user_id'))
-=======
+
     authorship_person_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
->>>>>>> dico-proso/master
+
     authorship_person_person_id = db.Column(db.Integer, db.ForeignKey('person.person_id'))
 # Jointure
     person = db.relationship("Person", back_populates="authorships_p")
