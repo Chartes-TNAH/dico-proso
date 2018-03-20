@@ -1,0 +1,16 @@
+{% extends "conteneur.html" %}
+{% block corps %}
+
+<h1>Bienvenue !</h1>
+    {% if personnes %}
+    <p>Il y a {{personnes|length}} personnes enregistrées :</p>
+        <ul>
+            {% for personne in personnes %}
+                <li><a href="{{url_for("notice", identifier=personne.person_id)}}">{{personne.person_name}} {{personne.person_firstname}}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>La base de données est en cours de constitution</p>
+    {% endif %}
+
+{% endblock %}

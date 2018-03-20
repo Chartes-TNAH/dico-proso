@@ -19,8 +19,8 @@ class Person(db.Model):
     person_external_id = db.Column(db.String(45))
 # Jointure
     authorships_p = db.relationship("Authorship_person", back_populates="person")
-    link_pers1 = db.relationship("Link", back_populates="person1")
-    link_pers2 =  db.relationship("Link", back_populates="person2")
+    link_pers1 = db.relationship("Link", primaryjoin="Person.person_id==Link.link_person1_id")
+    link_pers2 = db.relationship("Link", primaryjoin="Person.person_id==Link.link_person2_id")
 
 class Relation_type(db.Model):
     __tablename__ = "relation_type"
@@ -42,8 +42,8 @@ class Link(db.Model):
     link_relation_type_id = db.Column(db.Integer, db.ForeignKey('relation_type.relation_type_id'))
 # Jointure
     relations = db.relationship("Relation_type", back_populates="type_link")
-    person1 = db.relationship("Person", back_populates="link_pers1")
-    person2 = db.relationship("Person", back_populates="link_pers2")
+    person1 = db.relationship("Person", foreign_keys=[link_person1_id])
+    person2 = db.relationship("Person", foreign_keys=[link_person2_id])
     authorships_l = db.relationship ("Authorship_link", back_populates="link_link")
 
 class Authorship_link(db.Model):
