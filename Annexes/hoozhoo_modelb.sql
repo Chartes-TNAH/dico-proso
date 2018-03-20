@@ -77,6 +77,10 @@ CREATE TABLE IF NOT EXISTS `hoozhoo`.`relation_type` (
   `relation_type_id` SMALLINT NOT NULL AUTO_INCREMENT,
   `relation_type_name`  VARCHAR(45) NOT NULL,
   `relation_type_code` VARCHAR(45) NOT NULL,
+  `relation_type_first_snap` VARCHAR(45),
+  `relation_type_second_snap` VARCHAR(45),
+  `relation_type_third_snap` VARCHAR(45),
+  `relation_type_fourth_snap` VARCHAR(45), 
   PRIMARY KEY (`relation_type_id`))
 ENGINE = InnoDB;
 
