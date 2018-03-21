@@ -1,0 +1,53 @@
+{% extends "conteneur.html" %}
+{% block corps %}
+<h1 class="mt-3">Création de lien(s)</h1>
+<p>Complétez le formulaire ci-dessous et cliquez sur "Créer" pour créer le(s) lien(s) saisi(s).</p>
+<form class="form container-fluid mt-5" method="POST" action="{{url_for("creer_lien")}}">
+    <div class="newlink col-md-10 row mb-3 mx-auto">
+      <div class="form-group col-sm">
+        <label for="link_person1" class="font-weight-bold">Personne 1 (ID)</label>
+        <input type="text" class="form-control" id="link_person1" name="link_person1" placeholder="ex: 325"/>
+      </div>
+
+      <div class="form-group col-sm">
+        <label for="link_relation_type" class="font-weight-bold">nature de la relation</label>
+        <select class="custom-select d-block" id="link_relation_type" name="link_relation_type">
+          <option selected>Choisir</option>
+          <option value="soeur de">soeur de</option>
+          <option value="frère de">frère de</option>
+          <option value="fille de">fille de</option>
+          <option value="fils de">fils de</option>
+          <option value="mère de">mère de</option>
+          <option value="père de">père de</option>
+          <option value="tante de">tante de</option>
+          <option value="oncle de">oncle de</option>
+          <option value="nièce de">nièce de</option>
+          <option value="neveu de">neveu de</option>
+          <option value="cousine ou cousin de">cousine ou cousin de</option>
+          <option value="petite-fille de">petite-fille de</option>
+          <option value="petit-fils de">petit-fils de</option>
+          <option value="grand-mère de">grand-mère de</option>
+          <option value="grand-père de">grand-père de</option>
+          <option value="arrière-grand-mère de">arrière-grand-mère de</option>
+          <option value="arrière-grand-père de">arrière-grand-père de</option>
+          <option value="relation intime occasionnelle avec">relation intime occasionnelle avec</option>
+          <option value="relation intime sérieuse avec">relation intime sérieuse avec</option>
+          <option value="esclave de">esclave de</option>
+          <option value="esclave libéré de">esclave libéré de</option>
+          <option value="femme libérée de">femme libérée de</option>
+          <option value="homme libéré de">homme libéré de</option>
+          <option value="ennemi de">ennemi de</option>
+          <option value="ami avec">ami avec</option>
+        </select>
+      </div>
+
+      <div class="form-group col-sm">
+        <label for="link_person2" class="font-weight-bold">Personne 2 (ID)</label>
+        <input type="text" class="form-control" id="link_person2" name="link_person2" placeholder="ex: 128"/>
+      </div>
+    </div>
+    <div class="row">
+    <button type="submit" class="btn btn-secondary btn-block col-md-2 mx-auto">Créer</button>
+  </div>
+  </form>
+{% endblock %}

@@ -1,6 +1,6 @@
-from flask import render_template
+from flask import render_template, request, flash, redirect
 from ..app import app
-from ..modeles.donnees import Person
+from ..modeles.donnees import Person, Link
 from ..modeles.utilisateurs import User
 
 
@@ -36,3 +36,25 @@ def notice(identifier):
 
     return render_template("pages/notice.html", unique=personneUnique, listLien=listLien)
 
+@app.route("/creer-lien", methods=["GET", "POST"])
+#@login_required #désactivé pour le test
+def creer_lien():
+    """ route permettant à un utilisateur enregistré de créer un ou plusieurs liens entre des personnes existant dans la base
+    """
+    if request.method == "POST":
+        # méthode statique create_link() à créer sous Link
+        status, data = Link.create_link(
+        link_person1=request.form.get("link_person1", None),
+        link_relation_type=request.form.get("link_relation_type", None),
+        link_person2=request.form.get("link_person2", None)
+        )
+
+        if status is True:
+            flash("Création d'un nouveau lien réussie !", "success")
+            return redirect("/creer-lien")
+        else:
+            flash("La création d'un nouveau lien a échoué pour les raisons suivantes : " + ", ".join(data), "danger")
+            return render_template("pages/creer_lien.html")
+
+    else:
+        return render_template("pages/creer_lien.html")
