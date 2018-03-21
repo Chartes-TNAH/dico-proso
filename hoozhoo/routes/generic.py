@@ -30,6 +30,9 @@ def notice(identifier):
     Route qui affiche la notice descriptive de la personne
     :param identifier: identifiant numérique de la personne
     """
-    personne = Person.query.get(identifier)
-    return render_template("pages/notice.html", personne=personne)
+    personneUnique = Person.query.get(identifier)
+
+    listLien = personneUnique.link_pers1
+
+    return render_template("pages/notice.html", unique=personneUnique, listLien=listLien)
 
