@@ -33,7 +33,7 @@ def notice(identifier):
     personne = Person.query.get(identifier)
     return render_template("pages/notice.html", personne=personne)
 
-@app.route("/creer_lien", methods=["GET", "POST"])
+@app.route("/creer-lien", methods=["GET", "POST"])
 #@login_required #désactivé pour le test
 def creer_lien():
     """ route permettant à un utilisateur enregistré de créer un ou plusieurs liens entre des personnes existant dans la base
@@ -47,8 +47,8 @@ def creer_lien():
         )
 
         if status is True:
-            flash("Creation d'un nouveau lien réussie !", "success")
-            return redirect("/creer_lien")
+            flash("Création d'un nouveau lien réussie !", "success")
+            return redirect("/creer-lien")
         else:
             flash("La création d'un nouveau lien a échoué pour les raisons suivantes : " + ", ".join(data), "danger")
             return render_template("pages/creer_lien.html")

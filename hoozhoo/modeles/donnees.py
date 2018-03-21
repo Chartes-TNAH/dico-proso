@@ -99,7 +99,7 @@ class Link(db.Model):
             db.and_(Link.link_person1_id == link_person1, Link.link_person2_id == link_person2, Link.link_relation_type_id == link_relation_type)
         ).count()
         if uniques > 0:
-            erreurs.append("Le lien existe déjà")
+            errors.append("Le lien existe déjà")
 
         # Si on a au moins une erreur :
         if len(errors) > 0:
