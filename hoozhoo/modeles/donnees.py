@@ -46,6 +46,84 @@ class Link(db.Model):
     person2 = db.relationship("Person", foreign_keys=[link_person2_id])
     authorships_l = db.relationship ("Authorship_link", back_populates="link_link")
 
+    @staticmethod
+    def create_link(link_person1, link_relation_type, link_person2):
+        """ Crée un nouveau lien, retourn un tuple (booléen, lien ou liste).
+        S'il y a une erreur, la fonction renvoie False suivi d'une liste d'erreurs.
+        Sinon, elle renvoie True, suivi de la donnée enregistrée.
+        :param link_person1: nom de la personne 1
+        :param link_person2: nom de la personne 2
+        :param link_relation_type: nom de la relation (modele SNAP)
+        """
+
+        errors = []
+
+        # On vérifie que les champs sont remplis pour chaque ligne
+        if not link_person1:
+            errors.append(" - le champ 'Personne 1' n'a pas été rempli")
+        if not link_relation_type:
+            errors.append(" - le champ 'Relation' n'a pas été rempli")
+        if not link_person2:
+            errors.append(" - le champ 'Personne 2' n'a pas été rempli")
+        if link_person1 == link_person2:
+            errors.append(" - les champs 'Person 1' et 'Person 2' sont identiques")
+        if len(errors) > 0:
+            return False, errors
+
+        # On vérifie les ID sont valides
+        person1 = Person.query.filter(Person.person_id == link_person1).all()
+        person2 = Person.query.filter(Person.person_id == link_person2).all()
+
+        if len(person1) == 0:
+            errors.append("'Person 1' n'existe pas")
+        if len(person2) == 0:
+            errors.append("'Person 2' n'existe pas")
+
+        # On récupère l'id de la relation dans la table Relation_type :
+        relation = Relation_type.query.filter(Relation_type.relation_type_name == link_relation_type).all()
+
+        # On vérifie que la requête d'id de relation a bien fonctionné
+        if len(relation) == 0:
+            errors.append("Erreur de lien")
+
+        # Deuxième niveau d'interruption si erreurs.
+        if len(errors) > 0:
+            return False, errors
+
+        # On récupère l'id associé au lien.
+        u_relation = relation[0]
+        link_relation_type = u_relation.relation_type_id
+
+        # On vérifie que le lien n'existe pas déjà
+        uniques = Link.query.filter(
+            db.and_(Link.link_person1_id == link_person1, Link.link_person2_id == link_person2, Link.link_relation_type_id == link_relation_type)
+        ).count()
+        if uniques > 0:
+            errors.append("Le lien existe déjà")
+
+        # Si on a au moins une erreur :
+        if len(errors) > 0:
+            return False, errors
+
+        # Sinon, on crée un nouveau lien
+
+        created_link = Link(
+            link_person1_id=link_person1,
+            link_relation_type_id=link_relation_type,
+            link_person2_id=str(link_person2)
+            )
+
+        try:
+        # Phase de création du lien :
+            db.session.add(created_link)
+            db.session.commit()
+
+        # Renvoie d'informations vers l'utilisateur :
+            return True, created_link
+
+        except Exception as error_creation:
+            return False, [str(error_creation)]
+
 class Authorship_link(db.Model):
     __tablename__ = "authorship_link"
     authorship_link_id = db.Column(db.Integer, nullable=True, autoincrement=True, primary_key=True)
