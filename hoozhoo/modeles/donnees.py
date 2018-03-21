@@ -59,6 +59,8 @@ class Link(db.Model):
         errors = []
 
         # On vérifie que les champs sont remplis pour chaque ligne
+        ################################################################
+        # Faire une boucle pour vérifier ligne par ligne
         if not link_person1:
             errors.append(" - le champ 'Personne 1' n'a pas été rempli")
         if not link_relation_type:
@@ -69,6 +71,9 @@ class Link(db.Model):
             errors.append(" - les champs 'Person 1' et 'Person 2' sont identiques")
         if len(errors) > 0:
             return False, errors
+
+        ################################################################
+        # Faire une boucle pour faire toute la suite ligne par ligne
 
         # On vérifie les ID sont valides
         person1 = Person.query.filter(Person.person_id == link_person1).all()
