@@ -17,12 +17,15 @@
                 <dt>
                     {{lien.relations.relation_type_name}}
                 </dt>
-                <dd>{{lien.person2.person_name}} {{lien.person2.person_firstname}} {{lien.person2.person_nickname}}</dd>
+                <dd><a href="{{url_for('notice', identifier=lien.person2.person_id)}}">{{lien.person2.person_name}} {{lien.person2.person_firstname}} {{lien.person2.person_nickname}}</a></dd>
             {% endfor %}
         </dl>
     {% else %}
         <p>La base de données est en cours de constitution</p>
     {% endif %}
-    <p><a href="{{url_for('index')}}">Retour à l'index</a></p>
+    <div>
+        <a href="#routeModif" class="btn btn-secondary">Modifier la notice de la personne</a>
+        <a href="{{url_for('creer_lien')}}" class="btn btn-secondary">Créer des liens entre les personnes</a>
+    </div>
 
 {% endblock %}
