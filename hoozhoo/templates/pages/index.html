@@ -6,7 +6,7 @@
     <p>Il y a {{personnes|length}} personnes enregistrées :</p>
         <ul>
             {% for personne in personnes %}
-                <li><a href="{{url_for("notice", identifier=personne.person_id)}}">{{personne.person_name}} {{personne.person_firstname}}</a></li>
+                <li><a href="{{url_for("notice", identifier=personne.person_id)}}">{{personne.person_name}} {{personne.person_firstname}} {{personne.person_nickname}} </a></li>
             {% endfor %}
         </ul>
     {% else %}
