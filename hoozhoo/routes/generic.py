@@ -44,9 +44,9 @@ def creer_lien():
     if request.method == "POST":
         # méthode statique create_link() à créer sous Link
         status, data = Link.create_link(
-        link_person1=request.form.get("link_person1", None),
-        link_relation_type=request.form.get("link_relation_type", None),
-        link_person2=request.form.get("link_person2", None)
+        link_person1=request.form.getlist("link_1_person[]", None),
+        link_relation_type=request.form.getlist("link_relation_type[]", None),
+        link_person2=request.form.getlist("link_2_person[]", None)
         )
 
         if status is True:
