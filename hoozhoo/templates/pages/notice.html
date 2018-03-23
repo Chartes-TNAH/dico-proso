@@ -1,6 +1,6 @@
 {% extends "conteneur.html" %}
 {% block titre %}
-    {%if unique %}| unique : {{unique.person_name}} {{unique.person_firstname}} {{unique.person_nickname}} {% endif %}
+    {%if unique %}| {{unique.person_name}} {{unique.person_firstname}} {{unique.person_nickname}} {% endif %}
 {% endblock %}
 
 {% block corps %}
