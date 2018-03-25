@@ -24,7 +24,7 @@
         <p>La base de données est en cours de constitution</p>
     {% endif %}
     <div>
-        <a href="#routeModif" class="btn btn-secondary">Modifier la notice de la personne</a>
+        <a href="{{ url_for('modification', identifier=unique.person_id) }}" class="btn btn-secondary">Modifier la notice de la personne</a>
         <a href="{{url_for('creer_lien')}}" class="btn btn-secondary">Créer des liens entre les personnes</a>
     </div>
 

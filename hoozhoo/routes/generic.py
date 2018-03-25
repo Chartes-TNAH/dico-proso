@@ -58,3 +58,32 @@ def creer_lien():
 
     else:
         return render_template("pages/creer_lien.html")
+
+@app.route("/modification/<int:identifier>", methods=["POST", "GET"])
+#@login_required #désactivé pour le test
+def modification (identifier):
+    """
+    route permettant de modifier un formulaire avec les données d'une personne
+    :param identifier: identifiant numérique de la personne récupéré depuis la page notice
+    """
+    # récupérer l'objet correspondant à l'identifiant de la route pour retourner l'objet personne qui doit être modifié
+    if request.method == "GET":
+        personne_origine = Person.query.get(identifier)
+        return render_template("pages/modification.html", personne_origine=personne_origine)
+
+        # on récupère les données du formulaire
+    else:
+        personne_corriger = request.form.get("nomlieu", None)
+    if lieu_corriger:
+        # je récupère l'objet correspondand au lieu d'origine en faisant une requête get dans la base de données
+        lieu_origine = Place.query.get(nr_place)
+        # je fais une nouvelle affectation
+        lieu_origine.place_nom = lieu_corriger
+
+        db.session.add(lieu_origine)
+        db.session.commit()
+
+        flash("Modification effectuée.", "success")
+
+    return render_template("pages/place.html", lieu=lieu_origine)
+
