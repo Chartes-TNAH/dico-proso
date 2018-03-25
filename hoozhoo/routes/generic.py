@@ -66,24 +66,26 @@ def modification (identifier):
     route permettant de modifier un formulaire avec les données d'une personne
     :param identifier: identifiant numérique de la personne récupéré depuis la page notice
     """
-    # récupérer l'objet correspondant à l'identifiant de la route pour retourner l'objet personne qui doit être modifié
+    # renvoyer l'objet correspondant à l'identifiant de la route pour retourner l'objet personne qui doit être modifié
     if request.method == "GET":
         personne_origine = Person.query.get(identifier)
         return render_template("pages/modification.html", personne_origine=personne_origine)
 
-        # on récupère les données du formulaire
+        # on récupère les données du formulaire modifié
     else:
-        personne_corriger = request.form.get("nomlieu", None)
-    if lieu_corriger:
-        # je récupère l'objet correspondand au lieu d'origine en faisant une requête get dans la base de données
-        lieu_origine = Place.query.get(nr_place)
-        # je fais une nouvelle affectation
-        lieu_origine.place_nom = lieu_corriger
-
-        db.session.add(lieu_origine)
-        db.session.commit()
+        status, personneModifier= Person.modifier_person(
+            id= identifier,
+            nom= request.form.get("nom", None),
+            prenom= request.form.get("prenom", None),
+            surnom= request.form.get("surnom", None),
+            description= request.form.get("description", None),
+            date_naissance=request.form.get("date_naissance", None),
+            date_deces=request.form.get("date_deces", None),
+            genre= request.form.get("genre", None),
+            id_externes= request.form.get("id_externes", None)
+        )
 
         flash("Modification effectuée.", "success")
 
-    return render_template("pages/place.html", lieu=lieu_origine)
+        return render_template ("pages/notice.html", unique=personneModifier, listLien=personneModifier.link_pers1)
 

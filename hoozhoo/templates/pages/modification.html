@@ -51,7 +51,7 @@
         <label for="genre" class="col-lg-3 col-form-label">Genre</label>
           {% if personne_origine.person_gender == "Homme" %}
             <div class="form-check form-check-inline col-lg-2">
-                <input class="form-check-input" autofocus ="on" type="radio" name="genre" id="homme" value="personne_origine.person_gender">
+                <input class="form-check-input" checked="checked" type="radio" name="genre" id="homme" value="Homme">
                 <label class="form-check-label" for="homme">{{ personne_origine.person_gender }}</label>
             </div>
             <div class="form-check form-check-inline col-lg-2">
@@ -63,23 +63,21 @@
                 <label class="form-check-label" for="inconnu">Inconnu</label>
             </div>
           {% elif personne_origine.person_gender == "Femme"  %}
-            <div class="form-check form-check-inline col-lg-2">
-                <input class="form-check-input" autofocus ="on" type="radio" name="genre" id="femme" value="personne_origine.person_gender">
-                <label class="form-check-label" for="femme">{{ personne_origine.person_gender }}</label>
-            </div>
+
             <div class="form-check form-check-inline col-lg-2">
                 <input class="form-check-input" type="radio" name="genre" id="homme" value="Homme">
                 <label class="form-check-label" for="homme">Homme</label>
+            </div>
+              <div class="form-check form-check-inline col-lg-2">
+                <input class="form-check-input" checked="checked" type="radio" name="genre" id="femme" value="Femme">
+                <label class="form-check-label" for="femme">{{ personne_origine.person_gender }}</label>
             </div>
             <div class="form-check form-check-inline col-lg-2">
                 <input class="form-check-input" type="radio" name="genre" id="inconnu" value="Inconnu">
                 <label class="form-check-label" for="inconnu">Inconnu</label>
             </div>
           {% else %}
-            <div class="form-check form-check-inline col-lg-2">
-                <input class="form-check-input" autofocus ="on" type="radio" name="genre" id="inconnu" value="personne_origine.person_gender">
-                <label class="form-check-label" for="inconnu">{{ personne_origine.person_gender }}</label>
-            </div>
+
             <div class="form-check form-check-inline col-lg-2">
                 <input class="form-check-input" type="radio" name="genre" id="homme" value="Homme">
                 <label class="form-check-label" for="homme">Homme</label>
@@ -87,6 +85,10 @@
             <div class="form-check form-check-inline col-lg-2">
                 <input class="form-check-input" type="radio" name="genre" id="femme" value="Femme">
                 <label class="form-check-label" for="femme">Femme</label>
+            </div>
+              <div class="form-check form-check-inline col-lg-2">
+                <input class="form-check-input" checked="checked" type="radio" name="genre" id="inconnu" value="Inconnu">
+                <label class="form-check-label" for="inconnu">{{ personne_origine.person_gender }}</label>
             </div>
             {% endif %}
       </div>
