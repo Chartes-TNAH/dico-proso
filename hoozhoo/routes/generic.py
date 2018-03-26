@@ -3,6 +3,8 @@ from ..app import app
 from ..modeles.donnees import Person, Link
 from ..modeles.utilisateurs import User
 
+#variable à utiliser pour la pagination de la page recherche et index
+PERSONNES_PAR_PAGES = 3
 
 @app.route("/")
 def debut():
@@ -19,8 +21,17 @@ def index():
     """
     Route qui affiche la liste des personnes (Nom, prenom) de la base.
     """
-    personnes = Person.query.all()
-    return render_template("pages/index.html", personnes=personnes)
+    page = request.args.get("page", 1)
+
+    if isinstance(page, str) and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    titre="Index"
+#creation de la pagination avec la methode .paginate qui remplace le .all dans la requête sur la base
+    personnes = Person.query.order_by(Person.person_name).paginate(page=page, per_page= PERSONNES_PAR_PAGES)
+    return render_template("pages/index.html", personnes=personnes, titre=titre)
 
 
 
@@ -59,6 +70,7 @@ def creer_lien():
     else:
         return render_template("pages/creer_lien.html")
 
+
 @app.route("/modification/<int:identifier>", methods=["POST", "GET"])
 #@login_required #désactivé pour le test
 def modification (identifier):
@@ -93,4 +105,34 @@ def modification (identifier):
             personne_origine = Person.query.get(identifier)
             return render_template("pages/modification.html", personne_origine=personne_origine)
 
+
+
+@app.route("/creer_personne", methods=["GET", "POST"])
+#@login_required #désactivation pour test
+def creer_personne():
+    """ route permettant à l'utilisateur de créer une notice personne """
+    personne = Person.query.all()
+    if request.method == "POST":
+        # méthode statique create_person() à créer sous Person
+        status, data = Person.create_person(
+        nom=request.form.get("nom", None), 
+        prenom=request.form.get("prenom", None),
+        surnom=request.form.get("surnom", None),
+        date_naissance=request.form.get("date_naissance", None),
+        date_deces=request.form.get("date_mort", None),
+        genre=request.form.get("genre", None),
+        description=request.form.get("description", None),
+        id_externes=request.form.get("id_externes", None)
+        )
+        
+
+        if status is True:
+            flash("Création d'une nouvelle personne réussie !", "success")
+            return redirect("/creer_personne")
+        else:
+            flash("La création d'une nouvelle personne a échoué pour les raisons suivantes : " + ", ".join(data), "danger")
+            return render_template("pages/creer_personne.html")
+
+    else:
+        return render_template("pages/creer_personne.html")
 

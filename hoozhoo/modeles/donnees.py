@@ -166,10 +166,10 @@ class Link(db.Model):
         repeat = 0
         for row in range (0, loop):
             triplet = (link_person1[row], link_relation_type[row], link_person2[row])
-            triplets.append(triplet)
             for trio in triplets:
                 if triplet == trio:
                     repeat += 1
+            triplets.append(triplet)
         if repeat > 0:
             errors.append("certains liens à créer sont identiques")
 
