@@ -15,20 +15,20 @@
     <div class="form-group row">
       <div class="form-group col">
         <label for="nom" class="col-lg-4 col-form-label">Nom</label>
-      <div class="col">
-        <input type="text" class="form-control" id="nom" name="nom" value={{ personne_origine.person_name }}>
-      </div>
+          <div class="col">
+            <input type="text" class="form-control" id="nom" name="nom" value="{{ personne_origine.person_name }}">
+          </div>
       </div>
       <div class="form-group col">
         <label for="prenom" class="col-lg-4 col-form-label">Prénom</label>
       <div class="col">
-        <input type="text" class="form-control" id="prenom" name="prenom" value={{ personne_origine.person_firstname }}>
+        <input type="text" class="form-control" id="prenom" name="prenom" value="{{ personne_origine.person_firstname }}">
       </div>
       </div>
       <div class="form-group col">
         <label for="surnom" class="col-lg-4 col-form-label">Surnom</label>
       <div class="col">
-        <input type="text" class="form-control" id="surnom" name="surnom" value={{ personne_origine.person_nickname }}>
+        <input type="text" class="form-control" id="surnom" name="surnom" value="{{ personne_origine.person_nickname }}">
       </div>
       </div>
     </div>
@@ -36,13 +36,13 @@
       <div class="form-group col">
         <label for="date naissance" class="col-lg-4 col-form-label">Date de naissance</label>
       <div class="col">
-        <input type="text" class="form-control" id="date_naissance" name="date_naissance" value={{ personne_origine.person_birthdate }}>
+        <input type="text" class="form-control" id="date_naissance" name="date_naissance" value="{{ personne_origine.person_birthdate }}">
       </div>
       </div>
       <div class="form-group col">
         <label for="date_deces" class="col-lg-4 col-form-label">Date de décès</label>
       <div class="col">
-        <input type="text" class="form-control" id="date_deces" name="date_deces" value={{ personne_origine.person_deathdate }}>
+        <input type="text" class="form-control" id="date_deces" name="date_deces" value="{{ personne_origine.person_deathdate }}">
       </div>
       </div>
     </div>

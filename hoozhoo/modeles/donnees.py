@@ -72,23 +72,47 @@ class Person(db.Model):
     def modifier_person (id, nom, prenom, surnom, description, date_naissance, date_deces, genre, id_externes):
         """ Modifie la notice d'une personne, ....à compléter
                """
+        erreurs=[]
+        if not (nom or prenom or surnom):
+            erreurs.append("Un des trois champs (nom, prénom, surnom) est obligatoire")
+        if not description:
+            erreurs.append("Le champ description est obligatoire")
+        if not id_externes:
+            erreurs.append("L'identifiant Wikidata est obligatoire")
+        if len(erreurs) > 0:
+            return False, erreurs
+
         # récupérer une personne dans la base
-        personne= Person.query.get(id)
+        personne = Person.query.get(id)
 
-        # mise à jour de la personne
-        personne.person_name=nom
-        personne.person_firstname=prenom
-        personne.person_nickname=surnom
-        personne.person_description=description
-        personne.person_birthdate=date_naissance
-        personne.person_deathdate=date_deces
-        personne.person_gender=genre
-        personne.person_external_id=id_externes
+        #vérifier que l'utilisateur modifie au moins un champ
 
-        #ajout dans la base de données
-        db.session.add(personne)
-        db.session.commit()
-        return True, personne
+        if personne.person_name == nom and personne.person_firstname == prenom and personne.person_nickname == surnom and personne.person_description.strip() == description.strip() and personne.person_birthdate == date_naissance and personne.person_deathdate == date_deces and personne.person_gender == genre and personne.person_external_id == id_externes:
+            erreurs.append("Aucune modification n'a été réalisée")
+
+        if len(erreurs) > 0:
+            return False, erreurs
+
+        else:
+            # mise à jour de la personne
+            personne.person_name=nom
+            personne.person_firstname=prenom
+            personne.person_nickname=surnom
+            personne.person_description=description
+            personne.person_birthdate=date_naissance
+            personne.person_deathdate=date_deces
+            personne.person_gender=genre
+            personne.person_external_id=id_externes
+
+        try:
+            #ajout dans la base de données
+            db.session.add(personne)
+            db.session.commit()
+            return True, personne
+
+        except Exception as error_modification:
+            return False, [str(error_modification)]
+
 
 class Relation_type(db.Model):
     __tablename__ = "relation_type"
