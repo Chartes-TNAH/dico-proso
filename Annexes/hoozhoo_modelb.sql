@@ -17,10 +17,10 @@ CREATE TABLE IF NOT EXISTS `hoozhoo`.`person` (
   `person_name` TINYTEXT NULL,
   `person_firstname` TINYTEXT NULL,
   `person_nickname` TINYTEXT NULL,
-  `person_description` TEXT NOT NULL,
   `person_birthdate`VARCHAR(12) NULL,
   `person_deathdate` VARCHAR(12) NULL,
   `person_gender` ENUM('Femme','Homme', 'Inconnu') NOT NULL,
+  `person_description` TEXT NOT NULL,
   `person_external_id` VARCHAR(45) NULL,
   PRIMARY KEY (`person_id`))
 ENGINE = InnoDB;
