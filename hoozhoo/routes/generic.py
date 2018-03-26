@@ -3,6 +3,8 @@ from ..app import app
 from ..modeles.donnees import Person, Link
 from ..modeles.utilisateurs import User
 
+#variable à utiliser pour la pagination de la page recherche et index
+PERSONNES_PAR_PAGES = 3
 
 @app.route("/")
 def debut():
@@ -19,8 +21,17 @@ def index():
     """
     Route qui affiche la liste des personnes (Nom, prenom) de la base.
     """
-    personnes = Person.query.all()
-    return render_template("pages/index.html", personnes=personnes)
+    page = request.args.get("page", 1)
+
+    if isinstance(page, str) and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    titre="Index"
+#creation de la pagination avec la methode .paginate qui remplace le .all dans la requête sur la base
+    personnes = Person.query.order_by(Person.person_name).paginate(page=page, per_page= PERSONNES_PAR_PAGES)
+    return render_template("pages/index.html", personnes=personnes, titre=titre)
 
 
 
@@ -58,7 +69,6 @@ def creer_lien():
 
     else:
         return render_template("pages/creer_lien.html")
-
 
 @app.route("/creer_personne", methods=["GET", "POST"])
 #@login_required #désactivation pour test
