@@ -136,3 +136,9 @@ def creer_personne():
     else:
         return render_template("pages/creer_personne.html")
 
+
+
+@app.route("/contact")
+def contact():
+    return render_template("pages/contact.html")
+
