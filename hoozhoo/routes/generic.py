@@ -58,3 +58,33 @@ def creer_lien():
 
     else:
         return render_template("pages/creer_lien.html")
+
+
+@app.route("/creer_personne", methods=["GET", "POST"])
+#@login_required #désactivation pour test
+def creer_personne():
+    """ route permettant à l'utilisateur de créer une notice personne """
+    personne = Person.query.all()
+    if request.method == "POST":
+        # méthode statique create_person() à créer sous Person
+        status, data = Person.create_person(
+        nom=request.form.get("nom", None), 
+        prenom=request.form.get("prenom", None),
+        surnom=request.form.get("surnom", None),
+        date_naissance=request.form.get("date_naissance", None),
+        date_deces=request.form.get("date_mort", None),
+        genre=request.form.get("genre", None),
+        description=request.form.get("description", None),
+        id_externes=request.form.get("id_externes", None)
+        )
+        
+
+        if status is True:
+            flash("Création d'une nouvelle personne réussie !", "success")
+            return redirect("/creer_personne")
+        else:
+            flash("La création d'une nouvelle personne a échoué pour les raisons suivantes : " + ", ".join(data), "danger")
+            return render_template("pages/creer_personne.html")
+
+    else:
+        return render_template("pages/creer_personne.html")

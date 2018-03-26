@@ -22,6 +22,52 @@ class Person(db.Model):
     link_pers1 = db.relationship("Link", primaryjoin="Person.person_id==Link.link_person1_id")
     link_pers2 = db.relationship("Link", primaryjoin="Person.person_id==Link.link_person2_id")
 
+    @staticmethod
+    def create_person(nom, prenom, surnom, description, date_naissance, date_deces, genre, id_externes):
+    # on vérifie qu'au moins un des trois champs (nom, prénom et surnom) est rempli ainsi que celui de la description qui est obligatoire
+        errors = []
+        if not (nom or prenom or surnom): 
+            errors.append("Un des trois champs (nom, prénom, surnom) est obligatoire")
+        # vérifier que le champ description est bien rempli
+        if not description:
+            errors.append("Le champ description est obligatoire")
+    # si on a au moins une erreur
+        if len(errors) > 0:
+            return False, errors
+
+    # vérifier si la personne existe
+        personne = Person.query.filter(db.and_(Person.person_name == nom, Person.person_firstname == prenom, Person.person_nickname == surnom)).count()
+        if personne > 0:
+            errors.append("La personne est déjà inscrite dans la base de données")
+
+    # Si on a au moins une erreur
+        if len(errors) > 0:
+            return False, errors
+
+
+    # Sinon, on crée une nouvelle personne dans la table Person
+        created_person=Person(
+            person_name=nom,
+            person_firstname=prenom,
+            person_nickname=surnom,
+            person_description=description,
+            person_birthdate=date_naissance,
+            person_deathdate=date_deces,
+            person_gender= genre,
+            person_external_id=id_externes
+            )
+
+        try:
+        # création de la nouvelle personne :
+            db.session.add(created_person)
+            db.session.commit()
+
+        # Renvoie d'informations vers l'utilisateur :
+            return True, created_person
+
+        except Exception as error_creation:
+            return False, [str(error_creation)]
+
 class Relation_type(db.Model):
     __tablename__ = "relation_type"
     relation_type_id = db.Column(db.Integer, unique=True, nullable=False, autoincrement=True, primary_key=True)
