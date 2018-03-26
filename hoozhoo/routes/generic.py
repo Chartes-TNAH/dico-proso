@@ -98,3 +98,26 @@ def creer_personne():
 
     else:
         return render_template("pages/creer_personne.html")
+
+
+
+@app.route("/register", methods=["GET", "POST"])
+def inscription():
+    """ Route gérant les inscriptions
+    """
+    
+    if request.method == "POST":
+        statut, donnees = User.creer(
+            login=request.form.get("login", None),
+            email=request.form.get("email", None),
+            nom=request.form.get("nom", None),
+            motdepasse=request.form.get("motdepasse", None)
+        )
+        if statut is True:
+            flash("Enregistrement effectué. Identifiez-vous maintenant", "success")
+            return redirect("/")
+        else:
+            flash("Les erreurs suivantes ont été rencontrées : " + ",".join(donnees), "error")
+            return render_template("pages/inscription.html")
+    else:
+        return render_template("pages/inscription.html")
