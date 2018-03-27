@@ -93,6 +93,29 @@ class Person(db.Model):
         if len(erreurs) > 0:
             return False, erreurs
 
+        #vérifier que la taille des caractères insérés (nom, prenonm, surnon, date, ID externes) ne dépasse pas la limite acceptée par mysql
+
+        if len(nom) > 255 or len(prenom) > 255 or len(surnom) > 255 :
+            erreurs.append("La taille des caractères du nom, ou du prénom ou du surnon a été dépassée")
+        if len(erreurs) > 0:
+            return False, erreurs
+
+        if len(date_naissance) or len(date_deces) > 12 :
+            erreurs.append("La taille des caractères des dates a été dépassée")
+        if len(erreurs) > 0:
+            return False, erreurs
+
+        if len(id_externes) > 45 :
+            erreurs.append("La taille des caractères des dates a été dépassée")
+        if len(erreurs) > 0:
+            return False, erreurs
+
+        #vérifier que l'ID Wikidata commence par Q
+        if id_externes[0] != "Q" :
+            erreurs.append("L'ID Wikidata doit commencer par 'Q'")
+        if len(erreurs) > 0:
+            return False, erreurs
+
         else:
             # mise à jour de la personne
             personne.person_name=nom
