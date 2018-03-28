@@ -16,6 +16,10 @@ class Person(db.Model):
     person_birthdate = db.Column(db.String(12))
     person_deathdate = db.Column(db.String(12))
     person_gender = db.Column(db.Text, nullable=False)
+    person_country = db.Column(db.Text)
+    person_language = db.Column(db.Text)
+    person_occupations = db.Column(db.Text)
+    person_nativename = db.Column(db.Text)
     person_external_id = db.Column(db.String(45))
 # Jointure
     authorships_p = db.relationship("Authorship_person", back_populates="person")
@@ -24,49 +28,118 @@ class Person(db.Model):
 
     @staticmethod
     def create_person(nom, prenom, surnom, description, date_naissance, date_deces, genre, id_externes):
-    # on vérifie qu'au moins un des trois champs (nom, prénom et surnom) est rempli ainsi que celui de la description qui est obligatoire
+        # on vérifie qu'au moins un des trois champs (nom, prénom et surnom) est rempli ainsi que celui de la description qui est obligatoire
         errors = []
-        if not (nom or prenom or surnom): 
+        if not (nom or prenom or surnom):
             errors.append("Un des trois champs (nom, prénom, surnom) est obligatoire")
         # vérifier que le champ description est bien rempli
         if not description:
             errors.append("Le champ description est obligatoire")
-    # si on a au moins une erreur
+        # si on a au moins une erreur
         if len(errors) > 0:
             return False, errors
 
-    # vérifier si la personne existe
-        personne = Person.query.filter(db.and_(Person.person_name == nom, Person.person_firstname == prenom, Person.person_nickname == surnom)).count()
+        # vérifier si la personne existe
+        personne = Person.query.filter(db.and_(Person.person_name == nom, Person.person_firstname == prenom,
+                                               Person.person_nickname == surnom)).count()
         if personne > 0:
             errors.append("La personne est déjà inscrite dans la base de données")
 
-    # Si on a au moins une erreur
+        # Si on a au moins une erreur
         if len(errors) > 0:
             return False, errors
 
-
-    # Sinon, on crée une nouvelle personne dans la table Person
-        created_person=Person(
+        # Sinon, on crée une nouvelle personne dans la table Person
+        created_person = Person(
             person_name=nom,
             person_firstname=prenom,
             person_nickname=surnom,
             person_description=description,
             person_birthdate=date_naissance,
             person_deathdate=date_deces,
-            person_gender= genre,
+            person_gender=genre,
             person_external_id=id_externes
-            )
+        )
 
         try:
-        # création de la nouvelle personne :
+            # création de la nouvelle personne :
             db.session.add(created_person)
             db.session.commit()
 
-        # Renvoie d'informations vers l'utilisateur :
+            # Renvoie d'informations vers l'utilisateur :
             return True, created_person
 
         except Exception as error_creation:
             return False, [str(error_creation)]
+
+    @staticmethod
+    def modifier_person (id, nom, prenom, surnom, description, date_naissance, date_deces, genre, id_externes):
+        """ Modifie la notice d'une personne, ....à compléter
+               """
+        erreurs=[]
+        if not (nom or prenom or surnom):
+            erreurs.append("Un des trois champs (nom, prénom, surnom) est obligatoire")
+        if not description:
+            erreurs.append("Le champ description est obligatoire")
+        if not id_externes:
+            erreurs.append("L'identifiant Wikidata est obligatoire")
+        if len(erreurs) > 0:
+            return False, erreurs
+
+        # récupérer une personne dans la base
+        personne = Person.query.get(id)
+
+        #vérifier que l'utilisateur modifie au moins un champ
+
+        if personne.person_name == nom and personne.person_firstname == prenom and personne.person_nickname == surnom and personne.person_description.strip() == description.strip() and personne.person_birthdate == date_naissance and personne.person_deathdate == date_deces and personne.person_gender == genre and personne.person_external_id == id_externes:
+            erreurs.append("Aucune modification n'a été réalisée")
+
+        if len(erreurs) > 0:
+            return False, erreurs
+
+        #vérifier que la taille des caractères insérés (nom, prenonm, surnon, date, ID externes) ne dépasse pas la limite acceptée par mysql
+
+        if len(nom) > 255 or len(prenom) > 255 or len(surnom) > 255 :
+            erreurs.append("La taille des caractères du nom, ou du prénom ou du surnon a été dépassée")
+        if len(erreurs) > 0:
+            return False, erreurs
+
+        if len(date_naissance) or len(date_deces) > 12 :
+            erreurs.append("La taille des caractères des dates a été dépassée")
+        if len(erreurs) > 0:
+            return False, erreurs
+
+        if len(id_externes) > 45 :
+            erreurs.append("La taille des caractères des dates a été dépassée")
+        if len(erreurs) > 0:
+            return False, erreurs
+
+        #vérifier que l'ID Wikidata commence par Q
+        if id_externes[0] != "Q" :
+            erreurs.append("L'ID Wikidata doit commencer par 'Q'")
+        if len(erreurs) > 0:
+            return False, erreurs
+
+        else:
+            # mise à jour de la personne
+            personne.person_name=nom
+            personne.person_firstname=prenom
+            personne.person_nickname=surnom
+            personne.person_description=description
+            personne.person_birthdate=date_naissance
+            personne.person_deathdate=date_deces
+            personne.person_gender=genre
+            personne.person_external_id=id_externes
+
+        try:
+            #ajout dans la base de données
+            db.session.add(personne)
+            db.session.commit()
+            return True, personne
+
+        except Exception as error_modification:
+            return False, [str(error_modification)]
+
 
 class Relation_type(db.Model):
     __tablename__ = "relation_type"
