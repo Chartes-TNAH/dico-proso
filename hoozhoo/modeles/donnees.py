@@ -16,6 +16,10 @@ class Person(db.Model):
     person_birthdate = db.Column(db.String(12))
     person_deathdate = db.Column(db.String(12))
     person_gender = db.Column(db.Text, nullable=False)
+    person_country = db.Column(db.Text)
+    person_language = db.Column(db.Text)
+    person_occupations = db.Column(db.Text)
+    person_nativename = db.Column(db.Text)
     person_external_id = db.Column(db.String(45))
 # Jointure
     authorships_p = db.relationship("Authorship_person", back_populates="person")
