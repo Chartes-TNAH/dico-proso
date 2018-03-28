@@ -36,7 +36,7 @@
 				<button class="btn btn-secondary" type="submit"><i class="fa fa-search"></i></button>
 				</form>
 			</nav>
-			<div class="container">
+			<main class="container pb-5 mb-5">
 				<!-- messages flash après une requête-->
 			{% with messages = get_flashed_messages(with_categories=true) %}
           	{% if messages %}
@@ -55,15 +55,25 @@
 	            	{% block corps %}{% endblock %}
 	            </div>
 	        	</div>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
 
-	        </div>
-        <footer class="footer container-fluid-expand" style="background-color: #e6e6e6; padding: 20px">
+
+	        </main>
+        <footer class="footer fixed-bottom" style="background-color: #e6e6e6;">
+        	<div class="container py-3">
         	<div class="row justify-content-md-center">
-                	<div class="col col-1"><a href="https://github.com/Chartes-TNAH/dico-proso" class="text-secondary">  <i class="fa fa-github"></i> Github</a></div>
-                	<div class="col col-1"><a href="#" class="text-secondary">  <i class="fa fa-envelope"></i> Contact</a></div>
-                	<div class="col col-1"><a href="{{url_for("about")}}" class="text-secondary">A propos</a></div>
+                	<div class="col col-2"><a href="https://github.com/Chartes-TNAH/dico-proso" class="text-secondary">  <i class="fa fa-github"></i> Github</a></div>
+                	<div class="col col-2"><a href="{{url_for("contact")}}" class="text-secondary">  <i class="fa fa-envelope"></i> Contact</a></div>
+                	<div class="col col-2"><a href="{{url_for("about")}}" class="text-secondary">A propos</a></div>
          	</div>
+         </div>
         </footer>
+
 				<script src="../static/js/jquery.js"></script>
 				<script src="../static/js/popper.js"></script>
 				<script src="../static/js/bootstrap.js"></script>
