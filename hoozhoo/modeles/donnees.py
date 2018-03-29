@@ -104,13 +104,15 @@ class Person(db.Model):
         if len(erreurs) > 0:
             return False, erreurs
 
-        if len(date_naissance) >12 or len(date_deces) > 12 :
+
+        if len(date_naissance) > 12 or len(date_deces) > 12 :
+
             erreurs.append("La taille des caractères des dates a été dépassée")
         if len(erreurs) > 0:
             return False, erreurs
 
         if len(id_externes) > 12 :
-            erreurs.append("La taille des caractères du champs ID externe a été dépassée")
+            erreurs.append("La taille des caractères du champs Wikidata ID a été dépassée")
         if len(erreurs) > 0:
             return False, erreurs
 
