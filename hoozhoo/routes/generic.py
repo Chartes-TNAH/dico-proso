@@ -1,6 +1,6 @@
 from flask import render_template, request, flash, redirect
 from ..app import app
-from ..modeles.donnees import Person, Link
+from ..modeles.donnees import Person, Link, Relation_type
 from ..modeles.utilisateurs import User
 
 #variable à utiliser pour la pagination de la page recherche et index
@@ -148,3 +148,16 @@ def creer_personne():
 def contact():
     return render_template("pages/contact.html")
 
+@app.route("/modifier/lien/<int:identifier>", methods=["GET", "POST"])
+def modification_lien(identifier):
+    """
+    Route qui affiche un lien existant dans la base pour l'éditer
+    :param identifier: identifiant numérique du lien
+    """
+    print(identifier)
+    if request.method == "GET":
+        lienUnique = Link.query.get(identifier)
+        type_relation = Relation_type.query.filter(Relation_type.relation_type_id == lienUnique.link_relation_type_id).all()
+        relation = type_relation[0]
+        relation_name = relation.relation_type_name
+        return render_template("pages/modification_lien.html", unique=lienUnique, relation_name=relation_name)
