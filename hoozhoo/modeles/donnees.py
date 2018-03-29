@@ -277,6 +277,72 @@ class Link(db.Model):
         except Exception as error_creation:
             return False, [str(error_creation)]
 
+
+
+
+    @staticmethod
+    def modifier_link(id, link_person1_id, link_relation_type, link_person2_id):
+        """
+        Modifie un lien dans la base de donnée, retourne un tuple (booléen, liste ou objet).
+        S'il y a une erreur, la fonction renvoie False suivi d'une liste d'erreurs.
+        Sinon, elle renvoie True, suivi de la donnée enregistrée.
+        :param id : un identifiant numérique du lien
+        :param link_person1_id : un identifiant numérique de la personne 1
+        :param link_relation_type : une chaine de caractère correspondant à un type de relation 
+        :param link_person2_id : un identifiant numérique de la personne 2
+        """
+
+        errors = []
+        
+        # on vérifie que tous les paramètres sont complétés : 
+        if not id:
+            errors.append("erreur d'identification du lien à éditer")
+        if not link_person1_id:
+            errors.append("le champ personne 1 est vide")
+        if not link_person2_id:
+            errors.append("le champ personne 2 est vide")
+        if not link_relation_type:
+            errors.append("aucune relation n'a été spécifiée")
+        # on vérifie que personne 1 et personne 2 ne sont pas identiques 
+        if link_person1_id == link_person2_id:
+            errors.append("personne 1 et personne 2 ne peuvent pas être identiques")
+
+        # s'il y a des erreurs, on interrompt le processus
+        if len(errors) > 0:
+            return False, errors
+
+        # on récupère le lien dans la base 
+        origin_link = Link.query.get(id)
+        # on récupère l'id du type de relation 
+        relation_id = Relation_type.query.filter(Relation_type.relation_type_name == link_relation_type).all()
+
+        # on vérifie qu'une modification a été effectuée : 
+        if origin_link.link_person1_id == link_person1_id and origin_link.link_person2_id == link_person2_id and origin_link.link_relation_type_id == relation_id:
+            errors.append("Aucune modification n'a été réalisée")
+        if len(errors) > 0:
+            return False, errors
+
+        # on vérifie que le lien n'existe pas déjà
+        uniques = Link.query.filter(
+            db.and_(Link.link_id != id, Link.link_person1_id == link_person1_id, Link.link_person2_id == link_person2_id, Link.link_relation_type_id == relation_id)
+            ).count()
+        if uniques > 0:
+            errors.append("le lien modifié existe déjà")
+
+        # mise à jour du lien
+        origin_link.link_person1_id=link_person1_id
+        origin_link.link_person2_id=link_person2_id
+        origin_link.link_relation_type_id=relation_id
+
+        try:
+            # ajout de la mise à jour du lien dans la base de données
+            db.session.add(origin_link)
+            db.session.commit()
+            return True, origin_link
+
+        except Exception as error_modification:
+            return False, [str(error_modification)]
+
 class Authorship_link(db.Model):
     __tablename__ = "authorship_link"
     authorship_link_id = db.Column(db.Integer, nullable=True, autoincrement=True, primary_key=True)

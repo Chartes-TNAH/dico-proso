@@ -154,10 +154,28 @@ def modification_lien(identifier):
     Route qui affiche un lien existant dans la base pour l'éditer
     :param identifier: identifiant numérique du lien
     """
-    print(identifier)
     if request.method == "GET":
         lienUnique = Link.query.get(identifier)
         type_relation = Relation_type.query.filter(Relation_type.relation_type_id == lienUnique.link_relation_type_id).all()
         relation = type_relation[0]
         relation_name = relation.relation_type_name
         return render_template("pages/modification_lien.html", unique=lienUnique, relation_name=relation_name)
+
+        # sinon en méthode POST : 
+    # VERIFIER CETTE METHODE
+    else: 
+        status, data = Link.modifier_link(
+            id = identifier,
+            link_person1_id = request.form.get("link_1_person", None),
+            link_relation_type = request.form.get("link_relation_type", None),
+            link_person2_id = request.form.get("link_2_person", None)
+            )
+
+        if status is True :
+            flash("Modification réussie !", success)
+            unique = Person.query.get(data.link_person1_id)
+            return render_template ("pages/notice.html", unique=unique, listLien=unique.link_pers1)
+
+        else:
+            flash("Les erreurs suivantes empêchent l'édition du lien : " + ",".join(data), "danger")
+            return render_template("pages/modification_lien.html", identifier=identifier)
