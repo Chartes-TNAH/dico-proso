@@ -7,9 +7,15 @@ from ..modeles.utilisateurs import User
 PERSONNES_PAR_PAGES = 3
 
 @app.route("/")
-def debut():
+def accueil():
+    """ Route permettant l'affichage de la page d'accueil
+    """
 
-    return "Hello"
+    # récupération des 4 dernières notices créées pour affichage
+    personnes = Person.query.order_by(Person.person_id.desc()).limit(4).all()
+    print (type(personnes))
+
+    return render_template("pages/accueil.html", personnes=personnes)
 
 
 @app.route("/a-propos")
