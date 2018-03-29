@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `hoozhoo`.`person` (
   `person_language` TINYTEXT NULL,
   `person_occupations` TINYTEXT NULL,
   `person_nativename` TINYTEXT NULL,
-  `person_external_id` VARCHAR(45) NULL,
+  `person_external_id` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`person_id`))
 ENGINE = InnoDB;
 

@@ -20,7 +20,7 @@ class Person(db.Model):
     person_language = db.Column(db.Text)
     person_occupations = db.Column(db.Text)
     person_nativename = db.Column(db.Text)
-    person_external_id = db.Column(db.String(45))
+    person_external_id = db.Column(db.String(45), nullable=False)
 # Jointure
     authorships_p = db.relationship("Authorship_person", back_populates="person")
     link_pers1 = db.relationship("Link", primaryjoin="Person.person_id==Link.link_person1_id")
