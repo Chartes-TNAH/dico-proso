@@ -149,7 +149,7 @@ def creer_personne():
 def contact():
     return render_template("pages/contact.html")
 
-@app.route("/modifier/lien/<int:identifier>", methods=["GET", "POST"])
+@app.route("/modifierlien/<int:identifier>", methods=["GET", "POST"])
 def modification_lien(identifier):
     """
     Route qui affiche un lien existant dans la base pour l'éditer
