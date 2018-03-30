@@ -113,7 +113,7 @@ def modification (identifier):
 
 
 
-@app.route("/creer_personne", methods=["GET", "POST"])
+@app.route("/creer-personne", methods=["GET", "POST"])
 #@login_required #désactivation pour test
 def creer_personne():
     """ route permettant à l'utilisateur de créer une notice personne """
