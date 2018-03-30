@@ -20,7 +20,7 @@ class Person(db.Model):
     person_language = db.Column(db.Text)
     person_occupations = db.Column(db.Text)
     person_nativename = db.Column(db.Text)
-    person_external_id = db.Column(db.String(45))
+    person_external_id = db.Column(db.String(12), nullable=False)
 # Jointure
     authorships_p = db.relationship("Authorship_person", back_populates="person")
     link_pers1 = db.relationship("Link", primaryjoin="Person.person_id==Link.link_person1_id")
@@ -104,13 +104,15 @@ class Person(db.Model):
         if len(erreurs) > 0:
             return False, erreurs
 
-        if len(date_naissance) or len(date_deces) > 12 :
+
+        if len(date_naissance) > 12 or len(date_deces) > 12 :
+
             erreurs.append("La taille des caractères des dates a été dépassée")
         if len(erreurs) > 0:
             return False, erreurs
 
-        if len(id_externes) > 45 :
-            erreurs.append("La taille des caractères des dates a été dépassée")
+        if len(id_externes) > 12 :
+            erreurs.append("La taille des caractères du champs Wikidata ID a été dépassée")
         if len(erreurs) > 0:
             return False, erreurs
 
