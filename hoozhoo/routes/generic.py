@@ -51,6 +51,7 @@ def notice(identifier):
     personneUnique = Person.query.get(identifier)
 
     listLien = personneUnique.link_pers1
+    print(listLien)
 
     return render_template("pages/notice.html", unique=personneUnique, listLien=listLien)
 
@@ -151,10 +152,7 @@ def contact():
 
 @app.route("/delete/<int:nr_personne>")
 def delete(nr_personne):
-
-    status = Person.suprim_person(
-        personne_a_supprimer=Person.query.get(nr_personne))
-
+    status = Person.suprimer_person(nr_personne)
 
     page = request.args.get("page", 1)
 
@@ -170,4 +168,5 @@ def delete(nr_personne):
     if status == True:
         flash("Suppression réussie !", "success")
         return render_template("pages/index.html", personnes=personnes )
+
 

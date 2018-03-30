@@ -91,7 +91,7 @@ class Person(db.Model):
 
         #vérifier que l'utilisateur modifie au moins un champ
 
-        if personne.person_name == nom and personne.person_firstname == prenom and personne.person_nickname == surnom and personne.person_description.strip() == description.strip() and personne.person_birthdate == date_naissance and personne.person_deathdate == date_deces and personne.person_gender == genre and personne.person_external_id == id_externes:
+        if personne.person_name == nom and personne.person_firstname == prenom and personne.person_nickname == surnom and personne.person_description == description and personne.person_birthdate == date_naissance and personne.person_deathdate == date_deces and personne.person_gender == genre and personne.person_external_id == id_externes:
             erreurs.append("Aucune modification n'a été réalisée")
 
         if len(erreurs) > 0:
@@ -141,7 +141,8 @@ class Person(db.Model):
             return False, [str(error_modification)]
 
     @staticmethod
-    def suprim_person(personne_a_supprimer):
+    def suprimer_person(id):
+        personne_a_supprimer = Person.query.get(id)
         db.session.delete(personne_a_supprimer)
         db.session.commit()
         return True
