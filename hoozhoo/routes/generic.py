@@ -171,11 +171,17 @@ def modification_lien(identifier):
             link_person2_id = request.form.get("link_2_person", None)
             )
 
+        personneOrigine = request.form.get("link_1_person", None)
+        personneUnique = Person.query.get(personneOrigine)
+
         if status is True :
-            flash("Modification réussie !", success)
-            unique = Person.query.get(data.link_person1_id)
-            return render_template ("pages/notice.html", unique=unique, listLien=unique.link_pers1)
+            flash("Modification réussie !", "success")
+            return render_template ("pages/notice.html", unique=personneUnique, listLien=personneUnique.link_pers1)
 
         else:
             flash("Les erreurs suivantes empêchent l'édition du lien : " + ",".join(data), "danger")
-            return render_template("pages/modification_lien.html", identifier=identifier)
+            lienUnique = Link.query.get(identifier)
+            type_relation = Relation_type.query.filter(Relation_type.relation_type_id == lienUnique.link_relation_type_id).all()
+            relation = type_relation[0]
+            relation_name = relation.relation_type_name
+            return render_template("pages/modification_lien.html", unique=lienUnique, relation_name=relation_name)

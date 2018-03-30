@@ -311,28 +311,33 @@ class Link(db.Model):
         if len(errors) > 0:
             return False, errors
 
-        # on récupère le lien dans la base 
-        origin_link = Link.query.get(id)
         # on récupère l'id du type de relation 
         relation_id = Relation_type.query.filter(Relation_type.relation_type_name == link_relation_type).all()
+        relation_type = relation_id[0]
+        id_relation = relation_type.relation_type_id
 
+        # on récupère le lien dans la base 
+        origin_link = Link.query.get(id)
         # on vérifie qu'une modification a été effectuée : 
-        if origin_link.link_person1_id == link_person1_id and origin_link.link_person2_id == link_person2_id and origin_link.link_relation_type_id == relation_id:
+        if origin_link.link_person1_id == link_person1_id and origin_link.link_person2_id == link_person2_id and origin_link.link_relation_type_id == id_relation:
             errors.append("Aucune modification n'a été réalisée")
         if len(errors) > 0:
             return False, errors
 
         # on vérifie que le lien n'existe pas déjà
         uniques = Link.query.filter(
-            db.and_(Link.link_id != id, Link.link_person1_id == link_person1_id, Link.link_person2_id == link_person2_id, Link.link_relation_type_id == relation_id)
+            db.and_(Link.link_id != id, Link.link_person1_id == link_person1_id, Link.link_person2_id == link_person2_id, Link.link_relation_type_id == id_relation)
             ).count()
         if uniques > 0:
             errors.append("le lien modifié existe déjà")
 
+        if len(errors) > 0:
+            return False, errors
+
         # mise à jour du lien
         origin_link.link_person1_id=link_person1_id
         origin_link.link_person2_id=link_person2_id
-        origin_link.link_relation_type_id=relation_id
+        origin_link.link_relation_type_id=id_relation
 
         try:
             # ajout de la mise à jour du lien dans la base de données
