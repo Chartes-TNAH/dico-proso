@@ -264,7 +264,7 @@ class Link(db.Model):
         """
 
         errors = []
-        
+
         # on vérifie que tous les paramètres sont complétés : 
         if not id:
             errors.append("erreur d'identification du lien à éditer")
@@ -280,13 +280,14 @@ class Link(db.Model):
         if len(errors) > 0:
             return False, errors
 
-        # on récupère le lien original dans la base 
-        origin_link = Link.query.get(id)
-        # on vérifie qu'une modification a été effectuée : 
-        if origin_link.link_person1_id == link_person1_id and origin_link.link_person2_id == link_person2_id and origin_link.link_relation_type_id == link_relation_type:
-            errors.append("Aucune modification n'a été réalisée")
+        exist = Person.query.get(link_person2_id)
+        if not exist:
+            errors.append(link_person2_id + " n'est pas un identifiant valide")
         if len(errors) > 0:
             return False, errors
+
+        # on récupère le lien original dans la base 
+        origin_link = Link.query.get(id)
 
         # on vérifie que le lien n'existe pas déjà
         uniques = Link.query.filter(
