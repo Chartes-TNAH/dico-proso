@@ -145,7 +145,7 @@ def creer_personne():
 
 
 
-@app.route("/register", methods=["GET", "POST"])
+@app.route("/inscription", methods=["GET", "POST"])
 def inscription():
     """ Route gérant les inscriptions
     """
