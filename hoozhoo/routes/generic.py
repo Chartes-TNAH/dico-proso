@@ -37,6 +37,7 @@ def index():
     titre="Index"
 #creation de la pagination avec la methode .paginate qui remplace le .all dans la requête sur la base
     personnes = Person.query.order_by(Person.person_name).paginate(page=page, per_page= PERSONNES_PAR_PAGES)
+
     return render_template("pages/index.html", personnes=personnes, titre=titre)
 
 
@@ -147,4 +148,26 @@ def creer_personne():
 @app.route("/contact")
 def contact():
     return render_template("pages/contact.html")
+
+@app.route("/delete/<int:nr_personne>")
+def delete(nr_personne):
+
+    status = Person.suprim_person(
+        personne_a_supprimer=Person.query.get(nr_personne))
+
+
+    page = request.args.get("page", 1)
+
+    if isinstance(page, str) and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    titre = "Index"
+    personnes = Person.query.order_by(Person.person_name).paginate(page=page, per_page=PERSONNES_PAR_PAGES)
+
+
+    if status == True:
+        flash("Suppression réussie !", "success")
+        return render_template("pages/index.html", personnes=personnes )
 

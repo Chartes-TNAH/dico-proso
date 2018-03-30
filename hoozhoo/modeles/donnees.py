@@ -140,6 +140,13 @@ class Person(db.Model):
         except Exception as error_modification:
             return False, [str(error_modification)]
 
+    @staticmethod
+    def suprim_person(personne_a_supprimer):
+        db.session.delete(personne_a_supprimer)
+        db.session.commit()
+        return True
+
+
 
 class Relation_type(db.Model):
     __tablename__ = "relation_type"
