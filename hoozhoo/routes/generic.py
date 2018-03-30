@@ -164,7 +164,6 @@ def modification_lien(identifier):
     # sinon en méthode POST : 
     else: 
         personneOrigine = request.form.get("link_1_person", None)
-        personneUnique = Person.query.get(personneOrigine)
         
         status, data = Link.modifier_link(
             id = identifier,
@@ -175,7 +174,7 @@ def modification_lien(identifier):
 
         if status is True :
             flash("Modification réussie !", "success")
-            return render_template("pages/notice.html", unique=personneUnique, listLien=personneUnique.link_pers1)
+            return redirect("/person/" + str(personneOrigine) )
 
         else:
             flash("Les erreurs suivantes empêchent l'édition du lien : " + ",".join(data), "danger")
