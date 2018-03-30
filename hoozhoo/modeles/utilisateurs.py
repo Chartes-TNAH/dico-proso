@@ -14,57 +14,54 @@ class User(UserMixin, db.Model):
     author_person = db.relationship("Authorship_person", back_populates="user_person")
     author_link = db.relationship("Authorship_link", back_populates="user_link")
 
-# AJOUTER  LES METHODES STATIQUES
-
-
     @staticmethod
     def creer(login, email, nom, motdepasse):
-        """ Crée un compte utilisateur-rice. Retourne un tuple (booléen, User ou liste).
-        Si il y a une erreur, la fonction renvoie False suivi d'une liste d'erreur
-        Sinon, elle renvoie True suivi de la donnée enregistrée
+	    """ Crée un compte utilisateur-rice. Retourne un tuple (booléen, User ou liste).
+	    Si il y a une erreur, la fonction renvoie False suivi d'une liste d'erreur
+	    Sinon, elle renvoie True suivi de la donnée enregistrée
 
-        :param login: Login de l'utilisateur-rice
-        :param email: Email de l'utilisateur-rice
-        :param nom: Nom de l'utilisateur-rice
-        :param motdepasse: Mot de passe de l'utilisateur-rice (Minimum 6 caractères)
+	    :param login: Login de l'utilisateur-rice
+	    :param email: Email de l'utilisateur-rice
+	    :param nom: Nom de l'utilisateur-rice
+	    :param motdepasse: Mot de passe de l'utilisateur-rice (Minimum 6 caractères)
 
-        """
-        erreurs = []
-        if not login:
-            erreurs.append("Le login fourni est vide")
-        if not email:
-            erreurs.append("L'email fourni est vide")
-        if not nom:
-            erreurs.append("Le nom fourni est vide")
-        if not motdepasse or len(motdepasse) < 6:
-            erreurs.append("Le mot de passe fourni est vide ou trop court")
+	    """
+	    erreurs = []
+	    if not login:
+	        erreurs.append("Le login fourni est vide")
+	    if not email:
+	        erreurs.append("L'email fourni est vide")
+	    if not nom:
+	        erreurs.append("Le nom fourni est vide")
+	    if not motdepasse or len(motdepasse) < 6:
+	        erreurs.append("Le mot de passe fourni est vide ou trop court")
 
-        # On vérifie que personne n'a utilisé cet email ou ce login
-        uniques = User.query.filter(
-            db.or_(User.user_email == email, User.user_login == login)
-        ).count()
-        if uniques > 0:
-            erreurs.append("L'email ou le login sont déjà inscrits dans notre base de données")
+	    # On vérifie que personne n'a utilisé cet email ou ce login
+	    uniques = User.query.filter(
+	        db.or_(User.user_email == email, User.user_login == login)
+	    ).count()
+	    if uniques > 0:
+	        erreurs.append("L'email ou le login sont déjà inscrits dans notre base de données")
 
-        # Si on a au moins une erreur
-        if len(erreurs) > 0:
-            return False, erreurs
+	    # Si on a au moins une erreur
+	    if len(erreurs) > 0:
+	        return False, erreurs
 
-        # On crée un utilisateur
-        utilisateur = User(
-            user_nom=nom,
-            user_login=login,
-            user_email=email,
-            user_password=generate_password_hash(motdepasse)
-        )
+	    # On crée un utilisateur
+	    utilisateur = User(
+	        user_name=nom,
+	        user_login=login,
+	        user_email=email,
+	        user_password=generate_password_hash(motdepasse)
+	    )
 
-        try:
-            # On l'ajoute au transport vers la base de données
-            db.session.add(utilisateur)
-            # On envoie le paquet
-            db.session.commit()
+	    try:
+	        # On l'ajoute au transport vers la base de données
+	        db.session.add(utilisateur)
+	        # On envoie le paquet
+	        db.session.commit()
 
-            # On renvoie l'utilisateur
-            return True, utilisateur
-        except Exception as erreur:
-            return False, [str(erreur)]
+	        # On renvoie l'utilisateur
+	        return True, utilisateur
+	    except Exception as erreur:
+	        return False, [str(erreur)]
