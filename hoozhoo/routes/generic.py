@@ -155,34 +155,28 @@ def modification_lien(identifier):
     Route qui affiche un lien existant dans la base pour l'éditer
     :param identifier: identifiant numérique du lien
     """
-    if request.method == "GET":
-        lienUnique = Link.query.get(identifier)
-        type_relation = Relation_type.query.filter(Relation_type.relation_type_id == lienUnique.link_relation_type_id).all()
-        relation = type_relation[0]
-        relation_name = relation.relation_type_name
-        return render_template("pages/modification_lien.html", unique=lienUnique, relation_name=relation_name)
+    listRelation = Relation_type.query.all()
+    lienUnique = Link.query.get(identifier)
 
-        # sinon en méthode POST : 
-    # VERIFIER CETTE METHODE
+    if request.method == "GET":
+        return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)
+
+    # sinon en méthode POST : 
     else: 
+        personneOrigine = request.form.get("link_1_person", None)
+        personneUnique = Person.query.get(personneOrigine)
+        
         status, data = Link.modifier_link(
             id = identifier,
-            link_person1_id = request.form.get("link_1_person", None),
+            link_person1_id = personneOrigine,
             link_relation_type = request.form.get("link_relation_type", None),
             link_person2_id = request.form.get("link_2_person", None)
             )
 
-        personneOrigine = request.form.get("link_1_person", None)
-        personneUnique = Person.query.get(personneOrigine)
-
         if status is True :
             flash("Modification réussie !", "success")
-            return render_template ("pages/notice.html", unique=personneUnique, listLien=personneUnique.link_pers1)
+            return render_template("pages/notice.html", unique=personneUnique, listLien=personneUnique.link_pers1)
 
         else:
             flash("Les erreurs suivantes empêchent l'édition du lien : " + ",".join(data), "danger")
-            lienUnique = Link.query.get(identifier)
-            type_relation = Relation_type.query.filter(Relation_type.relation_type_id == lienUnique.link_relation_type_id).all()
-            relation = type_relation[0]
-            relation_name = relation.relation_type_name
-            return render_template("pages/modification_lien.html", unique=lienUnique, relation_name=relation_name)
+            return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)

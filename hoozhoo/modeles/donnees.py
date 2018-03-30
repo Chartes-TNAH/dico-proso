@@ -174,10 +174,6 @@ class Link(db.Model):
         :param link_person2: liste de noms de la personne 2
         :param link_relation_type: liste d'id numérique de relation, ou bien "choisir"
         """
-        print("TEST")
-        print(link_person1)
-        print(link_person2)
-        print(link_relation_type)
 
         errors = []
 
@@ -263,7 +259,7 @@ class Link(db.Model):
         Sinon, elle renvoie True, suivi de la donnée enregistrée.
         :param id : un identifiant numérique du lien
         :param link_person1_id : un identifiant numérique de la personne 1
-        :param link_relation_type : une chaine de caractère correspondant à un type de relation 
+        :param link_relation_type : un identifiant numérique du type de relation  
         :param link_person2_id : un identifiant numérique de la personne 2
         """
 
@@ -281,38 +277,30 @@ class Link(db.Model):
         # on vérifie que personne 1 et personne 2 ne sont pas identiques 
         if link_person1_id == link_person2_id:
             errors.append("personne 1 et personne 2 ne peuvent pas être identiques")
-
-        # s'il y a des erreurs, on interrompt le processus
         if len(errors) > 0:
             return False, errors
 
-        # on récupère l'id du type de relation 
-        relation_id = Relation_type.query.filter(Relation_type.relation_type_name == link_relation_type).all()
-        relation_type = relation_id[0]
-        id_relation = relation_type.relation_type_id
-
-        # on récupère le lien dans la base 
+        # on récupère le lien original dans la base 
         origin_link = Link.query.get(id)
         # on vérifie qu'une modification a été effectuée : 
-        if origin_link.link_person1_id == link_person1_id and origin_link.link_person2_id == link_person2_id and origin_link.link_relation_type_id == id_relation:
+        if origin_link.link_person1_id == link_person1_id and origin_link.link_person2_id == link_person2_id and origin_link.link_relation_type_id == link_relation_type:
             errors.append("Aucune modification n'a été réalisée")
         if len(errors) > 0:
             return False, errors
 
         # on vérifie que le lien n'existe pas déjà
         uniques = Link.query.filter(
-            db.and_(Link.link_id != id, Link.link_person1_id == link_person1_id, Link.link_person2_id == link_person2_id, Link.link_relation_type_id == id_relation)
+            db.and_(Link.link_id != id, Link.link_person1_id == link_person1_id, Link.link_person2_id == link_person2_id, Link.link_relation_type_id == link_relation_type)
             ).count()
         if uniques > 0:
             errors.append("le lien modifié existe déjà")
-
         if len(errors) > 0:
             return False, errors
 
         # mise à jour du lien
         origin_link.link_person1_id=link_person1_id
         origin_link.link_person2_id=link_person2_id
-        origin_link.link_relation_type_id=id_relation
+        origin_link.link_relation_type_id=link_relation_type
 
         try:
             # ajout de la mise à jour du lien dans la base de données
