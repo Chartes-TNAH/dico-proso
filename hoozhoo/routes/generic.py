@@ -1,6 +1,6 @@
 from flask import render_template, request, flash, redirect
 from ..app import app
-from ..modeles.donnees import Person, Link
+from ..modeles.donnees import Person, Link, Relation_type
 from ..modeles.utilisateurs import User
 
 #variable à utiliser pour la pagination de la page recherche et index
@@ -13,8 +13,6 @@ def accueil():
 
     # récupération des 4 dernières notices créées pour affichage
     personnes = Person.query.order_by(Person.person_id.desc()).limit(4).all()
-    print (type(personnes))
-
     return render_template("pages/accueil.html", personnes=personnes)
 
 
@@ -150,9 +148,11 @@ def creer_personne():
 def contact():
     return render_template("pages/contact.html")
 
+
 @app.route("/delete/<int:nr_personne>")
 def delete(nr_personne):
-    status = Person.suprimer_person(nr_personne)
+
+    status = Person.suprimer_personne(nr_personne)
 
     page = request.args.get("page", 1)
 
@@ -169,4 +169,47 @@ def delete(nr_personne):
         flash("Suppression réussie !", "success")
         return render_template("pages/index.html", personnes=personnes )
 
+
+
+@app.route("/modifier/lien/<int:identifier>", methods=["GET", "POST"])
+def modification_lien(identifier):
+    """
+    Route qui affiche un lien existant dans la base pour l'éditer
+    :param identifier: identifiant numérique du lien
+    """
+    if request.method == "GET":
+
+        lienUnique = Link.query.get(identifier)
+
+        relation_name = lienUnique.relations.relation_type_name
+
+        #type_relation = Relation_type.query.filter(Relation_type.relation_type_id == lienUnique.link_relation_type_id).all()
+        #relation = type_relation[0]
+        #relation_name = relation.relation_type_name
+        return render_template("pages/modification_lien.html", unique=lienUnique, relation_name=relation_name)
+
+        # sinon en méthode POST : 
+    # VERIFIER CETTE METHODE
+    else: 
+        status, data = Link.modifier_link(
+            id = identifier,
+            link_person1_id = request.form.get("link_1_person", None),
+            link_relation_type = request.form.get("link_relation_type", None),
+            link_person2_id = request.form.get("link_2_person", None)
+            )
+
+        personneOrigine = request.form.get("link_1_person", None)
+        personneUnique = Person.query.get(personneOrigine)
+
+        if status is True :
+            flash("Modification réussie !", "success")
+            return render_template ("pages/notice.html", unique=personneUnique, listLien=personneUnique.link_pers1)
+
+        else:
+            flash("Les erreurs suivantes empêchent l'édition du lien : " + ",".join(data), "danger")
+            lienUnique = Link.query.get(identifier)
+            type_relation = Relation_type.query.filter(Relation_type.relation_type_id == lienUnique.link_relation_type_id).all()
+            relation = type_relation[0]
+            relation_name = relation.relation_type_name
+            return render_template("pages/modification_lien.html", unique=lienUnique, relation_name=relation_name)
 
