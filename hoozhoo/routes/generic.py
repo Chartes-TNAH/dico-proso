@@ -54,12 +54,13 @@ def notice(identifier):
     return render_template("pages/notice.html", unique=personneUnique, listLien=listLien)
 
 @app.route("/creer-lien", methods=["GET", "POST"])
-#@login_required #désactivé pour le test
 def creer_lien():
-    """ route permettant à un utilisateur enregistré de créer un ou plusieurs liens entre des personnes existant dans la base
     """
+    route permettant à un utilisateur enregistré de créer un ou plusieurs liens entre des personnes existant dans la base
+    """
+    listRelation = Relation_type.query.all()
+
     if request.method == "POST":
-        # méthode statique create_link() à créer sous Link
         status, data = Link.create_link(
         link_person1=request.form.getlist("link_1_person[]", None),
         link_relation_type=request.form.getlist("link_relation_type[]", None),
@@ -67,14 +68,14 @@ def creer_lien():
         )
 
         if status is True:
-            flash("Création d'un nouveau lien réussie !", "success")
+            flash("Création de lien(s) réussie !", "success")
             return redirect("/creer-lien")
-        else:
-            flash("La création d'un nouveau lien a échoué pour les raisons suivantes : " + ", ".join(data), "danger")
-            return render_template("pages/creer_lien.html")
 
+        else:
+            flash("La création de lien(s) a échoué pour les raisons suivantes : " + ",".join(data), "danger")
+            return render_template("pages/creer_lien.html", listRelation=listRelation)
     else:
-        return render_template("pages/creer_lien.html")
+        return render_template("pages/creer_lien.html", listRelation=listRelation)
 
 
 @app.route("/modification/<int:identifier>", methods=["POST", "GET"])
