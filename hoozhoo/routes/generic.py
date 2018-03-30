@@ -7,9 +7,15 @@ from ..modeles.utilisateurs import User
 PERSONNES_PAR_PAGES = 3
 
 @app.route("/")
-def debut():
+def accueil():
+    """ Route permettant l'affichage de la page d'accueil
+    """
 
-    return "Hello"
+    # récupération des 4 dernières notices créées pour affichage
+    personnes = Person.query.order_by(Person.person_id.desc()).limit(4).all()
+    print (type(personnes))
+
+    return render_template("pages/accueil.html", personnes=personnes)
 
 
 @app.route("/a-propos")
@@ -70,6 +76,43 @@ def creer_lien():
     else:
         return render_template("pages/creer_lien.html")
 
+
+@app.route("/modification/<int:identifier>", methods=["POST", "GET"])
+#@login_required #désactivé pour le test
+def modification (identifier):
+    """
+    route permettant de modifier un formulaire avec les données d'une personne
+    :param identifier: identifiant numérique de la personne récupéré depuis la page notice
+    """
+    # renvoyer sur la page html les éléments de l'objet personne correspondant à l'identifiant de la route
+    if request.method == "GET":
+        personne_origine = Person.query.get(identifier)
+        return render_template("pages/modification.html", personne_origine=personne_origine)
+
+        # on récupère les données du formulaire modifié
+    else:
+        status, personneModifier= Person.modifier_person(
+            id = identifier,
+            nom = request.form.get("nom", None),
+            prenom = request.form.get("prenom", None),
+            surnom = request.form.get("surnom", None),
+            description = request.form.get("description", None),
+            date_naissance = request.form.get("date_naissance", None),
+            date_deces = request.form.get("date_deces", None),
+            genre = request.form.get("genre", None),
+            id_externes = request.form.get("id_externes", None)
+        )
+
+        if status is True:
+            flash("Modification réussie !", "success")
+            return render_template ("pages/notice.html", unique=personneModifier, listLien=personneModifier.link_pers1)
+        else:
+            flash("Les erreurs suivantes ont été rencontrées : " + ",".join(personneModifier), "danger")
+            personne_origine = Person.query.get(identifier)
+            return render_template("pages/modification.html", personne_origine=personne_origine)
+
+
+
 @app.route("/creer_personne", methods=["GET", "POST"])
 #@login_required #désactivation pour test
 def creer_personne():
@@ -101,6 +144,7 @@ def creer_personne():
 
 
 
+
 @app.route("/register", methods=["GET", "POST"])
 def inscription():
     """ Route gérant les inscriptions
@@ -121,3 +165,8 @@ def inscription():
             return render_template("pages/inscription.html")
     else:
         return render_template("pages/inscription.html")
+
+@app.route("/contact")
+def contact():
+    return render_template("pages/contact.html")
+

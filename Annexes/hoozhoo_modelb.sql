@@ -21,7 +21,11 @@ CREATE TABLE IF NOT EXISTS `hoozhoo`.`person` (
   `person_deathdate` VARCHAR(12) NULL,
   `person_gender` ENUM('Femme','Homme', 'Inconnu') NOT NULL,
   `person_description` TEXT NOT NULL,
-  `person_external_id` VARCHAR(45) NULL,
+  `person_country` TINYTEXT NULL,
+  `person_language` TINYTEXT NULL,
+  `person_occupations` TINYTEXT NULL,
+  `person_nativename` TINYTEXT NULL,
+  `person_external_id` VARCHAR(12) NOT NULL,
   PRIMARY KEY (`person_id`))
 ENGINE = InnoDB;
 
