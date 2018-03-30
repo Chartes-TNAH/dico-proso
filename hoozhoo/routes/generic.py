@@ -161,7 +161,7 @@ def inscription():
             flash("Enregistrement effectué. Identifiez-vous maintenant", "success")
             return redirect("/")
         else:
-            flash("Les erreurs suivantes ont été rencontrées : " + ",".join(donnees), "error")
+            flash("Les erreurs suivantes ont été rencontrées : " + ",".join(donnees), "danger")
             return render_template("pages/inscription.html")
     else:
         return render_template("pages/inscription.html")
