@@ -124,9 +124,13 @@ def creer_personne():
         nom=request.form.get("nom", None), 
         prenom=request.form.get("prenom", None),
         surnom=request.form.get("surnom", None),
+        nom_naissance=request.form.get("nom_naissance", None),
         date_naissance=request.form.get("date_naissance", None),
-        date_deces=request.form.get("date_mort", None),
+        date_deces=request.form.get("date_deces", None),
+        nationalite=request.form.get("nationalite", None),
+        langues=request.form.get("langues", None),
         genre=request.form.get("genre", None),
+        fonctions=request.form.get("fonctions", None),
         description=request.form.get("description", None),
         id_externes=request.form.get("id_externes", None)
         )
@@ -134,7 +138,7 @@ def creer_personne():
 
         if status is True:
             flash("Création d'une nouvelle personne réussie !", "success")
-            return redirect("/creer_personne")
+            return redirect("/creer-personne")
         else:
             flash("La création d'une nouvelle personne a échoué pour les raisons suivantes : " + ", ".join(data), "danger")
             return render_template("pages/creer_personne.html")
