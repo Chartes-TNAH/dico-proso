@@ -349,12 +349,28 @@ class Link(db.Model):
         except Exception as error_modification:
             return False, [str(error_modification)]
 
+    @staticmethod
+    def delete_link(link_id):
+        """
+        Supprime un lien dans la bae de données, retourne un booléen : True si la suppression a réussi, sinon False.
+        :param link_id : un identifiant numérique du lien
+        """
+
+        lien = Link.query.get(link_id)
+
+        try:
+            db.session.delete(lien)
+            db.session.commit()
+            return True
+        except Exception as failed:
+            print(failed)
+            return False
+
 class Authorship_link(db.Model):
     __tablename__ = "authorship_link"
     authorship_link_id = db.Column(db.Integer, nullable=True, autoincrement=True, primary_key=True)
     authorship_link_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     authorship_link_link_id = db.Column(db.Integer, db.ForeignKey('link.link_id'))
-    link_relation_type_id = db.Column(db.Integer, db.ForeignKey('relation_type.relation_type_id'))
     authorship_link_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 # Jointure
     user_link = db.relationship("User", back_populates="author_link")
