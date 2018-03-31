@@ -12,14 +12,14 @@ class Person(db.Model):
     person_name = db.Column(db.Text)
     person_firstname = db.Column(db.Text)
     person_nickname = db.Column(db.Text)
-    person_description = db.Column(db.Text, nullable=False)
+    person_nativename = db.Column(db.Text)
+    person_country = db.Column(db.Text)
+    person_language = db.Column(db.Text)
     person_birthdate = db.Column(db.String(12))
     person_deathdate = db.Column(db.String(12))
     person_gender = db.Column(db.Text, nullable=False)
-    person_country = db.Column(db.Text)
-    person_language = db.Column(db.Text)
     person_occupations = db.Column(db.Text)
-    person_nativename = db.Column(db.Text)
+    person_description = db.Column(db.Text, nullable=False)
     person_external_id = db.Column(db.String(12), nullable=False)
 # Jointure
     authorships_p = db.relationship("Authorship_person", back_populates="person")
@@ -27,15 +27,45 @@ class Person(db.Model):
     link_pers2 = db.relationship("Link", primaryjoin="Person.person_id==Link.link_person2_id")
 
     @staticmethod
-    def create_person(nom, prenom, surnom, description, date_naissance, date_deces, genre, id_externes):
+    def create_person(nom, prenom, surnom, nom_naissance, nationalite, langues, date_naissance, date_deces, fonctions, description, genre, id_externes):
         # on vérifie qu'au moins un des trois champs (nom, prénom et surnom) est rempli ainsi que celui de la description qui est obligatoire
         errors = []
         if not (nom or prenom or surnom):
             errors.append("Un des trois champs (nom, prénom, surnom) est obligatoire")
+        # vérifier que le champ genre est bien coché
+        if not genre:
+            errors.append("Le champ genre est obligatoire")
         # vérifier que le champ description est bien rempli
         if not description:
             errors.append("Le champ description est obligatoire")
+        # vérifier que le champ wikidata id est bien rempli
+        if not id_externes:
+            errors.append("L'identifiant Wikidata est obligatoire")
         # si on a au moins une erreur
+        if len(errors) > 0:
+            return False, errors
+
+        #vérifier que la taille des caractères insérés (nom, prenonm, surnom) ne dépasse pas la limite acceptée par mysql
+        if len(nom) > 255 or len(prenom) > 255 or len(surnom) > 255 :
+            errors.append("La taille des caractères du nom, ou du prénom ou du surnon a été dépassée")
+        if len(errors) > 0:
+            return False, errors
+
+        #vérifier que la taille des caractères insérés (date) ne dépasse pas la limite acceptée par mysql
+        if len(date_naissance) > 12 or len(date_deces) > 12:
+            errors.append("La taille des caractères des dates a été dépassée")
+        if len(errors) > 0:
+            return False, errors
+
+        #vérifier que la taille des caractères insérés (wikidata id) ne dépasse pas la limite acceptée par mysql
+        if len(id_externes) > 12 :
+            errors.append("La taille des caractères du champs Wikidata ID a été dépassée")
+        if len(errors) > 0:
+            return False, errors
+
+        #vérifier que l'ID Wikidata commence par Q
+        if id_externes[0] != "Q" :
+            errors.append("L'ID Wikidata doit commencer par 'Q'")
         if len(errors) > 0:
             return False, errors
 
@@ -49,15 +79,20 @@ class Person(db.Model):
         if len(errors) > 0:
             return False, errors
 
+
         # Sinon, on crée une nouvelle personne dans la table Person
         created_person = Person(
             person_name=nom,
             person_firstname=prenom,
             person_nickname=surnom,
-            person_description=description,
+            person_nativename=nom_naissance,
+            person_country=nationalite,
+            person_language=langues,
             person_birthdate=date_naissance,
             person_deathdate=date_deces,
             person_gender=genre,
+            person_occupations=fonctions,
+            person_description=description,
             person_external_id=id_externes
         )
 
