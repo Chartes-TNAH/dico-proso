@@ -27,7 +27,7 @@ class Person(db.Model):
     link_pers2 = db.relationship("Link", primaryjoin="Person.person_id==Link.link_person2_id")
 
     @staticmethod
-    def create_person(nom, prenom, surnom, nom_naissance, nationalite, langues, date_naissance, date_deces, fonctions, description, genre, id_externes):
+    def create_person(nom, prenom, surnom, nom_languematernelle, pays_nationalite, langues, date_naissance, date_deces, fonctions_occupations, description, genre, id_externes):
         # on vérifie qu'au moins un des trois champs (nom, prénom et surnom) est rempli ainsi que celui de la description qui est obligatoire
         errors = []
         if not (nom or prenom or surnom):
@@ -85,13 +85,13 @@ class Person(db.Model):
             person_name=nom,
             person_firstname=prenom,
             person_nickname=surnom,
-            person_nativename=nom_naissance,
-            person_country=nationalite,
+            person_nativename=nom_languematernelle,
+            person_country=pays_nationalite,
             person_language=langues,
             person_birthdate=date_naissance,
             person_deathdate=date_deces,
             person_gender=genre,
-            person_occupations=fonctions,
+            person_occupations=fonctions_occupations,
             person_description=description,
             person_external_id=id_externes
         )
