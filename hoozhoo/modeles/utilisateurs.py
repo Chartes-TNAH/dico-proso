@@ -24,6 +24,7 @@ class User(UserMixin, db.Model):
 	    :param email: Email de l'utilisateur-rice
 	    :param nom: Nom de l'utilisateur-rice
 	    :param motdepasse: Mot de passe de l'utilisateur-rice (Minimum 6 caractères)
+            :param motdepasse-confirmation: Confirmation du mot de passe par l'utilisateur
 
 	    """
 	    erreurs = []
