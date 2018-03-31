@@ -53,7 +53,7 @@
               <a href="{{ url_for('modification_lien', identifier=lien.link_id) }}" type="button" class="btn btn-outline-secondary btn-sm" title="éditer"><i class="fa fa-edit"></i></a>
             </div>
             <div class="col-1">
-              <a href="#" type="button" class="btn btn-outline-danger btn-sm" title="supprimer"><i class="fa fa-trash"></i></a>
+              <a href="{{ url_for('suppression_lien', identifier=lien.link_id) }}" class="btn btn-outline-danger btn-sm" title="supprimer"><i class="fa fa-trash"></i></a>
             </div>
 
             {% endfor %}
