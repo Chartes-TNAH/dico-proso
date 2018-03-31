@@ -195,6 +195,14 @@ def suppression_lien(identifier):
         return render_template("pages/suppr_lien.html", unique=lienUnique, listRelation=listRelation)
 
     else:
-        flash("Lien supprimé !", "success")
-        return redirect("/person/" + str(lienUnique.link_person1_id))
+
+        status = Link.delete_link(link_id=identifier)
+
+        if status is True : 
+            flash("Lien supprimé !", "success")
+            return redirect("/person/" + str(lienUnique.link_person1_id))
+
+        else: 
+            flash("La suppression a échoué.", "danger")
+            return redirect("/person/" + str(lienUnique.link_person1_id))
 

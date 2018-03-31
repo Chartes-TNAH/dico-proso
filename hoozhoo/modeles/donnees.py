@@ -314,6 +314,21 @@ class Link(db.Model):
         except Exception as error_modification:
             return False, [str(error_modification)]
 
+    @staticmethod
+    def delete_link(link_id):
+        """
+        Supprime un lien dans la bae de données, retourne un booléen : True si la suppression a réussi, sinon False.
+        :param link_id : un identifiant numérique du lien
+        """
+
+        try:
+            db.session.delete(link_id)
+            db.session.commit()
+            return True
+        except Exception as failed:
+            print(failed)
+            return False
+
 class Authorship_link(db.Model):
     __tablename__ = "authorship_link"
     authorship_link_id = db.Column(db.Integer, nullable=True, autoincrement=True, primary_key=True)
