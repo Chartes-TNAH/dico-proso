@@ -110,7 +110,7 @@ def modification (identifier):
         else:
             flash("Les erreurs suivantes ont été rencontrées : " + ",".join(personneModifier), "danger")
             personne_origine = Person.query.get(identifier)
-            return render_template("pages/modification.html", personne_origine=personne_origine)
+            return render_template("pages/modification_personne.html", personne_origine=personne_origine)
 
 
 
