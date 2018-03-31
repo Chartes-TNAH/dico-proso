@@ -321,8 +321,10 @@ class Link(db.Model):
         :param link_id : un identifiant numérique du lien
         """
 
+        lien = Link.query.get(link_id)
+
         try:
-            db.session.delete(link_id)
+            db.session.delete(lien)
             db.session.commit()
             return True
         except Exception as failed:
