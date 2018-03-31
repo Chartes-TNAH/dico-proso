@@ -1,0 +1,41 @@
+{% extends "conteneur.html" %}
+{% block titre %}
+    {%if unique %}| Suppression d'un lien {% endif %}
+{% endblock %}
+
+{% block corps %}
+<div class="mt-5 container">
+
+	<div class="row">
+		<div class="col-md mt-3">
+			<p>Merci de confirmer la suppression du lien suivant :</p>
+		</div>
+		<div class="col-md mt-3">
+			<strong>
+				<span class="mr-1">
+					{% if unique.person1.person_firstname %}{{unique.person1.person_firstname}}{% endif %}
+					{% if unique.person1.person_name %}{{unique.person1.person_name}}{% endif %}
+					{% if unique.person1.person_nickname %}{{unique.person1.person_nickname}}{% endif %}
+				</span>
+				<span>{{unique.relations.relation_type_name}}</span>
+				<span class="ml-1">
+					{% if unique.person2.person_firstname %}{{unique.person2.person_firstname}}{% endif %}
+					{% if unique.person2.person_name %}{{unique.person2.person_name}}{% endif %}
+					{% if unique.person2.person_nickname %}{{unique.person2.person_nickname}}{% endif %}
+				</span>
+			</strong>
+		</div>
+		<div class="col-md container mt-3">
+				<div class="row">
+				<form class="col-3 mr-2 " method="POST" action="{{url_for('suppression_lien', identifier=unique.link_id) }}">
+				<button type="submit" class="btn btn-success btn-sm">Confirmer</button>
+				</form>
+				<form class="col-3 ml-2" method="GET" action="{{ url_for('notice', identifier=unique.link_person1_id) }}">
+				<button type="submit" class="btn btn-danger btn-sm">Annuler</button>
+			</form>
+		</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
