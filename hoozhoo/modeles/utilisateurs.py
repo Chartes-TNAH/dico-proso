@@ -36,7 +36,7 @@ class User(UserMixin, db.Model):
 	        erreurs.append("Le nom fourni est vide")
 	    if not motdepasse or len(motdepasse) < 6:
 	        erreurs.append("Le mot de passe fourni est vide ou trop court")
-            if not motdepasse-confirmation or motdepasse-confirmation != motdepasse:
+            if not motdepasse-confirmation or motdepasse-confirmation != "motdepasse":
                 erreur.append("Le mot de passe fourni est différent du mot de passe initial")
 
 	    # On vérifie que personne n'a utilisé cet email ou ce login
