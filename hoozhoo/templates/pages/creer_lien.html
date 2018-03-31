@@ -18,31 +18,9 @@
         <label for="link_relation_type" class="font-weight-bold">Nature de la relation</label>
         <select class="custom-select d-block" id="link_relation_type" name="link_relation_type[]">
           <option selected>Choisir</option>
-          <option value="soeur de">soeur de</option>
-          <option value="frère de">frère de</option>
-          <option value="fille de">fille de</option>
-          <option value="fils de">fils de</option>
-          <option value="mère de">mère de</option>
-          <option value="père de">père de</option>
-          <option value="tante de">tante de</option>
-          <option value="oncle de">oncle de</option>
-          <option value="nièce de">nièce de</option>
-          <option value="neveu de">neveu de</option>
-          <option value="cousine ou cousin de">cousine ou cousin de</option>
-          <option value="petite-fille de">petite-fille de</option>
-          <option value="petit-fils de">petit-fils de</option>
-          <option value="grand-mère de">grand-mère de</option>
-          <option value="grand-père de">grand-père de</option>
-          <option value="arrière-grand-mère de">arrière-grand-mère de</option>
-          <option value="arrière-grand-père de">arrière-grand-père de</option>
-          <option value="relation intime occasionnelle avec">relation intime occasionnelle avec</option>
-          <option value="relation intime sérieuse avec">relation intime sérieuse avec</option>
-          <option value="esclave de">esclave de</option>
-          <option value="esclave libéré de">esclave libéré de</option>
-          <option value="femme libérée de">femme libérée de</option>
-          <option value="homme libéré de">homme libéré de</option>
-          <option value="ennemi de">ennemi de</option>
-          <option value="ami avec">ami avec</option>
+          {% for lien in listRelation %}
+          <option value="{{lien.relation_type_id}}">{{lien.relation_type_name}}</option>
+          {% endfor %}
         </select>
       </div>
 
@@ -76,31 +54,9 @@
                   <div class="col-sm">
                     <select class="custom-select d-block" id="link_relation_type" name="link_relation_type[]">
                       <option selected>Choisir</option>
-                      <option value="soeur de">soeur de</option>
-                      <option value="frère de">frère de</option>
-                      <option value="fille de">fille de</option>
-                      <option value="fils de">fils de</option>
-                      <option value="mère de">mère de</option>
-                      <option value="père de">père de</option>
-                      <option value="tante de">tante de</option>
-                      <option value="oncle de">oncle de</option>
-                      <option value="nièce de">nièce de</option>
-                      <option value="neveu de">neveu de</option>
-                      <option value="cousine ou cousin de">cousine ou cousin de</option>
-                      <option value="petite-fille de">petite-fille de</option>
-                      <option value="petit-fils de">petit-fils de</option>
-                      <option value="grand-mère de">grand-mère de</option>
-                      <option value="grand-père de">grand-père de</option>
-                      <option value="arrière-grand-mère de">arrière-grand-mère de</option>
-                      <option value="arrière-grand-père de">arrière-grand-père de</option>
-                      <option value="relation intime occasionnelle avec">relation intime occasionnelle avec</option>
-                      <option value="relation intime sérieuse avec">relation intime sérieuse avec</option>
-                      <option value="esclave de">esclave de</option>
-                      <option value="esclave libéré de">esclave libéré de</option>
-                      <option value="femme libérée de">femme libérée de</option>
-                      <option value="homme libéré de">homme libéré de</option>
-                      <option value="ennemi de">ennemi de</option>
-                      <option value="ami avec">ami avec</option>
+          {% for lien in listRelation %}
+          <option value="{{lien.relation_type_id}}">{{lien.relation_type_name}}</option>
+          {% endfor %}
                     </select>
                   </div>
 
