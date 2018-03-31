@@ -179,3 +179,30 @@ def modification_lien(identifier):
         else:
             flash("Les erreurs suivantes empêchent l'édition du lien : " + ",".join(data), "danger")
             return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)
+
+
+
+@app.route("/confirmer-supprimer/<int:identifier>", methods=["GET", "POST"]) 
+def suppression_lien(identifier):
+    """
+    Route qui affiche les informations du lien à supprimer et qui demande confirmation
+    :param identifier : identifiant numérique du lien
+    """
+    listRelation = Relation_type.query.all()
+    lienUnique = Link.query.get(identifier)
+
+    if request.method == "GET":
+        return render_template("pages/suppr_lien.html", unique=lienUnique, listRelation=listRelation)
+
+    else:
+
+        status = Link.delete_link(link_id=identifier)
+
+        if status is True : 
+            flash("Lien supprimé !", "success")
+            return redirect("/person/" + str(lienUnique.link_person1_id))
+
+        else: 
+            flash("La suppression a échoué.", "danger")
+            return redirect("/person/" + str(lienUnique.link_person1_id))
+
