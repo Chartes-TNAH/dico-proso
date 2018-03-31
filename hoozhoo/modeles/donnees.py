@@ -73,7 +73,7 @@ class Person(db.Model):
             return False, [str(error_creation)]
 
     @staticmethod
-    def modifier_person (id, nom, prenom, surnom, description, date_naissance, date_deces, genre, id_externes):
+    def modifier_person (id, nom, prenom, surnom, nom_naissance, nationalite, langues, description, date_naissance, date_deces, fonctions, genre, id_externes):
         """ Modifie la notice d'une personne, ....à compléter
                """
         erreurs=[]
@@ -91,7 +91,18 @@ class Person(db.Model):
 
         #vérifier que l'utilisateur modifie au moins un champ
 
-        if personne.person_name == nom and personne.person_firstname == prenom and personne.person_nickname == surnom and personne.person_description.strip() == description.strip() and personne.person_birthdate == date_naissance and personne.person_deathdate == date_deces and personne.person_gender == genre and personne.person_external_id == id_externes:
+        if personne.person_name == nom \
+                and personne.person_firstname == prenom \
+                and personne.person_nickname == surnom \
+                and personne.person_description.strip() == description.strip() \
+                and personne.person_birthdate == date_naissance \
+                and personne.person_deathdate == date_deces \
+                and personne.person_gender == genre \
+                and personne.person_external_id == id_externes \
+                and personne.person_nativename == nom_naissance \
+                and personne.person_country == nationalite \
+                and personne.person_language == langues \
+                and personne.person_occupations == fonctions:
             erreurs.append("Aucune modification n'a été réalisée")
 
         if len(erreurs) > 0:
@@ -101,20 +112,12 @@ class Person(db.Model):
 
         if len(nom) > 255 or len(prenom) > 255 or len(surnom) > 255 :
             erreurs.append("La taille des caractères du nom, ou du prénom ou du surnon a été dépassée")
-        if len(erreurs) > 0:
-            return False, erreurs
-
 
         if len(date_naissance) > 12 or len(date_deces) > 12 :
-
             erreurs.append("La taille des caractères des dates a été dépassée")
-        if len(erreurs) > 0:
-            return False, erreurs
 
         if len(id_externes) > 12 :
             erreurs.append("La taille des caractères du champs Wikidata ID a été dépassée")
-        if len(erreurs) > 0:
-            return False, erreurs
 
         #vérifier que l'ID Wikidata commence par Q
         if id_externes[0] != "Q" :
@@ -124,14 +127,18 @@ class Person(db.Model):
 
         else:
             # mise à jour de la personne
-            personne.person_name=nom
-            personne.person_firstname=prenom
-            personne.person_nickname=surnom
-            personne.person_description=description
-            personne.person_birthdate=date_naissance
-            personne.person_deathdate=date_deces
-            personne.person_gender=genre
-            personne.person_external_id=id_externes
+            personne.person_name = nom
+            personne.person_firstname = prenom
+            personne.person_nickname = surnom
+            personne.person_description = description
+            personne.person_birthdate = date_naissance
+            personne.person_deathdate = date_deces
+            personne.person_gender = genre
+            personne.person_external_id = id_externes
+            personne.person_nativename = nom_naissance
+            personne.person_country = nationalite
+            personne.person_language = langues
+            personne.person_occupations = fonctions
 
         try:
             #ajout dans la base de données

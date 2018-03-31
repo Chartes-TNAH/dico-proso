@@ -88,7 +88,7 @@ def modification (identifier):
     # renvoyer sur la page html les éléments de l'objet personne correspondant à l'identifiant de la route
     if request.method == "GET":
         personne_origine = Person.query.get(identifier)
-        return render_template("pages/modification.html", personne_origine=personne_origine)
+        return render_template("pages/modification_personne.html", personne_origine=personne_origine)
 
         # on récupère les données du formulaire modifié
     else:
@@ -101,8 +101,15 @@ def modification (identifier):
             date_naissance = request.form.get("date_naissance", None),
             date_deces = request.form.get("date_deces", None),
             genre = request.form.get("genre", None),
-            id_externes = request.form.get("id_externes", None)
+            id_externes = request.form.get("id_externes", None),
+            fonctions = request.form.get ("fonctions_occupations", None),
+            langues = request.form.get ("langues", None),
+            nationalite = request.form.get ("pays_nationalite", None),
+            nom_naissance = request.form.get ("nom_languematernelle", None)
+
         )
+
+
 
         if status is True:
             flash("Modification réussie !", "success")
