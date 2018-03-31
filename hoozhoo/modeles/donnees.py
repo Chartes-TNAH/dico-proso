@@ -209,7 +209,7 @@ class Link(db.Model):
         Sinon, elle renvoie True, suivi d'une liste de données enregistrées.
         :param link_person1: liste de noms de la personne 1
         :param link_person2: liste de noms de la personne 2
-        :param link_relation_type: liste de noms de la relation (modele SNAP)
+        :param link_relation_type: liste d'id numérique de relation, ou bien "choisir"
         """
 
         errors = []
@@ -217,14 +217,11 @@ class Link(db.Model):
         # On vérifie que les champs de toutes les lignes sont remplis
         if not( (len(link_person1) == len(link_person2)) and (len(link_person1) == len(link_relation_type)) and (len(link_person2) == len(link_relation_type)) ):
             errors.append("certains champs sont vides")
-
-        # Premier niveau d'interruption si erreurs.
         if len(errors) > 0:
             return False, errors
 
         # Calcul du nombre d'itérations nécessaire pour la boucle
         loop = len(link_person1)
-
         # On vérifie qu'aucune ligne n'est identique à une autre
         triplets = []
         repeat = 0
@@ -236,15 +233,12 @@ class Link(db.Model):
             triplets.append(triplet)
         if repeat > 0:
             errors.append("certains liens à créer sont identiques")
-
         # on vérifie que le type de relation a bien été séléctionné, et que les champs pers1 et pers2 ne sont pas identiques:
         for row in range (0, loop):
             if link_relation_type[row] == 'Choisir':
                 errors.append("aucun type de relation n'a été sélectionné, ligne " + str(row +1))
             if link_person1[row] == link_person2[row]:
                 errors.append("les champs 'Personne 1' et 'Personne 2' sont identiques, ligne " + str(row +1))
-
-        # Deuxième niveau d'interruption si erreurs.
         if len(errors) > 0:
             return False, errors
 
@@ -252,47 +246,27 @@ class Link(db.Model):
         for row in range (0, loop):
             person1 = Person.query.filter(Person.person_id == link_person1[row]).count()
             person2 = Person.query.filter(Person.person_id == link_person2[row]).count()
-
             if person1 == 0:
                 errors.append(link_person1[row] +" n'existe pas, ligne " + str(row +1))
             if person2 == 0:
                 errors.append(link_person2[row] +" n'existe pas, ligne " + str(row +1))
-
-            # Il est possible que ce test ne soit pas nécessaire :
-            # On récupère l'id de la relation dans la table Relation_type :
-            c_relation = Relation_type.query.filter(Relation_type.relation_type_name == link_relation_type[row]).count()
-            # On vérifie que la requête d'id de relation a bien fonctionné
-            if c_relation == 0:
-                errors.append("erreur de lien, ligne " + str(row +1))
-
-        # Troisième niveau d'interruption si erreurs. Liste des erreurs sur tout le formulaire.
         if len(errors) > 0:
             return False, errors
 
-        # On récupère l'id associé au lien.
+        # On vérifie que le lien n'existe pas déjà
         for row in range (0, loop):
-            relation = Relation_type.query.filter(Relation_type.relation_type_name == link_relation_type[row]).all()
-            u_relation = relation[0]
-            link_relation_type[row] = u_relation.relation_type_id
-
-            # On vérifie que le lien n'existe pas déjà
             uniques = Link.query.filter(
                 db.and_(Link.link_person1_id == link_person1[row], Link.link_person2_id == link_person2[row], Link.link_relation_type_id == link_relation_type[row])
                 ).count()
             if uniques > 0:
                 errors.append("le lien existe déjà")
-
-        # Quatrième niveau d'interruption si erreurs.
         if len(errors) > 0:
             return False, errors
 
-        # Sinon, on itère à nouveau pour créer un lien :
+        # On itère à nouveau pour créer un lien :
         # la liste created_link va récupérer l'ensemble des données enregistrées
         created_link = []
         for row in range (0, loop):
-            # re-création de la variable relation
-            relation = Relation_type.query.filter(Relation_type.relation_type_name == link_relation_type[row]).all()
-
             created_link.append(
                 Link(
                     link_person1_id=link_person1[row],
@@ -306,13 +280,74 @@ class Link(db.Model):
                 # Phase de création du lien :
                 db.session.add(created_link[row])
                 db.session.commit()
-
             # Renvoie d'informations vers l'utilisateur :
             return True, created_link
 
         # Sinon renvoie l'erreur vers l'utilisateur :
         except Exception as error_creation:
             return False, [str(error_creation)]
+
+
+    @staticmethod
+    def modifier_link(id, link_person1_id, link_relation_type, link_person2_id):
+        """
+        Modifie un lien dans la base de donnée, retourne un tuple (booléen, liste ou objet).
+        S'il y a une erreur, la fonction renvoie False suivi d'une liste d'erreurs.
+        Sinon, elle renvoie True, suivi de la donnée enregistrée.
+        :param id : un identifiant numérique du lien
+        :param link_person1_id : un identifiant numérique de la personne 1
+        :param link_relation_type : un identifiant numérique du type de relation  
+        :param link_person2_id : un identifiant numérique de la personne 2
+        """
+
+        errors = []
+
+        # on vérifie que tous les paramètres sont complétés : 
+        if not id:
+            errors.append("erreur d'identification du lien à éditer")
+        if not link_person1_id:
+            errors.append("le champ personne 1 est vide")
+        if not link_person2_id:
+            errors.append("le champ personne 2 est vide")
+        if not link_relation_type:
+            errors.append("aucune relation n'a été spécifiée")
+        # on vérifie que personne 1 et personne 2 ne sont pas identiques 
+        if link_person1_id == link_person2_id:
+            errors.append("personne 1 et personne 2 ne peuvent pas être identiques")
+        if len(errors) > 0:
+            return False, errors
+
+        exist = Person.query.get(link_person2_id)
+        if not exist:
+            errors.append(link_person2_id + " n'est pas un identifiant valide")
+        if len(errors) > 0:
+            return False, errors
+
+        # on récupère le lien original dans la base 
+        origin_link = Link.query.get(id)
+
+        # on vérifie que le lien n'existe pas déjà
+        uniques = Link.query.filter(
+            db.and_(Link.link_id != id, Link.link_person1_id == link_person1_id, Link.link_person2_id == link_person2_id, Link.link_relation_type_id == link_relation_type)
+            ).count()
+        if uniques > 0:
+            errors.append("le lien modifié existe déjà")
+        if len(errors) > 0:
+            return False, errors
+
+        # mise à jour du lien
+        origin_link.link_person1_id=link_person1_id
+        origin_link.link_person2_id=link_person2_id
+        origin_link.link_relation_type_id=link_relation_type
+
+        try:
+            # ajout de la mise à jour du lien dans la base de données
+            db.session.add(origin_link)
+            db.session.commit()
+            return True, origin_link
+
+        except Exception as error_modification:
+            return False, [str(error_modification)]
 
 class Authorship_link(db.Model):
     __tablename__ = "authorship_link"
