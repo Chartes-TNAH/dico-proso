@@ -124,13 +124,13 @@ def creer_personne():
         nom=request.form.get("nom", None), 
         prenom=request.form.get("prenom", None),
         surnom=request.form.get("surnom", None),
-        nom_naissance=request.form.get("nom_naissance", None),
+        nom_languematernelle=request.form.get("nom_languematernelle", None),
         date_naissance=request.form.get("date_naissance", None),
         date_deces=request.form.get("date_deces", None),
-        nationalite=request.form.get("nationalite", None),
+        pays_nationalite=request.form.get("pays_nationalite", None),
         langues=request.form.get("langues", None),
         genre=request.form.get("genre", None),
-        fonctions=request.form.get("fonctions", None),
+        fonctions_occupations=request.form.get("fonctions_occupations", None),
         description=request.form.get("description", None),
         id_externes=request.form.get("id_externes", None)
         )
