@@ -67,12 +67,7 @@
           <div class="col-4"> <p class="font-weight-bold">Genre</p></div>
           <div class="col-8">{{unique.person_gender}}</div>
 
-        <!-- Affichage de la description-->
-          <div class="w-100"></div>
-          <div class="col-4"> <p class="font-weight-bold">Description</p></div>
-          <div class="col-8">{{unique.person_description}}</div>
-
-         <!-- Affichage de l'occupation avec condition -->
+        <!-- Affichage de l'occupation avec condition -->
         <div class="w-100"></div>
         {% if not unique.person_occupations %}
           <div class="col-4"> <p class="font-weight-bold">Fonction(s)/Occupation(s)</p></div>
@@ -82,16 +77,22 @@
             <div class="col-8">{{unique.person_occupations}}</div>
         {% endif %}
 
+        <!-- Affichage de la description-->
+          <div class="w-100"></div>
+          <div class="col-4"> <p class="font-weight-bold">Description</p></div>
+          <div class="col-8">{{unique.person_description}}</div>
+
         <!-- Affichage de l'ID Wikidata -->
           <div class="w-100"></div>
           <div class="col-4"> <p class="font-weight-bold">Identifiant Wikidata</p></div>
           <div class="col-8">{{unique.person_external_id}}</div>
         </div>
+
+        <!-- Liens avec les autres personnes-->
         <div class="row pt-3">
           <h2 class="pb-2">Liens avec les autres personnes</h2>
         {% for lien in listLien %}
             <div class="w-100">
-              
             </div>
             <div class="col-4"> 
               <p class="font-weight-bold">{{lien.relations.relation_type_name}}</p>
@@ -108,11 +109,11 @@
 
             {% endfor %}
         </div>
-
-
     {% else %}
         <p>La base de données est en cours de constitution</p>
     {% endif %}
+
+    <!-- Boutons-->
 
     <div class="row pt-3">
     <div class="w-100"></div>
