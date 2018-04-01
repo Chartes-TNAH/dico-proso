@@ -1,6 +1,6 @@
 from flask import render_template, request, flash, redirect
 from ..app import app
-from ..modeles.donnees import Person, Link
+from ..modeles.donnees import Person, Link, Relation_type
 from ..modeles.utilisateurs import User
 
 #variable à utiliser pour la pagination de la page recherche et index
@@ -54,12 +54,13 @@ def notice(identifier):
     return render_template("pages/notice.html", unique=personneUnique, listLien=listLien)
 
 @app.route("/creer-lien", methods=["GET", "POST"])
-#@login_required #désactivé pour le test
 def creer_lien():
-    """ route permettant à un utilisateur enregistré de créer un ou plusieurs liens entre des personnes existant dans la base
     """
+    route permettant à un utilisateur enregistré de créer un ou plusieurs liens entre des personnes existant dans la base
+    """
+    listRelation = Relation_type.query.all()
+
     if request.method == "POST":
-        # méthode statique create_link() à créer sous Link
         status, data = Link.create_link(
         link_person1=request.form.getlist("link_1_person[]", None),
         link_relation_type=request.form.getlist("link_relation_type[]", None),
@@ -67,14 +68,14 @@ def creer_lien():
         )
 
         if status is True:
-            flash("Création d'un nouveau lien réussie !", "success")
+            flash("Création de lien(s) réussie !", "success")
             return redirect("/creer-lien")
-        else:
-            flash("La création d'un nouveau lien a échoué pour les raisons suivantes : " + ", ".join(data), "danger")
-            return render_template("pages/creer_lien.html")
 
+        else:
+            flash("La création de lien(s) a échoué pour les raisons suivantes : " + ",".join(data), "danger")
+            return render_template("pages/creer_lien.html", listRelation=listRelation)
     else:
-        return render_template("pages/creer_lien.html")
+        return render_template("pages/creer_lien.html", listRelation=listRelation)
 
 
 @app.route("/modification/<int:identifier>", methods=["POST", "GET"])
@@ -113,7 +114,7 @@ def modification (identifier):
 
 
 
-@app.route("/creer_personne", methods=["GET", "POST"])
+@app.route("/creer-personne", methods=["GET", "POST"])
 #@login_required #désactivation pour test
 def creer_personne():
     """ route permettant à l'utilisateur de créer une notice personne """
@@ -124,9 +125,13 @@ def creer_personne():
         nom=request.form.get("nom", None), 
         prenom=request.form.get("prenom", None),
         surnom=request.form.get("surnom", None),
+        nom_languematernelle=request.form.get("nom_languematernelle", None),
         date_naissance=request.form.get("date_naissance", None),
-        date_deces=request.form.get("date_mort", None),
+        date_deces=request.form.get("date_deces", None),
+        pays_nationalite=request.form.get("pays_nationalite", None),
+        langues=request.form.get("langues", None),
         genre=request.form.get("genre", None),
+        fonctions_occupations=request.form.get("fonctions_occupations", None),
         description=request.form.get("description", None),
         id_externes=request.form.get("id_externes", None)
         )
@@ -134,7 +139,7 @@ def creer_personne():
 
         if status is True:
             flash("Création d'une nouvelle personne réussie !", "success")
-            return redirect("/creer_personne")
+            return redirect("/creer-personne")
         else:
             flash("La création d'une nouvelle personne a échoué pour les raisons suivantes : " + ", ".join(data), "danger")
             return render_template("pages/creer_personne.html")
@@ -147,4 +152,86 @@ def creer_personne():
 @app.route("/contact")
 def contact():
     return render_template("pages/contact.html")
+
+
+@app.route("/inscription", methods=["GET", "POST"])
+def inscription():
+    """ Route gérant les inscriptions
+    """
+    # Si on est en POST, cela veut dire que le formulaire a été envoyé
+    if request.method == "POST":
+        statut, donnees = User.creer(
+            login=request.form.get("login", None),
+            email=request.form.get("email", None),
+            nom=request.form.get("nom", None),
+            motdepasse=request.form.get("motdepasse", None)
+        )
+        if statut is True:
+            flash("Enregistrement effectué. Identifiez-vous maintenant", "success")
+            return redirect("/")
+        else:
+            flash("Les erreurs suivantes ont été rencontrées : " + ",".join(donnees), "error")
+            return render_template("pages/inscription.html")
+    else:
+        return render_template("pages/inscription.html")
+
+
+@app.route("/modifierlien/<int:identifier>", methods=["GET", "POST"])
+def modification_lien(identifier):
+    """
+    Route qui affiche un lien existant dans la base pour l'éditer
+    :param identifier: identifiant numérique du lien
+    """
+    listRelation = Relation_type.query.all()
+    lienUnique = Link.query.get(identifier)
+
+    if request.method == "GET":
+        return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)
+
+    # sinon en méthode POST : 
+    else: 
+        personneOrigine = request.form.get("link_1_person", None)
+        
+        status, data = Link.modifier_link(
+            id = identifier,
+            link_person1_id = personneOrigine,
+            link_relation_type = request.form.get("link_relation_type", None),
+            link_person2_id = request.form.get("link_2_person", None)
+            )
+
+        if status is True :
+            flash("Modification réussie !", "success")
+            return redirect("/person/" + str(personneOrigine) )
+
+        else:
+            flash("Les erreurs suivantes empêchent l'édition du lien : " + ",".join(data), "danger")
+            return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)
+
+
+
+
+
+@app.route("/confirmer-supprimer/<int:identifier>", methods=["GET", "POST"])
+def suppression_lien(identifier):
+    """
+    Route qui affiche les informations du lien à supprimer et qui demande confirmation
+    :param identifier : identifiant numérique du lien
+    """
+    listRelation = Relation_type.query.all()
+    lienUnique = Link.query.get(identifier)
+
+    if request.method == "GET":
+        return render_template("pages/suppr_lien.html", unique=lienUnique, listRelation=listRelation)
+
+    else:
+
+        status = Link.delete_link(link_id=identifier)
+
+        if status is True :
+            flash("Lien supprimé !", "success")
+            return redirect("/person/" + str(lienUnique.link_person1_id))
+
+        else:
+            flash("La suppression a échoué.", "danger")
+            return redirect("/person/" + str(lienUnique.link_person1_id))
 
