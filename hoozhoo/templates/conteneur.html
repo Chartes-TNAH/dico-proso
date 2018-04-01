@@ -6,6 +6,12 @@
 			<title>Hoozhoo {%block titre %}{%endblock%}</title>
 			{% include "partials/css.html" %}
         	{% include "partials/metadata.html" %}
+                <script language="JavaScript">
+                    function delete_confirm()
+                    {
+                    confirm("Etes-vous sur(e) de vouloir supprimer la notice ?");
+                    if(Check == false) history.back();
+                </script>
 		</head>
 		<body>
 			<nav class="navbar navbar-expand navbar-light justify-content-between" style="background-color: #e6e6e6;">
@@ -16,7 +22,7 @@
 							<a class="nav-link" href="{{url_for("index")}}">Index</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#">Contribuer</a>
+							<a class="nav-link" href="{{url_for("creer_personne")}}">Créer une personne</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="{{url_for("creer_lien")}}">Créer un lien</a>
@@ -26,9 +32,6 @@
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="#">Déconnexion ()</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">Contact</a>
 						</li>
 					</ul>
 				<form class="form-inline" action="#" method="GET">
