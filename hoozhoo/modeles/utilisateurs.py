@@ -24,10 +24,8 @@ class User(UserMixin, db.Model):
 	    :param email: Email de l'utilisateur-rice
 	    :param nom: Nom de l'utilisateur-rice
 	    :param motdepasse: Mot de passe de l'utilisateur-rice (Minimum 6 caractères)
-<<<<<<< HEAD
-            :param motdepasse-confirmation: Confirmation du mot de passe par l'utilisateur
-=======
->>>>>>> 60b66d7c4609399952a3bf0615766e7033447cd0
+            :param motdepasse_confirmation: Confirmation du mot de passe par l'utilisateur
+
 
 	    """
 	    erreurs = []
@@ -38,11 +36,10 @@ class User(UserMixin, db.Model):
 	    if not nom:
 	        erreurs.append("Le nom fourni est vide")
 	    if not motdepasse or len(motdepasse) < 6:
-<<<<<<< HEAD
-	    
-=======
-	        erreurs.append("Le mot de passe fourni est vide ou trop court")
->>>>>>> 60b66d7c4609399952a3bf0615766e7033447cd0
+                erreurs.append("Le mot de passe fourni est vide ou trop court")
+            if not motdepasse_confirmation or "motdepasse_confirmation" != "motdepasse":
+                erreur.append("Le mot de passe fourni est différent du mot de passe initial")
+
 
 	    # On vérifie que personne n'a utilisé cet email ou ce login
 	    uniques = User.query.filter(
@@ -72,8 +69,8 @@ class User(UserMixin, db.Model):
 	        # On renvoie l'utilisateur
 	        return True, utilisateur
 	    except Exception as erreur:
-<<<<<<< HEAD
+
 	        return False, [str(erreur)]
-=======
+
 	        return False, [str(erreur)]
->>>>>>> 60b66d7c4609399952a3bf0615766e7033447cd0
+
