@@ -37,7 +37,7 @@ class User(UserMixin, db.Model):
 	        erreurs.append("Le nom fourni est vide")
 	    if not motdepasse or len(motdepasse) < 6:
                 erreurs.append("Le mot de passe fourni est vide ou trop court")
-            if not motdepasse_confirmation or "motdepasse_confirmation" != "motdepasse":
+            if not motdepasse_confirmation or motdepasse_confirmation != motdepasse:
                 erreur.append("Le mot de passe fourni est différent du mot de passe initial")
 
 
