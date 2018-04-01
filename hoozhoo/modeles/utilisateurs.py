@@ -74,5 +74,5 @@ class User(UserMixin, db.Model):
 
 	        return False, [str(erreur)]
 
-	        return False, [str(erreur)]
+	        
 
