@@ -74,7 +74,27 @@ class Person(db.Model):
 
     @staticmethod
     def modifier_person (id, nom, prenom, surnom, nom_naissance, nationalite, langues, description, date_naissance, date_deces, fonctions, genre, id_externes):
-        """ Modifie la notice d'une personne, ....à compléter
+        """ Modifie les informations de la notice d'une personne
+        :param id: l'identifiant de la personne
+        :type id: int
+        :param nom : nom de la personne
+        :param prenom : prénom de la personne
+        :param surnom : surnom de la personne
+        :param nom_naissance : nom d'origine de la personne
+        :param nationalite : Pays de nationalité de la personne
+        :param langues : langues utilisées par la personne
+        :param description : description de la personne
+        :param date_naissance : date de naissance de la personne
+        :param date_deces : date de déces de la personne
+        :param fonctions : fonctions/occupations de la personne
+        :param genre : sexe de la personne
+        :param id_externes : identifiant Wikidata
+        :type nom, prenom, surnom, nom_naissance, nationalite, langues, description, date_naissance, date_deces, fonctions, genre, id_externes: str
+
+        returns : Tuple (booléen, liste).
+        S'il y a une erreur, la fonction renvoie False suivi d'une liste d'erreurs.
+        Sinon, elle renvoie True, suivi d'une liste de données enregistrées.
+
                """
         erreurs=[]
         if not (nom or prenom or surnom):
