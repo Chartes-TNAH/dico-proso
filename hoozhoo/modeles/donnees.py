@@ -183,9 +183,12 @@ class Person(db.Model):
         :type id_personne: int
         :returns : Booleens
         """
+        #récupération de l'objet personne
         personneUnique = Person.query.get(id_personne)
 
+        #récupération des liens ou uniquePersonne est la personne 1
         listLien1 = personneUnique.link_pers1
+        # récupération des liens ou uniquePersonne est la personne 2
         listLien2 = personneUnique.link_pers2
 
         try:
