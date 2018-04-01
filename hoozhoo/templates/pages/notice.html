@@ -10,12 +10,12 @@
         <div class="row border border-top-0 border-right-0 border-left-0 border-secondary pb-2">
           <!-- Affichage de l'identifiant -->
             <div class="col-4"> <p class="font-weight-bold"> Identifiant Hoozhoo</p></div>
-          <div class="col-8">{{unique.person_id}}</div>
+            <div class="col-8">{{unique.person_id}}</div>
 
         <!-- Affichage du nom  dans la langue maternelle de la personne avec condition-->
         <div class="w-100"></div>
             {% if not unique.person_nativename %}
-                <div class="col-4"> <p class="font-weight-bold"> <p class="font-weight-bold">Nom dans la langue maternelle de la personne</p></div>
+                <div class="col-4"> <p class="font-weight-bold">Nom dans la langue maternelle de la personne</p></div>
                 <div class="col-8">- non renseigné -</div>
             {% else %}
                 <div class="col-4"> <p class="font-weight-bold">Nom dans la langue maternelle de la personne</p></div>
@@ -25,7 +25,7 @@
          <!-- Affichage de la date de naissance avec condition -->
             <div class="w-100"></div>
             {% if not unique.person_birthdate %}
-                <div class="col-4"> <p class="font-weight-bold"> <p class="font-weight-bold">Date de naissance</p></div>
+                <div class="col-4"> <p class="font-weight-bold">Date de naissance</p></div>
                 <div class="col-8">- non renseigné -</div>
             {% else %}
                 <div class="col-4"> <p class="font-weight-bold">Date de naissance</p></div>
@@ -55,10 +55,10 @@
          <!-- Affichage des langues parlées avec condition -->
          <div class="w-100"></div>
         {% if not unique.person_language %}
-          <div class="col-4"> <p class="font-weight-bold">Pays de nationalité</p></div>
+          <div class="col-4"> <p class="font-weight-bold">Langues parlées, écrites ou signées</p></div>
           <div class="col-8">- non renseigné -</div>
         {% else %}
-            <div class="col-4"> <p class="font-weight-bold">Pays de nationalité</p></div>
+            <div class="col-4"> <p class="font-weight-bold">Langues parlées, écrites ou signées</p></div>
             <div class="col-8">{{unique.person_language}}</div>
         {% endif %}
 
@@ -75,10 +75,10 @@
          <!-- Affichage de l'occupation avec condition -->
         <div class="w-100"></div>
         {% if not unique.person_occupations %}
-          <div class="col-4"> <p class="font-weight-bold">Pays de nationalité</p></div>
+          <div class="col-4"> <p class="font-weight-bold">Fonction(s)/Occupation(s)</p></div>
           <div class="col-8">- non renseigné -</div>
         {% else %}
-            <div class="col-4"> <p class="font-weight-bold">Pays de nationalité</p></div>
+            <div class="col-4"> <p class="font-weight-bold">Fonction(s)/Occupation(s)</p></div>
             <div class="col-8">{{unique.person_occupations}}</div>
         {% endif %}
 
