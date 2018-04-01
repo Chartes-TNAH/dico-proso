@@ -15,19 +15,27 @@
       <div class="form-group col">
         <label for="nom" class="col-lg-4 col-form-label">Nom</label>
       <div class="col">
-        <input type="text" class="form-control" id="nom" name="nom" placeholder="Nom">
+        <input type="text" class="form-control" id="nom" name="nom" maxlength="255">
       </div>
       </div>
       <div class="form-group col">
         <label for="prenom" class="col-lg-4 col-form-label">Prénom</label>
       <div class="col">
-        <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Prénom">
+        <input type="text" class="form-control" id="prenom" name="prenom" maxlength="255">
       </div>
       </div>
       <div class="form-group col">
         <label for="surnom" class="col-lg-4 col-form-label">Surnom</label>
       <div class="col">
-        <input type="text" class="form-control" id="surnom" name="surnom" placeholder="Surnom">
+        <input type="text" class="form-control" id="surnom" name="surnom" maxlength="255">
+      </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="form-group col-lg-6">
+        <label for="nom_languematernelle" class="col-lg-9 col-form-label">Nom dans la langue maternelle de la personne</label>
+      <div class="col">
+        <input type="text" class="form-control" id="nom_languematernelle" name="nom_languematernelle" maxlength="255">
       </div>
       </div>
     </div>
@@ -35,13 +43,27 @@
       <div class="form-group col">
         <label for="date naissance" class="col-lg-4 col-form-label">Date de naissance</label>
       <div class="col">
-        <input type="text" class="form-control" id="date_naissance" name="date_naissance" placeholder="JJ-MM-AAAA">
+        <input type="text" class="form-control" id="date_naissance" name="date_naissance" maxlength="12">
       </div>
       </div>
       <div class="form-group col">
         <label for="date_deces" class="col-lg-4 col-form-label">Date de décès</label>
       <div class="col">
-        <input type="text" class="form-control" id="date_deces" name="date_deces" placeholder="JJ-MM-AAAA">
+        <input type="text" class="form-control" id="date_deces" name="date_deces" maxlength="12">
+      </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="form-group col">
+        <label for="pays_nationalite" class="col-lg-4 col-form-label">Pays de nationalité</label>
+      <div class="col">
+        <input type="text" class="form-control" id="pays_nationalite" name="pays_nationalite" placeholder="ex: France, Portugal" maxlength="255">
+      </div>
+      </div>
+      <div class="form-group col">
+        <label for="langues" class="col-lg-7 col-form-label">Langues parlées, écrites ou signées</label>
+      <div class="col">
+        <input type="text" class="form-control" id="langues" name="langues" placeholder="ex: anglais, français, italien" maxlength="255">
       </div>
       </div>
     </div>
@@ -63,10 +85,18 @@
       </div>
     </div>
     <div class="form-group row">
+      <div class="form-group col-lg-6">
+        <label for="fonctions_occupations" class="col-lg-4 col-form-label">Fonction(s)/Occupation(s)</label>
+      <div class="col">
+        <input type="text" class="form-control" id="fonctions_occupations" name="fonctions_occupations" placeholder="ex: peintre, sculpteur" maxlength="255">
+      </div>
+      </div>
+    </div>
+    <div class="form-group row">
       <div class="form-group col">
         <label for="description" class="col-lg-3 col-form-label">Description</label>
       <div class="col">
-        <textarea class="form-control" name="description" id="description" placeholder="Entrez votre texte" rows="3"></textarea>
+        <textarea class="form-control" name="description" id="description" placeholder="Entrez votre texte" rows="3" maxlength="255"></textarea>
       </div>
     </div>
   </div>
@@ -74,7 +104,7 @@
       <div class="form-group col">
         <label for="nom" class="col-lg-3 col-form-label">Wikidata ID</label>
       <div class="col">
-        <input type="text" class="form-control col-lg-4" id="id_externes" name="id_externes" placeholder="Saisir le Wikidata ID">
+        <input type="text" class="form-control col-lg-4" id="id_externes" name="id_externes" placeholder="Saisir le Wikidata ID" maxlength="12">
       </div>
       </div>
     </div>          

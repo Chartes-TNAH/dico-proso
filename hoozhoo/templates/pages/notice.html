@@ -8,17 +8,31 @@
         <h1 class="mt-3 mb-4">{{unique.person_name}} {{unique.person_firstname}} {{unique.person_nickname}}</h1>
 
         <div class="row border border-top-0 border-right-0 border-left-0 border-secondary pb-2">
+          <!-- Affichage de l'identifiant -->
             <div class="col-4"> <p class="font-weight-bold"> Identifiant Hoozhoo</p></div>
-          <div class="col-8">{{unique.person_id}}</div>
-          <div class="w-100"></div>
+            <div class="col-8">{{unique.person_id}}</div>
+
+        <!-- Affichage du nom  dans la langue maternelle de la personne avec condition-->
+        <div class="w-100"></div>
+            {% if not unique.person_nativename %}
+                <div class="col-4"> <p class="font-weight-bold">Nom dans la langue maternelle de la personne</p></div>
+                <div class="col-8">- non renseigné -</div>
+            {% else %}
+                <div class="col-4"> <p class="font-weight-bold">Nom dans la langue maternelle de la personne</p></div>
+                <div class="col-8">{{unique.person_nativename}}</div>
+            {% endif %}
+
+         <!-- Affichage de la date de naissance avec condition -->
+            <div class="w-100"></div>
             {% if not unique.person_birthdate %}
-                <div class="col-4"> <p class="font-weight-bold"> <p class="font-weight-bold">Date de naissance</p></div>
+                <div class="col-4"> <p class="font-weight-bold">Date de naissance</p></div>
                 <div class="col-8">- non renseigné -</div>
             {% else %}
                 <div class="col-4"> <p class="font-weight-bold">Date de naissance</p></div>
                 <div class="col-8">{{unique.person_birthdate}}</div>
             {% endif %}
 
+         <!-- Affichage de la date de mort avec condition -->
           <div class="w-100"></div>
         {% if not unique.person_deathdate %}
           <div class="col-4"> <p class="font-weight-bold">Date de mort</p></div>
@@ -26,13 +40,49 @@
         {% else %}
             <div class="col-4"> <p class="font-weight-bold">Date de mort</p></div>
             <div class="col-8">{{unique.person_deathdate}}</div>
-          {% endif %}
+        {% endif %}
+
+         <!-- Affichage de la nationalité avec condition -->
+         <div class="w-100"></div>
+        {% if not unique.person_country %}
+          <div class="col-4"> <p class="font-weight-bold">Pays de nationalité</p></div>
+          <div class="col-8">- non renseigné -</div>
+        {% else %}
+            <div class="col-4"> <p class="font-weight-bold">Pays de nationalité</p></div>
+            <div class="col-8">{{unique.person_country}}</div>
+        {% endif %}
+
+         <!-- Affichage des langues parlées avec condition -->
+         <div class="w-100"></div>
+        {% if not unique.person_language %}
+          <div class="col-4"> <p class="font-weight-bold">Langues parlées, écrites ou signées</p></div>
+          <div class="col-8">- non renseigné -</div>
+        {% else %}
+            <div class="col-4"> <p class="font-weight-bold">Langues parlées, écrites ou signées</p></div>
+            <div class="col-8">{{unique.person_language}}</div>
+        {% endif %}
+
+        <!-- Affichage du genre -->
           <div class="w-100"></div>
           <div class="col-4"> <p class="font-weight-bold">Genre</p></div>
           <div class="col-8">{{unique.person_gender}}</div>
+
+        <!-- Affichage de la description-->
           <div class="w-100"></div>
           <div class="col-4"> <p class="font-weight-bold">Description</p></div>
           <div class="col-8">{{unique.person_description}}</div>
+
+         <!-- Affichage de l'occupation avec condition -->
+        <div class="w-100"></div>
+        {% if not unique.person_occupations %}
+          <div class="col-4"> <p class="font-weight-bold">Fonction(s)/Occupation(s)</p></div>
+          <div class="col-8">- non renseigné -</div>
+        {% else %}
+            <div class="col-4"> <p class="font-weight-bold">Fonction(s)/Occupation(s)</p></div>
+            <div class="col-8">{{unique.person_occupations}}</div>
+        {% endif %}
+
+        <!-- Affichage de l'ID Wikidata -->
           <div class="w-100"></div>
           <div class="col-4"> <p class="font-weight-bold">Identifiant Wikidata</p></div>
           <div class="col-8">{{unique.person_external_id}}</div>
@@ -53,7 +103,7 @@
               <a href="{{ url_for('modification_lien', identifier=lien.link_id) }}" type="button" class="btn btn-outline-secondary btn-sm" title="éditer"><i class="fa fa-edit"></i></a>
             </div>
             <div class="col-1">
-              <a href="#" type="button" class="btn btn-outline-danger btn-sm" title="supprimer"><i class="fa fa-trash"></i></a>
+              <a href="{{ url_for('suppression_lien', identifier=lien.link_id) }}" class="btn btn-outline-danger btn-sm" title="supprimer"><i class="fa fa-trash"></i></a>
             </div>
 
             {% endfor %}
@@ -72,6 +122,7 @@
         <div class="col-4"> <p class="font-weight-bold">
           <a href="{{url_for('creer_lien')}}" class="btn btn-secondary">Créer de nouveaux liens</a>
         </div>
+    </div>
 
 
 {% endblock %}
