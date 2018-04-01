@@ -109,8 +109,6 @@ def modification (identifier):
 
         )
 
-
-
         if status is True:
             flash("Modification réussie !", "success")
             return render_template ("pages/notice.html", unique=personneModifier, listLien=personneModifier.link_pers1)
