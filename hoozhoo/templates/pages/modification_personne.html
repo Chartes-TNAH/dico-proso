@@ -20,7 +20,7 @@
       <div class="form-group col">
             <label for="nom" class="col-lg-4 col-form-label">Nom</label>
           <div class="col">
-            <input type="text" class="form-control" id="nom" name="nom" value="{{personne_origine.person_name }}">
+            <input type="text" class="form-control" id="nom" name="nom" maxlength="255" value="{{personne_origine.person_name }}">
           </div>
       </div>
 
@@ -28,7 +28,7 @@
       <div class="form-group col">
             <label for="prenom" class="col-lg-4 col-form-label">Prénom</label>
           <div class="col">
-            <input type="text" class="form-control" id="prenom" name="prenom" value="{{personne_origine.person_firstname }}">
+            <input type="text" class="form-control" id="prenom" name="prenom" maxlength="255" value="{{personne_origine.person_firstname }}">
           </div>
       </div>
 
@@ -36,7 +36,7 @@
       <div class="form-group col">
             <label for="surnom" class="col-lg-4 col-form-label">Surnom</label>
           <div class="col">
-            <input type="text" class="form-control" id="surnom" name="surnom" value="{{personne_origine.person_nickname }}">
+            <input type="text" class="form-control" id="surnom" name="surnom" maxlength="255" value="{{personne_origine.person_nickname }}">
           </div>
       </div>
     </div>
@@ -47,7 +47,7 @@
 
             <label for="nom_languematernelle" class="col-lg-9 col-form-label">Nom dans la langue maternelle de la personne</label>
           <div class="col">
-            <input type="text" class="form-control" id="nom_languematernelle" name="nom_languematernelle" value="{{personne_origine.person_nativename}}">
+            <input type="text" class="form-control" id="nom_languematernelle" name="nom_languematernelle" maxlength="255" value="{{personne_origine.person_nativename}}">
           </div>
       </div>
     </div>
@@ -57,13 +57,13 @@
       <div class="form-group col">
             <label for="date naissance" class="col-lg-4 col-form-label">Date de naissance</label>
           <div class="col">
-            <input type="text" class="form-control" id="date_naissance" name="date_naissance" value="{{personne_origine.person_birthdate }}">
+            <input type="text" class="form-control" id="date_naissance" name="date_naissance" maxlength="12" value="{{personne_origine.person_birthdate }}">
           </div>
       </div>
       <div class="form-group col">
             <label for="date_deces" class="col-lg-4 col-form-label">Date de décès</label>
           <div class="col">
-            <input type="text" class="form-control" id="date_deces" name="date_deces" value="{{personne_origine.person_deathdate }}">
+            <input type="text" class="form-control" id="date_deces" name="date_deces" maxlength="12" value="{{personne_origine.person_deathdate }}">
           </div>
       </div>
     </div>
@@ -73,13 +73,13 @@
       <div class="form-group col">
             <label for="pays_nationalite" class="col-lg-4 col-form-label">Pays de nationalité</label>
           <div class="col">
-            <input type="text" class="form-control" id="pays_nationalite" name="pays_nationalite" value="{{personne_origine.person_country}}">
+            <input type="text" class="form-control" id="pays_nationalite" name="pays_nationalite" maxlength="255" value="{{personne_origine.person_country}}">
       </div>
     </div>
       <div class="form-group col">
             <label for="langues" class="col-lg-7 col-form-label">Langues parlées, écrites ou signées</label>
           <div class="col">
-            <input type="text" class="form-control" id="langues" name="langues" value="{{ personne_origine.person_language}}">
+            <input type="text" class="form-control" id="langues" name="langues" maxlength="255" value="{{ personne_origine.person_language}}">
           </div>
       </div>
     </div>
@@ -138,7 +138,7 @@
       <div class="form-group col-lg-6">
         <label for="fonctions_occupations" class="col-lg-4 col-form-label">Fonction(s)/Occupation(s)</label>
       <div class="col">
-        <input type="text" class="form-control" id="fonctions_occupations" name="fonctions_occupations" value="{{personne_origine.person_occupations}}">
+        <input type="text" class="form-control" id="fonctions_occupations" name="fonctions_occupations" maxlength="255" value="{{personne_origine.person_occupations}}">
       </div>
       </div>
     </div>
@@ -158,7 +158,7 @@
           <div class="form-group col">
             <label for="nom" class="col-lg-3 col-form-label">Wikidata ID</label>
           <div class="col">
-            <input type="text" class="form-control col-lg-4" id="id_externes" name="id_externes" value={{personne_origine.person_external_id}}>
+            <input type="text" class="form-control col-lg-4" id="id_externes" name="id_externes" maxlength="12" value={{personne_origine.person_external_id}}>
           </div>
           </div>
     </div>
