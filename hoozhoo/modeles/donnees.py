@@ -91,9 +91,9 @@ class Person(db.Model):
         :param id_externes : identifiant Wikidata
         :type nom, prenom, surnom, nom_naissance, nationalite, langues, description, date_naissance, date_deces, fonctions, genre, id_externes: str
 
-        returns : Tuple (booléen, liste).
+        returns : Tuple (booléen, liste/objet).
         S'il y a une erreur, la fonction renvoie False suivi d'une liste d'erreurs.
-        Sinon, elle renvoie True, suivi d'une liste de données enregistrées.
+        Sinon, elle renvoie True, suivi de l'objet mis à jour (ici personne).
 
                """
         erreurs=[]
