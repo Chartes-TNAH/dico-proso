@@ -13,8 +13,6 @@ def accueil():
 
     # récupération des 4 dernières notices créées pour affichage
     personnes = Person.query.order_by(Person.person_id.desc()).limit(4).all()
-    print (type(personnes))
-
     return render_template("pages/accueil.html", personnes=personnes)
 
 
@@ -182,6 +180,14 @@ def inscription():
         return render_template("pages/inscription.html")
 
 
+@app.route("/delete/<int:nr_personne>")
+def delete(nr_personne):
+
+    status = Person.suprimer_personne(id_personne=nr_personne)
+    flash("Suppression réussie !", "success")
+    return redirect("/index")
+
+
 @app.route("/modifierlien/<int:identifier>", methods=["GET", "POST"])
 def modification_lien(identifier):
     """
@@ -194,10 +200,10 @@ def modification_lien(identifier):
     if request.method == "GET":
         return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)
 
-    # sinon en méthode POST : 
+    # sinon en méthode POST :
     else: 
         personneOrigine = request.form.get("link_1_person", None)
-        
+
         status, data = Link.modifier_link(
             id = identifier,
             link_person1_id = personneOrigine,
@@ -212,9 +218,6 @@ def modification_lien(identifier):
         else:
             flash("Les erreurs suivantes empêchent l'édition du lien : " + ",".join(data), "danger")
             return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)
-
-
-
 
 
 @app.route("/confirmer-supprimer/<int:identifier>", methods=["GET", "POST"])

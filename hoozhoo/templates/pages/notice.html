@@ -109,6 +109,7 @@
 
             {% endfor %}
         </div>
+
     {% else %}
         <p>La base de données est en cours de constitution</p>
     {% endif %}
@@ -125,5 +126,9 @@
         </div>
     </div>
 
+    <div class="w-100"></div>
+      <div class="col-4">
+          <a href="{{ url_for("delete", nr_personne = unique.person_id) }}" class="btn btn-danger" onclick="">Supprimer la notice</a>
+      </div>
 
 {% endblock %}

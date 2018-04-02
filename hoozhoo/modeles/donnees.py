@@ -204,6 +204,32 @@ class Person(db.Model):
         except Exception as error_modification:
             return False, [str(error_modification)]
 
+    @staticmethod
+    def suprimer_personne(id_personne):
+        """
+        Fonction qui supprime la notice
+        :param id_personne: l'identifiant de la personne à récupérer dans l'adresse de la notice
+        :type id_personne: int
+        :returns : Booleens
+        """
+        #récupération de l'objet personne
+        personneUnique = Person.query.get(id_personne)
+
+        #récupération des liens ou uniquePersonne est la personne 1
+        listLien1 = personneUnique.link_pers1
+        # récupération des liens ou uniquePersonne est la personne 2
+        listLien2 = personneUnique.link_pers2
+
+        for lien in listLien1:
+            db.session.delete(lien)
+            db.session.commit()
+        for lien in listLien2:
+            db.session.delete(lien)
+            db.session.commit()
+
+        db.session.delete(personneUnique)
+        db.session.commit()
+
 
 class Relation_type(db.Model):
     __tablename__ = "relation_type"
