@@ -99,7 +99,12 @@ def modification (identifier):
             date_naissance = request.form.get("date_naissance", None),
             date_deces = request.form.get("date_deces", None),
             genre = request.form.get("genre", None),
-            id_externes = request.form.get("id_externes", None)
+            id_externes = request.form.get("id_externes", None),
+            fonctions = request.form.get ("fonctions_occupations", None),
+            langues = request.form.get ("langues", None),
+            nationalite = request.form.get ("pays_nationalite", None),
+            nom_naissance = request.form.get ("nom_languematernelle", None)
+
         )
 
         if status is True:
@@ -162,7 +167,8 @@ def inscription():
             login=request.form.get("login", None),
             email=request.form.get("email", None),
             nom=request.form.get("nom", None),
-            motdepasse=request.form.get("motdepasse", None)
+            motdepasse=request.form.get("motdepasse", None),
+            motdepasse_confirmation=request.form.get("motdepasse_confirmation", None)
         )
         if statut is True:
             flash("Enregistrement effectué. Identifiez-vous maintenant", "success")

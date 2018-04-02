@@ -108,8 +108,28 @@ class Person(db.Model):
             return False, [str(error_creation)]
 
     @staticmethod
-    def modifier_person (id, nom, prenom, surnom, description, date_naissance, date_deces, genre, id_externes):
-        """ Modifie la notice d'une personne, ....à compléter
+    def modifier_person (id, nom, prenom, surnom, nom_naissance, nationalite, langues, description, date_naissance, date_deces, fonctions, genre, id_externes):
+        """ Modifie les informations de la notice d'une personne
+        :param id: l'identifiant de la personne
+        :type id: int
+        :param nom : nom de la personne
+        :param prenom : prénom de la personne
+        :param surnom : surnom de la personne
+        :param nom_naissance : nom d'origine de la personne
+        :param nationalite : Pays de nationalité de la personne
+        :param langues : langues utilisées par la personne
+        :param description : description de la personne
+        :param date_naissance : date de naissance de la personne
+        :param date_deces : date de déces de la personne
+        :param fonctions : fonctions/occupations de la personne
+        :param genre : sexe de la personne
+        :param id_externes : identifiant Wikidata
+        :type nom, prenom, surnom, nom_naissance, nationalite, langues, description, date_naissance, date_deces, fonctions, genre, id_externes: str
+
+        returns : Tuple (booléen, liste/objet).
+        S'il y a une erreur, la fonction renvoie False suivi d'une liste d'erreurs.
+        Sinon, elle renvoie True, suivi de l'objet mis à jour (ici personne).
+
                """
         erreurs=[]
         if not (nom or prenom or surnom):
@@ -126,7 +146,18 @@ class Person(db.Model):
 
         #vérifier que l'utilisateur modifie au moins un champ
 
-        if personne.person_name == nom and personne.person_firstname == prenom and personne.person_nickname == surnom and personne.person_description == description and personne.person_birthdate == date_naissance and personne.person_deathdate == date_deces and personne.person_gender == genre and personne.person_external_id == id_externes:
+        if personne.person_name == nom \
+                and personne.person_firstname == prenom \
+                and personne.person_nickname == surnom \
+                and personne.person_description == description \
+                and personne.person_birthdate == date_naissance \
+                and personne.person_deathdate == date_deces \
+                and personne.person_gender == genre \
+                and personne.person_external_id == id_externes \
+                and personne.person_nativename == nom_naissance \
+                and personne.person_country == nationalite \
+                and personne.person_language == langues \
+                and personne.person_occupations == fonctions:
             erreurs.append("Aucune modification n'a été réalisée")
 
         if len(erreurs) > 0:
@@ -136,18 +167,12 @@ class Person(db.Model):
 
         if len(nom) > 255 or len(prenom) > 255 or len(surnom) > 255 :
             erreurs.append("La taille des caractères du nom, ou du prénom ou du surnon a été dépassée")
-        if len(erreurs) > 0:
-            return False, erreurs
 
         if len(date_naissance) > 12 or len(date_deces) > 12 :
             erreurs.append("La taille des caractères des dates a été dépassée")
-        if len(erreurs) > 0:
-            return False, erreurs
 
         if len(id_externes) > 12 :
             erreurs.append("La taille des caractères du champs Wikidata ID a été dépassée")
-        if len(erreurs) > 0:
-            return False, erreurs
 
         #vérifier que l'ID Wikidata commence par Q
         if id_externes[0] != "Q" :
@@ -157,14 +182,18 @@ class Person(db.Model):
 
         else:
             # mise à jour de la personne
-            personne.person_name=nom
-            personne.person_firstname=prenom
-            personne.person_nickname=surnom
-            personne.person_description=description
-            personne.person_birthdate=date_naissance
-            personne.person_deathdate=date_deces
-            personne.person_gender=genre
-            personne.person_external_id=id_externes
+            personne.person_name = nom
+            personne.person_firstname = prenom
+            personne.person_nickname = surnom
+            personne.person_description = description
+            personne.person_birthdate = date_naissance
+            personne.person_deathdate = date_deces
+            personne.person_gender = genre
+            personne.person_external_id = id_externes
+            personne.person_nativename = nom_naissance
+            personne.person_country = nationalite
+            personne.person_language = langues
+            personne.person_occupations = fonctions
 
         try:
             #ajout dans la base de données
@@ -327,7 +356,7 @@ class Link(db.Model):
         Sinon, elle renvoie True, suivi de la donnée enregistrée.
         :param id : un identifiant numérique du lien
         :param link_person1_id : un identifiant numérique de la personne 1
-        :param link_relation_type : un identifiant numérique du type de relation
+        :param link_relation_type : un identifiant numérique du type de relation  
         :param link_person2_id : un identifiant numérique de la personne 2
         """
 
@@ -354,7 +383,7 @@ class Link(db.Model):
         if len(errors) > 0:
             return False, errors
 
-        # on récupère le lien original dans la base
+        # on récupère le lien original dans la base 
         origin_link = Link.query.get(id)
 
         # on vérifie que le lien n'existe pas déjà
