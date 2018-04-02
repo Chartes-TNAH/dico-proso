@@ -170,6 +170,7 @@ def inscription():
             email=request.form.get("email", None),
             nom=request.form.get("nom", None),
             motdepasse=request.form.get("motdepasse", None)
+            motdepasse_confirmation=request.form.get("motdepasse_confirmation", None)
         )
         if statut is True:
             flash("Enregistrement effectué. Identifiez-vous maintenant", "success")
