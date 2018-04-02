@@ -86,7 +86,7 @@ def modification (identifier):
     # renvoyer sur la page html les éléments de l'objet personne correspondant à l'identifiant de la route
     if request.method == "GET":
         personne_origine = Person.query.get(identifier)
-        return render_template("pages/modification.html", personne_origine=personne_origine)
+        return render_template("pages/modification_personne.html", personne_origine=personne_origine)
 
         # on récupère les données du formulaire modifié
     else:
@@ -113,7 +113,7 @@ def modification (identifier):
         else:
             flash("Les erreurs suivantes ont été rencontrées : " + ",".join(personneModifier), "danger")
             personne_origine = Person.query.get(identifier)
-            return render_template("pages/modification.html", personne_origine=personne_origine)
+            return render_template("pages/modification_personne.html", personne_origine=personne_origine)
 
 
 
@@ -184,27 +184,8 @@ def inscription():
 def delete(nr_personne):
 
     status = Person.suprimer_personne(id_personne=nr_personne)
-
-    page = request.args.get("page", 1)
-
-    if isinstance(page, str) and page.isdigit():
-        page = int(page)
-    else:
-        page = 1
-
-    titre = "Index"
-    personnes = Person.query.order_by(Person.person_name).paginate(page=page, per_page=PERSONNES_PAR_PAGES)
-
-
-    if status == True:
-        flash("Suppression réussie !", "success")
-        return redirect("/index")
-
-    else :
-        flash("La suppression n'a pas fonctionné", "danger")
-
-    return render_template("pages/index.html", personnes=personnes)
-
+    flash("Suppression réussie !", "success")
+    return redirect("/index")
 
 
 @app.route("/modifierlien/<int:identifier>", methods=["GET", "POST"])

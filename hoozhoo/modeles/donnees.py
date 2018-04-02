@@ -220,22 +220,15 @@ class Person(db.Model):
         # récupération des liens ou uniquePersonne est la personne 2
         listLien2 = personneUnique.link_pers2
 
-        try:
-            for lien in listLien1:
-                db.session.delete(lien)
-                db.session.commit()
-            for lien in listLien2:
-                db.session.delete(lien)
-                db.session.commit()
-
-            db.session.delete(personneUnique)
+        for lien in listLien1:
+            db.session.delete(lien)
             db.session.commit()
-            return True
+        for lien in listLien2:
+            db.session.delete(lien)
+            db.session.commit()
 
-        except Exception as failed:
-            print(failed)
-            return False
-
+        db.session.delete(personneUnique)
+        db.session.commit()
 
 
 class Relation_type(db.Model):
