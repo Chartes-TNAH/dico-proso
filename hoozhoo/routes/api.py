@@ -12,6 +12,4 @@ def Json_404():
 @app.route("/api/person/<int:identifier>")
 def json_person(identifier):
 	person = Person.query.get(identifier)
-	print("TEST")
-	print(type(person))
 	return jsonify(person.person_to_json())

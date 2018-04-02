@@ -204,19 +204,31 @@ class Person(db.Model):
         except Exception as error_modification:
             return False, [str(error_modification)]
 
-    @staticmethod
     def person_to_json(self):
         """
         Fonction qui transforme les informations sur une personne en un dictionnaire pour un export en JSON via l'API
         :return:
         """
-        print(self)
-        return {
+        dico = {
+        "type": "personne",
         "id": self.person_id,
-        "genre": self.person_gender,
-        "description": self.person_description,
-        "wikidata ID": self.person_external_id
+        "informations" : {
+            "nom": self.person_name,
+            "prénom": self.person_firstname,
+            "surnom": self.person_nickname,
+            "genre": self.person_gender,
+            "description": self.person_description,
+            "wikidata ID": self.person_external_id,
+            "nom dans la langue de la personne": self.person_nativename,
+            "date de naissance": self.person_birthdate,
+            "date de décès": self.person_deathdate,
+            "pays de nationalité": self.person_country,
+            "langues parlées, écrites ou signées": self.person_language,
+            "fonctions/occupations": self.person_occupations
+            },
+        "relations": []  
         }
+        return dico
 
 
 class Relation_type(db.Model):
