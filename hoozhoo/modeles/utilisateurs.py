@@ -15,7 +15,7 @@ class User(UserMixin, db.Model):
     author_link = db.relationship("Authorship_link", back_populates="user_link")
 
     @staticmethod
-    def creer(login, email, nom, motdepasse):
+    def creer(login, email, nom, motdepasse, motdepasse_confirmation):
 	    """ Crée un compte utilisateur-rice. Retourne un tuple (booléen, User ou liste).
 	    Si il y a une erreur, la fonction renvoie False suivi d'une liste d'erreur
 	    Sinon, elle renvoie True suivi de la donnée enregistrée
@@ -24,24 +24,29 @@ class User(UserMixin, db.Model):
 	    :param email: Email de l'utilisateur-rice
 	    :param nom: Nom de l'utilisateur-rice
 	    :param motdepasse: Mot de passe de l'utilisateur-rice (Minimum 6 caractères)
-
+	    :param motdepasse_confirmation: Confirmation du mot de passe par l'utilisateur-rice
 	    """
+
 	    erreurs = []
 	    if not login:
-	        erreurs.append("Le login fourni est vide")
+	    	erreurs.append("le login fourni est vide")
 	    if not email:
-	        erreurs.append("L'email fourni est vide")
+	    	erreurs.append("l'email fourni est vide")
 	    if not nom:
-	        erreurs.append("Le nom fourni est vide")
+	    	erreurs.append("le nom fourni est vide")
 	    if not motdepasse or len(motdepasse) < 6:
-	        erreurs.append("Le mot de passe fourni est vide ou trop court")
-
-	    # On vérifie que personne n'a utilisé cet email ou ce login
+	    	erreurs.append("le mot de passe fourni est vide ou trop court")
+	    if not motdepasse_confirmation:
+	    	erreurs.append("le mot de passe fourni est vide")
+	    if not motdepasse == motdepasse_confirmation:
+	    	erreurs.append("le mot de passe est différent du mot de passe initial")
+        
+        # On vérifie que personne n'a utilisé cet email ou ce login
 	    uniques = User.query.filter(
 	        db.or_(User.user_email == email, User.user_login == login)
 	    ).count()
 	    if uniques > 0:
-	        erreurs.append("L'email ou le login sont déjà inscrits dans notre base de données")
+	        erreurs.append("l'email ou le login sont déjà inscrits dans notre base de données")
 
 	    # Si on a au moins une erreur
 	    if len(erreurs) > 0:
@@ -64,4 +69,8 @@ class User(UserMixin, db.Model):
 	        # On renvoie l'utilisateur
 	        return True, utilisateur
 	    except Exception as erreur:
+
 	        return False, [str(erreur)]
+
+	        
+
