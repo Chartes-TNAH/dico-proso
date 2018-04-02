@@ -1,5 +1,6 @@
 from flask import render_template, request, flash, redirect
 from ..app import app
+from ..app import db
 from ..modeles.donnees import Person, Link, Relation_type
 from ..modeles.utilisateurs import User
 
@@ -243,3 +244,37 @@ def suppression_lien(identifier):
         else:
             flash("La suppression a échoué.", "danger")
             return redirect("/person/" + str(lienUnique.link_person1_id))
+
+
+@app.route("/recherche")
+def recherche():
+    """ Route permettant la recherche plein-texte à partir de la navbar
+    """
+
+    motcle = request.args.get("keyword", None)
+    page = request.args.get("page", 1)
+
+    if isinstance(page, str) and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    # Création d'une liste vide de résultat (par défaut, vide si pas de mot-clé)
+    resultats = []
+
+    # cherche les mots-clés dans les champs : nom, prenom, surnom, nom en langue maternelle, pays nationalité, langue
+    # occupation(s) et description
+    titre = "Recherche"
+    if motcle :
+        resultats = Person.query.filter(db.or_(Person.person_name.like("%{}%".format(motcle)), 
+            Person.person_firstname.like("%{}%".format(motcle)),
+            Person.person_nickname.like("%{}%".format(motcle)),
+            Person.person_nativename.like("%{}%".format(motcle)),
+            Person.person_country.like("%{}%".format(motcle)),
+            Person.person_language.like("%{}%".format(motcle)),
+            Person.person_occupations.like("%{}%".format(motcle)),
+            Person.person_description.like("%{}%".format(motcle)))
+            ).paginate(page=page, per_page=3)
+    # si un résultat, renvoie sur la page résultat
+        titre = "Résultat de la recherche : `" + motcle + "`"
+        return render_template("pages/resultats.html", resultats=resultats, titre=titre, keyword=motcle)
