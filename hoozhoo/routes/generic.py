@@ -192,6 +192,7 @@ def delete(nr_personne):
 
     if status == True:
         flash("Suppression réussie !", "success")
+        return redirect("/index")
 
     else :
         flash("La suppression n'a pas fonctionné", "danger")
