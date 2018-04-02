@@ -1,0 +1,172 @@
+{% extends "conteneur.html" %}
+
+{% block titre %}| Modification personne{%endblock%}
+
+{% block corps %}
+
+<div class="container mt-3 mb-5">
+  <div class="col">
+<h1>Modification personne</h1>
+  <p>Modifier le formulaire et cliquez sur "Modifier" pour modifier la notice</p>
+</div>
+</div>
+
+<form class="container" method="POST" action="{{url_for("modification", identifier=personne_origine.person_id)}}">
+
+    <!--groupe nom, prenom, surnom -->
+    <div class="form-group row">
+
+        <!-- Modification du nom -->
+      <div class="form-group col">
+            <label for="nom" class="col-lg-4 col-form-label">Nom</label>
+          <div class="col">
+            <input type="text" class="form-control" id="nom" name="nom" maxlength="255" value="{{personne_origine.person_name }}">
+          </div>
+      </div>
+
+         <!-- Modification du prénom -->
+      <div class="form-group col">
+            <label for="prenom" class="col-lg-4 col-form-label">Prénom</label>
+          <div class="col">
+            <input type="text" class="form-control" id="prenom" name="prenom" maxlength="255" value="{{personne_origine.person_firstname }}">
+          </div>
+      </div>
+
+           <!-- Modification du surnom -->
+      <div class="form-group col">
+            <label for="surnom" class="col-lg-4 col-form-label">Surnom</label>
+          <div class="col">
+            <input type="text" class="form-control" id="surnom" name="surnom" maxlength="255" value="{{personne_origine.person_nickname }}">
+          </div>
+      </div>
+    </div>
+
+    <!-- Modification du nom d'origine -->
+    <div class="form-group row">
+      <div class="form-group col-lg-6">
+
+            <label for="nom_languematernelle" class="col-lg-9 col-form-label">Nom dans la langue maternelle de la personne</label>
+          <div class="col">
+            <input type="text" class="form-control" id="nom_languematernelle" name="nom_languematernelle" maxlength="255" value="{{personne_origine.person_nativename}}">
+          </div>
+      </div>
+    </div>
+
+    <!-- Modification des dates -->
+    <div class="form-group row">
+      <div class="form-group col">
+            <label for="date naissance" class="col-lg-4 col-form-label">Date de naissance</label>
+          <div class="col">
+            <input type="text" class="form-control" id="date_naissance" name="date_naissance" maxlength="12" value="{{personne_origine.person_birthdate }}">
+          </div>
+      </div>
+      <div class="form-group col">
+            <label for="date_deces" class="col-lg-4 col-form-label">Date de décès</label>
+          <div class="col">
+            <input type="text" class="form-control" id="date_deces" name="date_deces" maxlength="12" value="{{personne_origine.person_deathdate }}">
+          </div>
+      </div>
+    </div>
+
+    <!-- Modificaction du pays de naissance et des langues-->
+    <div class="form-group row">
+      <div class="form-group col">
+            <label for="pays_nationalite" class="col-lg-4 col-form-label">Pays de nationalité</label>
+          <div class="col">
+            <input type="text" class="form-control" id="pays_nationalite" name="pays_nationalite" maxlength="255" value="{{personne_origine.person_country}}">
+      </div>
+    </div>
+      <div class="form-group col">
+            <label for="langues" class="col-lg-7 col-form-label">Langues parlées, écrites ou signées</label>
+          <div class="col">
+            <input type="text" class="form-control" id="langues" name="langues" maxlength="255" value="{{ personne_origine.person_language}}">
+          </div>
+      </div>
+    </div>
+
+    <!-- Modification du genre avec condition -->
+    <div class="form-group row">
+      <div class="form-group col">
+        <label for="genre" class="col-lg-3 col-form-label">Genre</label>
+          {% if personne_origine.person_gender == "Homme" %}
+            <div class="form-check form-check-inline col-lg-2">
+                <input class="form-check-input" checked="checked" type="radio" name="genre" id="homme" value="Homme">
+                <label class="form-check-label" for="homme">{{ personne_origine.person_gender }}</label>
+            </div>
+            <div class="form-check form-check-inline col-lg-2">
+                <input class="form-check-input" type="radio" name="genre" id="femme" value="Femme">
+                <label class="form-check-label" for="femme">Femme</label>
+            </div>
+            <div class="form-check form-check-inline col-lg-2">
+                <input class="form-check-input" type="radio" name="genre" id="inconnu" value="Inconnu">
+                <label class="form-check-label" for="inconnu">Inconnu</label>
+            </div>
+          {% elif personne_origine.person_gender == "Femme"  %}
+
+            <div class="form-check form-check-inline col-lg-2">
+                <input class="form-check-input" type="radio" name="genre" id="homme" value="Homme">
+                <label class="form-check-label" for="homme">Homme</label>
+            </div>
+              <div class="form-check form-check-inline col-lg-2">
+                <input class="form-check-input" checked="checked" type="radio" name="genre" id="femme" value="Femme">
+                <label class="form-check-label" for="femme">{{ personne_origine.person_gender }}</label>
+            </div>
+            <div class="form-check form-check-inline col-lg-2">
+                <input class="form-check-input" type="radio" name="genre" id="inconnu" value="Inconnu">
+                <label class="form-check-label" for="inconnu">Inconnu</label>
+            </div>
+          {% else %}
+
+            <div class="form-check form-check-inline col-lg-2">
+                <input class="form-check-input" type="radio" name="genre" id="homme" value="Homme">
+                <label class="form-check-label" for="homme">Homme</label>
+            </div>
+            <div class="form-check form-check-inline col-lg-2">
+                <input class="form-check-input" type="radio" name="genre" id="femme" value="Femme">
+                <label class="form-check-label" for="femme">Femme</label>
+            </div>
+              <div class="form-check form-check-inline col-lg-2">
+                <input class="form-check-input" checked="checked" type="radio" name="genre" id="inconnu" value="Inconnu">
+                <label class="form-check-label" for="inconnu">{{personne_origine.person_gender }}</label>
+            </div>
+            {% endif %}
+      </div>
+    </div>
+
+    <!-- Modification de l'occupation -->
+    <div class="form-group row">
+      <div class="form-group col-lg-6">
+        <label for="fonctions_occupations" class="col-lg-4 col-form-label">Fonction(s)/Occupation(s)</label>
+      <div class="col">
+        <input type="text" class="form-control" id="fonctions_occupations" name="fonctions_occupations" maxlength="255" value="{{personne_origine.person_occupations}}">
+      </div>
+      </div>
+    </div>
+
+    <!--Modification de la description -->
+    <div class="form-group row">
+      <div class="form-group col">
+            <label for="description" class="col-lg-3 col-form-label">Description</label>
+          <div class="col">
+            <textarea type="text" class="form-control" name="description" id="description" rows="3">{{personne_origine.person_description}}</textarea>
+      </div>
+    </div>
+    </div>
+
+   <!--Modification de l'ID Wikidata -->
+    <div class="form-group row">
+          <div class="form-group col">
+            <label for="nom" class="col-lg-3 col-form-label">Wikidata ID</label>
+          <div class="col">
+            <input type="text" class="form-control col-lg-4" id="id_externes" name="id_externes" maxlength="12" value={{personne_origine.person_external_id}}>
+          </div>
+          </div>
+    </div>
+
+   <!--Bouton modifier -->
+      <div class="form-group row">
+        <button type="submit" class="btn btn-secondary mx-auto" value="créer">Modifier</button>
+      </div>
+</form>
+{% endblock %}
+
