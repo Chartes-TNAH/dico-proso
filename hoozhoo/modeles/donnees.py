@@ -204,6 +204,20 @@ class Person(db.Model):
         except Exception as error_modification:
             return False, [str(error_modification)]
 
+    @staticmethod
+    def person_to_json(self):
+        """
+        Fonction qui transforme les informations sur une personne en un dictionnaire pour un export en JSON via l'API
+        :return:
+        """
+        print(self)
+        return {
+        "id": self.person_id,
+        "genre": self.person_gender,
+        "description": self.person_description,
+        "wikidata ID": self.person_external_id
+        }
+
 
 class Relation_type(db.Model):
     __tablename__ = "relation_type"
