@@ -226,7 +226,15 @@ class Person(db.Model):
             "langues parlées, écrites ou signées": self.person_language,
             "fonctions/occupations": self.person_occupations
             },
-        "relations": []  
+        "liensUrl": {"self": url_for("notice", identifier=self.person_id, _external=True),
+                     "json": url_for("json_person", identifier=self.person_id, _external=True)
+
+            },
+
+        "relations": [
+            lien.link_to_json()
+            for lien in self.link_pers1
+                      ]
         }
         return dico
 
@@ -405,7 +413,7 @@ class Link(db.Model):
     @staticmethod
     def delete_link(link_id):
         """
-        Supprime un lien dans la bae de données, retourne un booléen : True si la suppression a réussi, sinon False.
+        Supprime un lien dans la base de données, retourne un booléen : True si la suppression a réussi, sinon False.
         :param link_id : un identifiant numérique du lien
         """
 
@@ -418,6 +426,22 @@ class Link(db.Model):
         except Exception as failed:
             print(failed)
             return False
+    def link_to_json (self):
+        """
+        Fonction qui retourne un dictionnaire à partir des éléments des la classe Link pour un export en JSON via l'API
+
+        """
+        return {
+            "personneLier": self.person2.person_name + self.person2.person_firstname + self.person2.person_nickname,
+            "typeRelation": self.relations.relation_type_name,
+            "Link":
+                {
+                    "self": url_for("notice", identifier=self.person2.person_id, _external=True),
+                    "json": url_for("json_person", identifier=self.person2.person_id, _external=True)
+                }
+
+        }
+
 
 class Authorship_link(db.Model):
     __tablename__ = "authorship_link"
