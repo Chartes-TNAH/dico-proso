@@ -236,7 +236,7 @@ class Person(db.Model):
             lien.link_to_json()
             for lien in self.link_pers1
                    ]
-            },
+            }
 
         return dico
 
