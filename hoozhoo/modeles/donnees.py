@@ -216,7 +216,7 @@ class Person(db.Model):
                 "@prefix snap" : "http://data.snapdrgn.net/ontology/snap#",
                 "@prefix schema" : "http://schema.org"
             },
-            "Personne": {
+            "person": {
                 "@id": url_for("notice", identifier=self.person_id, _external=True),
                 "@type": "schema:Person",
                 "schema:familyName": self.person_name,  # "foaf :lastName"
@@ -232,7 +232,7 @@ class Person(db.Model):
                 # "langues parlées, écrites ou signées": self.person_language,
                 "schema:jobTitle": self.person_occupations,
             },
-        "schema:relatedTo": [
+        "snap:isRelatedTo": [
             lien.link_to_json()
             for lien in self.link_pers1
                    ]
@@ -434,8 +434,8 @@ class Link(db.Model):
 
         """
         return {
-            "snap:"+self.relations.relation_type_code : self.relations.relation_type_name,
-            "Personne": {
+            "typeOfRelationship" : self.relations.relation_type_code,
+            "person": {
                 "@id": url_for("notice", identifier=self.person2.person_id, _external=True),
                 "@type": "schema:Person",
                 "schema:familyName": self.person2.person_name, # "foaf :lastName"
