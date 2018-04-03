@@ -27,6 +27,7 @@ from .routes import api
 def config_app(config_name="production"):
     """ Create the application """
     app.config.from_object(CONFIG[config_name])
+    app.config['JSON_AS_ASCII'] = False
 
     # Set up extensions
     db.init_app(app)

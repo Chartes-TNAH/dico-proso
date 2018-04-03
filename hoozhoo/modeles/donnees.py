@@ -210,32 +210,34 @@ class Person(db.Model):
         :return:
         """
         dico = {
-        "type": "personne",
-        "id": self.person_id,
-        "informations" : {
-            "nom": self.person_name,
-            "prénom": self.person_firstname,
-            "surnom": self.person_nickname,
-            "genre": self.person_gender,
-            "description": self.person_description,
-            "wikidata ID": self.person_external_id,
-            "nom dans la langue de la personne": self.person_nativename,
-            "date de naissance": self.person_birthdate,
-            "date de décès": self.person_deathdate,
-            "pays de nationalité": self.person_country,
-            "langues parlées, écrites ou signées": self.person_language,
-            "fonctions/occupations": self.person_occupations
+            "@context" : {
+                "@prefix rdfs":"http://www.w3.org/2000/01/rdf-schema#",
+                "@prefix foaf" : "http://xmlns.com/foaf/0.1/", # à voir si on garde
+                "@prefix snap" : "http://data.snapdrgn.net/ontology/snap#",
+                "@prefix schema" : "http://schema.org"
             },
-        "liensUrl": {"self": url_for("notice", identifier=self.person_id, _external=True),
-                     "json": url_for("json_person", identifier=self.person_id, _external=True)
-
+            "Personne": {
+                "@id": url_for("notice", identifier=self.person_id, _external=True),
+                "@type": "schema:Person",
+                "schema:familyName": self.person_name,  # "foaf :lastName"
+                "schema:givenName": self.person_firstname,  # "foaf:firstName"
+                # "foaf:surname": self.person_nickname, # je suis pas sure qu'on peut mettre des attributs foaf et schéma pour la même entité schema.org n'a pas d'attribut pour le surnom
+                "schema:gender": self.person_gender,  # "foaf:gender"
+                "schema:description": self.person_description,
+                "schema:sameAs": "https://www.wikidata.org/wiki/" + self.person_external_id,
+                # "nom dans la langue de la personne": self.person_nativename,
+                "schema:birthDate": self.person_birthdate,
+                "schema:deathDate": self.person_deathdate,
+                "schema:nationality": self.person_country,
+                # "langues parlées, écrites ou signées": self.person_language,
+                "schema:jobTitle": self.person_occupations,
             },
-
-        "relations": [
+        "schema:relatedTo": [
             lien.link_to_json()
             for lien in self.link_pers1
-                      ]
-        }
+                   ]
+            },
+
         return dico
 
 
@@ -432,14 +434,24 @@ class Link(db.Model):
 
         """
         return {
-            "personneLier": self.person2.person_name + self.person2.person_firstname + self.person2.person_nickname,
-            "typeRelation": self.relations.relation_type_name,
-            "Link":
-                {
-                    "self": url_for("notice", identifier=self.person2.person_id, _external=True),
-                    "json": url_for("json_person", identifier=self.person2.person_id, _external=True)
-                }
+            "snap:"+self.relations.relation_type_code : self.relations.relation_type_name,
+            "Personne": {
+                "@id": url_for("notice", identifier=self.person2.person_id, _external=True),
+                "@type": "schema:Person",
+                "schema:familyName": self.person2.person_name, # "foaf :lastName"
+                "schema:givenName": self.person2.person_firstname, #  "foaf:firstName"
+                #"foaf:surname": self.person2.person_nickname, # je suis pas sure qu'on peut mettre des attributs foaf et schéma pour la même entité schema.org n'a pas d'attribut pour le surnom
+                "schema:gender": self.person2.person_gender, #  "foaf:gender"
+                "schema:description": self.person2.person_description,
+                "schema:identifier": self.person2.person_external_id,
+                #"nom dans la langue de la personne": self.person2.person_nativename,
+                "schema:birthDate": self.person2.person_birthdate,
+                "schema:deathDate": self.person2.person_deathdate,
+                "schema:nationality": self.person2.person_country,
+                #"langues parlées, écrites ou signées": self.person2.person_language,
+                "schema:jobTitle": self.person2.person_occupations,
 
+        },
         }
 
 
