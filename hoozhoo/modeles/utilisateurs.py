@@ -15,6 +15,20 @@ class User(UserMixin, db.Model):
     author_link = db.relationship("Authorship_link", back_populates="user_link")
 
     @staticmethod
+    def identification(login, motdepasse):
+        """ 
+        Identifie un utilisateur. Si cela fonctionne, renvoie les données de l'utilisateurs.
+        :param login: Login de l'utilisateur
+        :param motdepasse: Mot de passe envoyé par l'utilisateur
+        :returns: Si réussite, données de l'utilisateur. Sinon None
+        :rtype: User or None
+        """
+        utilisateur = User.query.filter(User.user_login == login).first()
+        if utilisateur and check_password_hash(utilisateur.user_password, motdepasse):
+        	return utilisateur
+        return None
+
+    @staticmethod
     def creer(login, email, nom, motdepasse, motdepasse_confirmation):
 	    """ Crée un compte utilisateur-rice. Retourne un tuple (booléen, User ou liste).
 	    Si il y a une erreur, la fonction renvoie False suivi d'une liste d'erreur
@@ -65,12 +79,8 @@ class User(UserMixin, db.Model):
 	        db.session.add(utilisateur)
 	        # On envoie le paquet
 	        db.session.commit()
-
 	        # On renvoie l'utilisateur
 	        return True, utilisateur
+
 	    except Exception as erreur:
-
 	        return False, [str(erreur)]
-
-	        
-
