@@ -133,6 +133,11 @@
       <div class="col-4">
           <a href="{{ url_for("delete", nr_personne = unique.person_id) }}" class="btn btn-danger" onclick="">Supprimer la notice</a>
       </div>
+
+      {% else %}
+      <div class="col-4 mx-auto mt-3 pl-4">
+        <p class="font-italic text-muted">Pour modifier cette notice, connectez-vous !</p>
+      </div>
       {% endif %}
 
 {% endblock %}
