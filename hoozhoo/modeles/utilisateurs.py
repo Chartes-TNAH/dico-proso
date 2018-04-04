@@ -14,6 +14,13 @@ class User(UserMixin, db.Model):
     author_person = db.relationship("Authorship_person", back_populates="user_person")
     author_link = db.relationship("Authorship_link", back_populates="user_link")
 
+    def get_id(self): 
+    	return (self.user_id)
+
+    @login.user_loader
+    def load_user(user_id):
+    	return User.query.get(int(user_id))
+
     @staticmethod
     def identification(login, motdepasse):
         """ 
