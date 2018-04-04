@@ -1,5 +1,6 @@
 from flask import render_template, request, flash, redirect
 from ..app import app
+from ..app import db
 from ..modeles.donnees import Person, Link, Relation_type
 from ..modeles.utilisateurs import User
 
@@ -13,8 +14,6 @@ def accueil():
 
     # récupération des 4 dernières notices créées pour affichage
     personnes = Person.query.order_by(Person.person_id.desc()).limit(4).all()
-    print (type(personnes))
-
     return render_template("pages/accueil.html", personnes=personnes)
 
 
@@ -182,6 +181,14 @@ def inscription():
         return render_template("pages/inscription.html")
 
 
+@app.route("/delete/<int:nr_personne>")
+def delete(nr_personne):
+
+    status = Person.suprimer_personne(id_personne=nr_personne)
+    flash("Suppression réussie !", "success")
+    return redirect("/index")
+
+
 @app.route("/modifierlien/<int:identifier>", methods=["GET", "POST"])
 def modification_lien(identifier):
     """
@@ -194,10 +201,10 @@ def modification_lien(identifier):
     if request.method == "GET":
         return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)
 
-    # sinon en méthode POST : 
+    # sinon en méthode POST :
     else: 
         personneOrigine = request.form.get("link_1_person", None)
-        
+
         status, data = Link.modifier_link(
             id = identifier,
             link_person1_id = personneOrigine,
@@ -212,9 +219,6 @@ def modification_lien(identifier):
         else:
             flash("Les erreurs suivantes empêchent l'édition du lien : " + ",".join(data), "danger")
             return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)
-
-
-
 
 
 @app.route("/confirmer-supprimer/<int:identifier>", methods=["GET", "POST"])
@@ -241,3 +245,36 @@ def suppression_lien(identifier):
             flash("La suppression a échoué.", "danger")
             return redirect("/person/" + str(lienUnique.link_person1_id))
 
+
+@app.route("/recherche")
+def recherche():
+    """ Route permettant la recherche plein-texte à partir de la navbar
+    """
+
+    motcle = request.args.get("keyword", None)
+    page = request.args.get("page", 1)
+
+    if isinstance(page, str) and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    # Création d'une liste vide de résultat (par défaut, vide si pas de mot-clé)
+    resultats = []
+
+    # cherche les mots-clés dans les champs : nom, prenom, surnom, nom en langue maternelle, pays nationalité, langue
+    # occupation(s) et description
+    titre = "Recherche"
+    if motcle :
+        resultats = Person.query.filter(db.or_(Person.person_name.like("%{}%".format(motcle)), 
+            Person.person_firstname.like("%{}%".format(motcle)),
+            Person.person_nickname.like("%{}%".format(motcle)),
+            Person.person_nativename.like("%{}%".format(motcle)),
+            Person.person_country.like("%{}%".format(motcle)),
+            Person.person_language.like("%{}%".format(motcle)),
+            Person.person_occupations.like("%{}%".format(motcle)),
+            Person.person_description.like("%{}%".format(motcle)))
+            ).paginate(page=page, per_page=3)
+    # si un résultat, renvoie sur la page résultat
+        titre = "Résultat de la recherche : `" + motcle + "`"
+        return render_template("pages/resultats.html", resultats=resultats, titre=titre, keyword=motcle)
