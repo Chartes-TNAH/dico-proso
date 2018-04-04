@@ -1,5 +1,5 @@
 from flask import render_template, request, flash, redirect
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 
 from ..app import app, login
 from ..modeles.donnees import Person, Link, Relation_type
@@ -54,6 +54,7 @@ def notice(identifier):
     return render_template("pages/notice.html", unique=personneUnique, listLien=listLien)
 
 @app.route("/creer-lien", methods=["GET", "POST"])
+@login_required
 def creer_lien():
     """
     route permettant à un utilisateur enregistré de créer un ou plusieurs liens entre des personnes existant dans la base
@@ -79,7 +80,7 @@ def creer_lien():
 
 
 @app.route("/modification/<int:identifier>", methods=["POST", "GET"])
-#@login_required #désactivé pour le test
+@login_required
 def modification (identifier):
     """
     route permettant de modifier un formulaire avec les données d'une personne
@@ -120,7 +121,7 @@ def modification (identifier):
 
 
 @app.route("/creer-personne", methods=["GET", "POST"])
-#@login_required #désactivation pour test
+@login_required
 def creer_personne():
     """ route permettant à l'utilisateur de créer une notice personne """
     personne = Person.query.all()
@@ -183,6 +184,7 @@ def inscription():
 
 
 @app.route("/delete/<int:nr_personne>")
+@login_required
 def delete(nr_personne):
 
     status = Person.suprimer_personne(id_personne=nr_personne)
@@ -191,6 +193,7 @@ def delete(nr_personne):
 
 
 @app.route("/modifierlien/<int:identifier>", methods=["GET", "POST"])
+@login_required
 def modification_lien(identifier):
     """
     Route qui affiche un lien existant dans la base pour l'éditer
@@ -223,6 +226,7 @@ def modification_lien(identifier):
 
 
 @app.route("/confirmer-supprimer/<int:identifier>", methods=["GET", "POST"])
+@login_required
 def suppression_lien(identifier):
     """
     Route qui affiche les informations du lien à supprimer et qui demande confirmation
