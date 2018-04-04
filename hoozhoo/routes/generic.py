@@ -1,5 +1,7 @@
 from flask import render_template, request, flash, redirect
-from ..app import app
+from flask_login import current_user, login_user, logout_user
+
+from ..app import app, login
 from ..modeles.donnees import Person, Link, Relation_type
 from ..modeles.utilisateurs import User
 
@@ -244,3 +246,34 @@ def suppression_lien(identifier):
             flash("La suppression a échoué.", "danger")
             return redirect("/person/" + str(lienUnique.link_person1_id))
 
+@app.route("/connexion", methods=["POST", "GET"])
+def connexion():
+    """ Route gérant les connexions des utilisateurs
+    """
+    print(current_user.is_authenticated)
+    if current_user.is_authenticated is True:
+        flash("Vous êtes déjà connecté-e", "info")
+        return redirect("/")
+
+    if request.method == "POST":
+        user = User.identification(
+            login=request.form.get("login", None),
+            motdepasse=request.form.get("password", None)
+        )
+        if user:
+            flash("Connexion effectuée", "success")
+            login_user(user)
+            return redirect("/")
+        else:
+            flash("Les identifiants n'ont pas été reconnus", "danger")
+
+    return render_template("pages/connexion.html")
+login.login_view = 'connexion'
+
+
+@app.route("/deconnexion")
+def deconnexion():
+    if current_user.is_authenticated is True:
+        logout_user()
+    flash("Vous êtes déconnecté-e", "info")
+return redirect("/")
