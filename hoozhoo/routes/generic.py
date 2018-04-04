@@ -250,7 +250,6 @@ def suppression_lien(identifier):
 def connexion():
     """ Route gérant les connexions des utilisateurs
     """
-    print(current_user.is_authenticated)
     if current_user.is_authenticated is True:
         flash("Vous êtes déjà connecté-e", "info")
         return redirect("/")
@@ -260,6 +259,7 @@ def connexion():
             login=request.form.get("login", None),
             motdepasse=request.form.get("password", None)
         )
+
         if user:
             flash("Connexion effectuée", "success")
             login_user(user)
@@ -276,4 +276,4 @@ def deconnexion():
     if current_user.is_authenticated is True:
         logout_user()
     flash("Vous êtes déconnecté-e", "info")
-return redirect("/")
+    return redirect("/")
