@@ -240,14 +240,18 @@ class Person(db.Model):
                 "@prefix rdfs":"http://www.w3.org/2000/01/rdf-schema#",
                 "@prefix foaf" : "http://xmlns.com/foaf/0.1/", # à voir si on garde
                 "@prefix snap" : "http://data.snapdrgn.net/ontology/snap#",
-                "@prefix schema" : "http://schema.org"
+                "@prefix schema" : "http://schema.org",
+                "person":
+                    {
+                        "@type": "@id",
+                        "@id": "http://schema.org/Person"
+                    }
             },
             "person": {
                 "@id": url_for("notice", identifier=self.person_id, _external=True),
-                "@type": "schema:Person",
                 "schema:familyName": self.person_name,  # "foaf :lastName"
                 "schema:givenName": self.person_firstname,  # "foaf:firstName"
-                # "foaf:surname": self.person_nickname, # je suis pas sure qu'on peut mettre des attributs foaf et schéma pour la même entité schema.org n'a pas d'attribut pour le surnom
+                "foaf:surname": self.person_nickname, # je suis pas sure qu'on peut mettre des attributs foaf et schéma pour la même entité schema.org n'a pas d'attribut pour le surnom
                 "schema:gender": self.person_gender,  # "foaf:gender"
                 "schema:description": self.person_description,
                 "schema:sameAs": "https://www.wikidata.org/wiki/" + self.person_external_id,
@@ -463,10 +467,9 @@ class Link(db.Model):
             "typeOfRelationship" : self.relations.relation_type_code,
             "person": {
                 "@id": url_for("notice", identifier=self.person2.person_id, _external=True),
-                "@type": "schema:Person",
                 "schema:familyName": self.person2.person_name, # "foaf :lastName"
                 "schema:givenName": self.person2.person_firstname, #  "foaf:firstName"
-                #"foaf:surname": self.person2.person_nickname, # je suis pas sure qu'on peut mettre des attributs foaf et schéma pour la même entité schema.org n'a pas d'attribut pour le surnom
+                "foaf:surname": self.person2.person_nickname, # je suis pas sure qu'on peut mettre des attributs foaf et schéma pour la même entité schema.org n'a pas d'attribut pour le surnom
                 "schema:gender": self.person2.person_gender, #  "foaf:gender"
                 "schema:description": self.person2.person_description,
                 "schema:identifier": self.person2.person_external_id,
@@ -477,8 +480,8 @@ class Link(db.Model):
                 #"langues parlées, écrites ou signées": self.person2.person_language,
                 "schema:jobTitle": self.person2.person_occupations,
 
-        },
-        }
+                },
+            }
 
 
 class Authorship_link(db.Model):
