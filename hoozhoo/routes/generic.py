@@ -1,6 +1,7 @@
 from flask import render_template, request, flash, redirect
-from ..app import app
-from ..app import db
+from flask_login import current_user, login_user, logout_user, login_required
+
+from ..app import app, db, login
 from ..modeles.donnees import Person, Link, Relation_type
 from ..modeles.utilisateurs import User
 
@@ -53,6 +54,7 @@ def notice(identifier):
     return render_template("pages/notice.html", unique=personneUnique, listLien=listLien)
 
 @app.route("/creer-lien", methods=["GET", "POST"])
+@login_required
 def creer_lien():
     """
     route permettant à un utilisateur enregistré de créer un ou plusieurs liens entre des personnes existant dans la base
@@ -78,7 +80,7 @@ def creer_lien():
 
 
 @app.route("/modification/<int:identifier>", methods=["POST", "GET"])
-#@login_required #désactivé pour le test
+@login_required
 def modification (identifier):
     """
     route permettant de modifier un formulaire avec les données d'une personne
@@ -119,7 +121,7 @@ def modification (identifier):
 
 
 @app.route("/creer-personne", methods=["GET", "POST"])
-#@login_required #désactivation pour test
+@login_required
 def creer_personne():
     """ route permettant à l'utilisateur de créer une notice personne """
     personne = Person.query.all()
@@ -182,6 +184,7 @@ def inscription():
 
 
 @app.route("/delete/<int:nr_personne>")
+@login_required
 def delete(nr_personne):
 
     status = Person.suprimer_personne(id_personne=nr_personne)
@@ -190,6 +193,7 @@ def delete(nr_personne):
 
 
 @app.route("/modifierlien/<int:identifier>", methods=["GET", "POST"])
+@login_required
 def modification_lien(identifier):
     """
     Route qui affiche un lien existant dans la base pour l'éditer
@@ -222,6 +226,7 @@ def modification_lien(identifier):
 
 
 @app.route("/confirmer-supprimer/<int:identifier>", methods=["GET", "POST"])
+@login_required
 def suppression_lien(identifier):
     """
     Route qui affiche les informations du lien à supprimer et qui demande confirmation
@@ -245,6 +250,37 @@ def suppression_lien(identifier):
             flash("La suppression a échoué.", "danger")
             return redirect("/person/" + str(lienUnique.link_person1_id))
 
+@app.route("/connexion", methods=["POST", "GET"])
+def connexion():
+    """ Route gérant les connexions des utilisateurs
+    """
+    if current_user.is_authenticated is True:
+        flash("Vous êtes déjà connecté-e", "info")
+        return redirect("/")
+
+    if request.method == "POST":
+        user = User.identification(
+            login=request.form.get("login", None),
+            motdepasse=request.form.get("password", None)
+        )
+
+        if user:
+            flash("Connexion effectuée", "success")
+            login_user(user)
+            return redirect("/")
+        else:
+            flash("Les identifiants n'ont pas été reconnus", "danger")
+
+    return render_template("pages/connexion.html")
+login.login_view = 'connexion'
+
+
+@app.route("/deconnexion")
+def deconnexion():
+    if current_user.is_authenticated is True:
+        logout_user()
+    flash("Vous êtes déconnecté-e", "info")
+    return redirect("/")
 
 @app.route("/recherche")
 def recherche():
