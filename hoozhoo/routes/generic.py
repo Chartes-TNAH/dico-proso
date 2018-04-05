@@ -1,7 +1,7 @@
 from flask import render_template, request, flash, redirect
 from flask_login import current_user, login_user, logout_user, login_required
 
-from ..app import app, login
+from ..app import app, db, login
 from ..modeles.donnees import Person, Link, Relation_type
 from ..modeles.utilisateurs import User
 
