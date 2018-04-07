@@ -15,20 +15,27 @@
 						<li class="nav-item">
 							<a class="nav-link" href="{{url_for("index")}}">Index</a>
 						</li>
+						{% if current_user.is_authenticated %}
 						<li class="nav-item">
 							<a class="nav-link" href="{{url_for("creer_personne")}}">Créer une personne</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{url_for("creer_lien")}}">Créer un lien</a>
+							<a class="nav-link" href="{{url_for("creer_lien")}}">Créer des liens</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#">Connexion</a>
+							<a class="nav-link" href="{{url_for("deconnexion")}}">Déconnexion ({{current_user.user_name}})</a>
 						</li>
+						{% else %}
 						<li class="nav-item">
-							<a class="nav-link" href="#">Déconnexion ()</a>
+							<a class="nav-link" href="{{url_for("connexion")}}">Connexion</a>
 						</li>
+                        <li class="nav-item">
+							<a class="nav-link" href="{{url_for("inscription")}}">Inscription</a>
+						</li>
+
+						{% endif %}
 					</ul>
-				<form class="form-inline" action="#" method="GET">
+				<form class="form-inline" action="{{url_for("recherche")}}" method="GET">
 				<input class="form-control" name="keyword" type="search" placeholder="Rechercher" aria-label="Recherche">
 				<button class="btn btn-secondary" type="submit"><i class="fa fa-search"></i></button>
 				</form>

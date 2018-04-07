@@ -1,5 +1,7 @@
 from flask import render_template, request, flash, redirect
-from ..app import app
+from flask_login import current_user, login_user, logout_user, login_required
+
+from ..app import app, db, login
 from ..modeles.donnees import Person, Link, Relation_type
 from ..modeles.utilisateurs import User
 
@@ -13,8 +15,6 @@ def accueil():
 
     # récupération des 4 dernières notices créées pour affichage
     personnes = Person.query.order_by(Person.person_id.desc()).limit(4).all()
-    print (type(personnes))
-
     return render_template("pages/accueil.html", personnes=personnes)
 
 @app.route("/api_documentation")
@@ -57,6 +57,7 @@ def notice(identifier):
     return render_template("pages/notice.html", unique=personneUnique, listLien=listLien)
 
 @app.route("/creer-lien", methods=["GET", "POST"])
+@login_required
 def creer_lien():
     """
     route permettant à un utilisateur enregistré de créer un ou plusieurs liens entre des personnes existant dans la base
@@ -82,7 +83,7 @@ def creer_lien():
 
 
 @app.route("/modification/<int:identifier>", methods=["POST", "GET"])
-#@login_required #désactivé pour le test
+@login_required
 def modification (identifier):
     """
     route permettant de modifier un formulaire avec les données d'une personne
@@ -123,7 +124,7 @@ def modification (identifier):
 
 
 @app.route("/creer-personne", methods=["GET", "POST"])
-#@login_required #désactivation pour test
+@login_required
 def creer_personne():
     """ route permettant à l'utilisateur de créer une notice personne """
     personne = Person.query.all()
@@ -185,7 +186,17 @@ def inscription():
         return render_template("pages/inscription.html")
 
 
+@app.route("/delete/<int:nr_personne>")
+@login_required
+def delete(nr_personne):
+
+    status = Person.suprimer_personne(id_personne=nr_personne)
+    flash("Suppression réussie !", "success")
+    return redirect("/index")
+
+
 @app.route("/modifierlien/<int:identifier>", methods=["GET", "POST"])
+@login_required
 def modification_lien(identifier):
     """
     Route qui affiche un lien existant dans la base pour l'éditer
@@ -197,10 +208,10 @@ def modification_lien(identifier):
     if request.method == "GET":
         return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)
 
-    # sinon en méthode POST : 
+    # sinon en méthode POST :
     else: 
         personneOrigine = request.form.get("link_1_person", None)
-        
+
         status, data = Link.modifier_link(
             id = identifier,
             link_person1_id = personneOrigine,
@@ -217,10 +228,8 @@ def modification_lien(identifier):
             return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)
 
 
-
-
-
 @app.route("/confirmer-supprimer/<int:identifier>", methods=["GET", "POST"])
+@login_required
 def suppression_lien(identifier):
     """
     Route qui affiche les informations du lien à supprimer et qui demande confirmation
@@ -243,3 +252,68 @@ def suppression_lien(identifier):
         else:
             flash("La suppression a échoué.", "danger")
             return redirect("/person/" + str(lienUnique.link_person1_id))
+
+@app.route("/connexion", methods=["POST", "GET"])
+def connexion():
+    """ Route gérant les connexions des utilisateurs
+    """
+    if current_user.is_authenticated is True:
+        flash("Vous êtes déjà connecté-e", "info")
+        return redirect("/")
+
+    if request.method == "POST":
+        user = User.identification(
+            login=request.form.get("login", None),
+            motdepasse=request.form.get("password", None)
+        )
+
+        if user:
+            flash("Connexion effectuée", "success")
+            login_user(user)
+            return redirect("/")
+        else:
+            flash("Les identifiants n'ont pas été reconnus", "danger")
+
+    return render_template("pages/connexion.html")
+login.login_view = 'connexion'
+
+
+@app.route("/deconnexion")
+def deconnexion():
+    if current_user.is_authenticated is True:
+        logout_user()
+    flash("Vous êtes déconnecté-e", "info")
+    return redirect("/")
+
+@app.route("/recherche")
+def recherche():
+    """ Route permettant la recherche plein-texte à partir de la navbar
+    """
+
+    motcle = request.args.get("keyword", None)
+    page = request.args.get("page", 1)
+
+    if isinstance(page, str) and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    # Création d'une liste vide de résultat (par défaut, vide si pas de mot-clé)
+    resultats = []
+
+    # cherche les mots-clés dans les champs : nom, prenom, surnom, nom en langue maternelle, pays nationalité, langue
+    # occupation(s) et description
+    titre = "Recherche"
+    if motcle :
+        resultats = Person.query.filter(db.or_(Person.person_name.like("%{}%".format(motcle)),
+            Person.person_firstname.like("%{}%".format(motcle)),
+            Person.person_nickname.like("%{}%".format(motcle)),
+            Person.person_nativename.like("%{}%".format(motcle)),
+            Person.person_country.like("%{}%".format(motcle)),
+            Person.person_language.like("%{}%".format(motcle)),
+            Person.person_occupations.like("%{}%".format(motcle)),
+            Person.person_description.like("%{}%".format(motcle)))
+            ).paginate(page=page, per_page=3)
+    # si un résultat, renvoie sur la page résultat
+        titre = "Résultat de la recherche : `" + motcle + "`"
+        return render_template("pages/resultats.html", resultats=resultats, titre=titre, keyword=motcle)
