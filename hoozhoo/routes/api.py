@@ -1,7 +1,7 @@
 from flask import render_template, request, url_for, jsonify
 from urllib.parse import urlencode
 PERSONNES_PAR_PAGES = 3
-from ..app import app
+from ..app import app, db
 from ..modeles.donnees import Person, Link, Relation_type
 
 def Json_404():
@@ -25,9 +25,15 @@ def json_recherche():
 		page = 1
 
 	if motclef:
-		query = Person.query.filter(
-			Person.person_name.like("%{}%".format(motclef))
-		)
+		query = Person.query.filter(db.or_(
+			Person.person_name.like("%{}%".format(motclef)),
+            Person.person_firstname.like("%{}%".format(motclef)),
+            Person.person_nickname.like("%{}%".format(motclef)),
+            Person.person_nativename.like("%{}%".format(motclef)),
+            Person.person_country.like("%{}%".format(motclef)),
+            Person.person_language.like("%{}%".format(motclef)),
+            Person.person_occupations.like("%{}%".format(motclef)),
+            Person.person_description.like("%{}%".format(motclef))))
 	else:
 		query = Person.query
 
