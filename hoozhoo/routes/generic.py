@@ -17,6 +17,9 @@ def accueil():
 
     return render_template("pages/accueil.html", personnes=personnes)
 
+@app.route("/api_documentation")
+def apiDoc():
+    return render_template("pages/API_Documentation.html")
 
 @app.route("/a-propos")
 def about():
@@ -240,4 +243,3 @@ def suppression_lien(identifier):
         else:
             flash("La suppression a échoué.", "danger")
             return redirect("/person/" + str(lienUnique.link_person1_id))
-

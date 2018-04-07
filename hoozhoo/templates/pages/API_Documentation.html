@@ -1,0 +1,33 @@
+{% extends "conteneur.html" %}
+{% block titre %}| API Documentation {% endblock %}
+{% block corps %}
+    <div class="container">
+  <br/>
+  <h2>Documentation pour l'API de Hoozhoo</h2><br/>
+  <p>Notre site propose à ce jour deux API. Vous pouvez les utiliser de la manière suivante</p>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Methode</th>
+        <th>URL à appeller</th>
+        <th>Procédure</th>
+        <th>Retourne</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GET</td>
+        <td>http://127.0.0.1:5000/api/person/{id}</td>
+        <td>Appellez l'url et remplacez le {id} par l'identifiant de la personne</td>
+        <td>Les détails de la personne et ses liens avec d'autres personnes</td>
+      </tr>
+      <tr>
+        <td>GET</td>
+        <td>http://127.0.0.1:5000/api/person?q={mot clé}</td>
+        <td>Appellez l'url et remplacez le {mot clé} par un mot clé de votre choix</td>
+        <td>Les détails de toutes les personnes issues du résultat de recherche par mot clé</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}
