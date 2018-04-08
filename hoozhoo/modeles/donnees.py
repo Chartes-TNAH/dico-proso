@@ -455,10 +455,9 @@ class Link(db.Model):
     def link_to_json (self):
         """
         Fonction qui retourne un dictionnaire à partir des éléments des la classe Link pour un export en JSON via l'API
-
         """
         return {
-            "personneLiee": self.person2.person_name + self.person2.person_firstname + self.person2.person_nickname,
+            "personneLiee": {"nom": self.person2.person_name, "prenom": self.person2.person_firstname, "surnom": self.person2.person_nickname},
             "typeRelation": self.relations.relation_type_name,
             "liensUrl":
                 {
