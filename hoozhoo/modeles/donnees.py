@@ -458,9 +458,9 @@ class Link(db.Model):
 
         """
         return {
-            "personneLier": self.person2.person_name + self.person2.person_firstname + self.person2.person_nickname,
+            "personneLiee": self.person2.person_name + self.person2.person_firstname + self.person2.person_nickname,
             "typeRelation": self.relations.relation_type_name,
-            "Link":
+            "liensUrl":
                 {
                     "self": url_for("notice", identifier=self.person2.person_id, _external=True),
                     "json": url_for("json_person", identifier=self.person2.person_id, _external=True)
