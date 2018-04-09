@@ -452,6 +452,7 @@ class Link(db.Model):
         except Exception as failed:
             print(failed)
             return False
+
     def link_to_json (self):
         """
         Fonction qui retourne un dictionnaire à partir des éléments des la classe Link pour un export en JSON via l'API
@@ -459,6 +460,7 @@ class Link(db.Model):
         return {
             "personneLiee": {"nom": self.person2.person_name, "prenom": self.person2.person_firstname, "surnom": self.person2.person_nickname},
             "typeRelation": self.relations.relation_type_name,
+            "SNAPClasses" : self.class_snap(),
             "liensUrl":
                 {
                     "self": url_for("notice", identifier=self.person2.person_id, _external=True),
@@ -466,6 +468,19 @@ class Link(db.Model):
                 }
 
         }
+
+    def class_snap(self):
+        dico_snap = []
+        dico_snap.append(self.relations.relation_type_first_snap)
+        if not(self.relations.relation_type_second_snap == ""):
+            dico_snap.append(self.relations.relation_type_second_snap)
+        if not(self.relations.relation_type_third_snap == ""):
+            dico_snap.append(self.relations.relation_type_third_snap)
+        if not(self.relations.relation_type_fourth_snap == ""):
+            dico_snap.append(self.relations.relation_type_fourth_snap)
+        dico_snap.append(self.relations.relation_type_code)
+        return dico_snap
+
 
 
 class Authorship_link(db.Model):
