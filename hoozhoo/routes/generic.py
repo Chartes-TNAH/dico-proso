@@ -21,10 +21,18 @@ def accueil():
     personnes = Person.query.order_by(Person.person_id.desc()).limit(4).all()
     return render_template("pages/accueil.html", personnes=personnes)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 986c72b14b6032a3f7f9c8b90a64ca41c5765c53
 @app.route("/api_documentation")
 def apiDoc():
     return render_template("pages/API_Documentation.html")
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 986c72b14b6032a3f7f9c8b90a64ca41c5765c53
 @app.route("/a-propos")
 def about():
     """ Route pour affcher les informations générale sur l'application
