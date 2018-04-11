@@ -31,18 +31,7 @@ def json_recherche():
     else:
         page = 1
 
-    if motclef != Person.query.filter(db.or_(
-            Person.person_name.like("%{}%".format(motclef)),
-            Person.person_firstname.like("%{}%".format(motclef)),
-            Person.person_nickname.like("%{}%".format(motclef)),
-            Person.person_nativename.like("%{}%".format(motclef)),
-            Person.person_country.like("%{}%".format(motclef)),
-            Person.person_language.like("%{}%".format(motclef)),
-            Person.person_occupations.like("%{}%".format(motclef)),
-            Person.person_description.like("%{}%".format(motclef)))):
-        return Json_404()
-
-    if motclef:
+    if motclef :
         query = Person.query.filter(db.or_(
             Person.person_name.like("%{}%".format(motclef)),
             Person.person_firstname.like("%{}%".format(motclef)),
@@ -57,6 +46,7 @@ def json_recherche():
 
     try:
         resultats = query.paginate(page=page, per_page=PERSONNES_PAR_PAGES)
+
     except Exception:
         return Json_404()
 
