@@ -226,7 +226,6 @@ class Person(db.Model):
         for lien in listLien2:
             db.session.delete(lien)
             db.session.commit()
-
         db.session.delete(personneUnique)
         db.session.commit()
 
