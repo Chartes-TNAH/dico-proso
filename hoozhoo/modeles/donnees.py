@@ -234,7 +234,7 @@ class Person(db.Model):
             db.session.commit()
         db.session.delete(personneUnique)
         db.session.commit()
-          
+
     def person_to_json(self):
         """
         Fonction qui transforme les informations sur une personne en un dictionnaire pour un export en JSON via l'API
@@ -268,6 +268,7 @@ class Person(db.Model):
                       ]
         }
         return dico
+
 
 class Relation_type(db.Model):
     __tablename__ = "relation_type"
@@ -456,21 +457,35 @@ class Link(db.Model):
         except Exception as failed:
             print(failed)
             return False
+
     def link_to_json (self):
         """
         Fonction qui retourne un dictionnaire à partir des éléments des la classe Link pour un export en JSON via l'API
-
         """
         return {
-            "personneLier": self.person2.person_name + self.person2.person_firstname + self.person2.person_nickname,
+            "personneLiee": {"nom": self.person2.person_name, "prenom": self.person2.person_firstname, "surnom": self.person2.person_nickname},
             "typeRelation": self.relations.relation_type_name,
-            "Link":
+            "SNAPClasses" : self.class_snap(),
+            "liensUrl":
                 {
                     "self": url_for("notice", identifier=self.person2.person_id, _external=True),
                     "json": url_for("json_person", identifier=self.person2.person_id, _external=True)
                 }
 
         }
+
+    def class_snap(self):
+        dico_snap = []
+        dico_snap.append(self.relations.relation_type_first_snap)
+        if not(self.relations.relation_type_second_snap == ""):
+            dico_snap.append(self.relations.relation_type_second_snap)
+        if not(self.relations.relation_type_third_snap == ""):
+            dico_snap.append(self.relations.relation_type_third_snap)
+        if not(self.relations.relation_type_fourth_snap == ""):
+            dico_snap.append(self.relations.relation_type_fourth_snap)
+        dico_snap.append(self.relations.relation_type_code)
+        return dico_snap
+
 
 
 class Authorship_link(db.Model):

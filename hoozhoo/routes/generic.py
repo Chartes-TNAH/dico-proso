@@ -21,6 +21,11 @@ def accueil():
     personnes = Person.query.order_by(Person.person_id.desc()).limit(4).all()
     return render_template("pages/accueil.html", personnes=personnes)
 
+@app.route("/api_documentation")
+def apiDoc():
+    return render_template("pages/API_Documentation.html")
+
+
 @app.route("/a-propos")
 def about():
     """ Route pour affcher les informations générale sur l'application
@@ -46,7 +51,7 @@ def creer_personne():
     personne = Person.query.all()
     if request.method == "POST":
         status, data = Person.create_person(
-        nom=request.form.get("nom", None), 
+        nom=request.form.get("nom", None),
         prenom=request.form.get("prenom", None),
         surnom=request.form.get("surnom", None),
         nom_languematernelle=request.form.get("nom_languematernelle", None),
@@ -59,7 +64,7 @@ def creer_personne():
         description=request.form.get("description", None),
         id_externes=request.form.get("id_externes", None)
         )
-        
+
         if status is True:
             flash("Création d'une nouvelle personne réussie !", "success")
             return redirect("/creer-personne")
