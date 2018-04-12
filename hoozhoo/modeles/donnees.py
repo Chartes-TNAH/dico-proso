@@ -75,6 +75,12 @@ class Person(db.Model):
         if personne > 0:
             errors.append("La personne est déjà inscrite dans la base de données")
 
+        # vérifier si l'ID wikidata existe déjà 
+        personne = Person.query.filter(Person.person_external_id == id_externes).count()
+
+        if personne > 0:
+            errors.append("L'identifiant Wikidata est déjà utilisé")
+
         # Si on a au moins une erreur
         if len(errors) > 0:
             return False, errors
