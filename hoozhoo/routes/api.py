@@ -1,7 +1,7 @@
 from flask import render_template, request, url_for, jsonify
 from urllib.parse import urlencode
 
-PERSONNES_PAR_PAGES = 3
+
 from ..app import app, db
 from ..modeles.donnees import Person, Link, Relation_type
 
@@ -24,12 +24,6 @@ def json_person(identifier):
 @app.route("/api/person")
 def json_recherche():
     motclef = request.args.get("q", None)
-    page = request.args.get("page", 1)
-
-    if isinstance(page, str) and page.isdigit():
-        page = int(page)
-    else:
-        page = 1
 
     if motclef :
         query = Person.query.filter(db.or_(
@@ -45,36 +39,17 @@ def json_recherche():
         query = Person.query
 
     try:
-        resultats = query.paginate(page=page, per_page=PERSONNES_PAR_PAGES)
+        resultats = query.all()
 
     except Exception:
         return Json_404()
 
     dict_resultats = {
-        "links": {
-            "self": request.url
-        },
-        "data": [
+        "resultats": [
             personne.person_to_json()
-            for personne in resultats.items
+            for personne in resultats
         ]
     }
-
-    if resultats.has_next:
-        arguments = {
-            "page": resultats.next_num
-        }
-        if motclef:
-            arguments["q"] = motclef
-        dict_resultats["links"]["next"] = url_for("json_recherche", _external=True) + "?" + urlencode(arguments)
-
-    if resultats.has_prev:
-        arguments = {
-            "page": resultats.prev_num
-        }
-        if motclef:
-            arguments["q"] = motclef
-        dict_resultats["links"]["prev"] = url_for("json_recherche", _external=True) + "?" + urlencode(arguments)
 
     response = jsonify(dict_resultats)
     return response
