@@ -14,6 +14,7 @@ def Json_404():
 
 @app.route("/api/person/<int:identifier>")
 def json_person(identifier):
+
     person = Person.query.get(identifier)
     if not person:
         return Json_404()
