@@ -230,29 +230,26 @@ class Person(db.Model):
         db.session.delete(personneUnique)
         db.session.commit()
 
+    @property
     def person_to_json(self):
         """
         Fonction qui transforme les informations sur une personne en un dictionnaire pour un export en JSON via l'API
         :return:
         """
+
+
         dico = {
-            "@context" : {
-                "@prefix rdfs":"http://www.w3.org/2000/01/rdf-schema#",
-                "@prefix foaf" : "http://xmlns.com/foaf/0.1/", # à voir si on garde
-                "@prefix snap" : "http://data.snapdrgn.net/ontology/snap#",
-                "@prefix schema" : "http://schema.org",
-                "person":
-                    {
-                        "@type": "@id",
-                        "@id": "http://schema.org/Person"
-                    }
-            },
-            "person": {
+            "@context": [
+                "https://schema.org/docs/jsonldcontext.json",
+                "http://xmlns.com/foaf/context",
+                {"snap": "http://data.snapdrgn.net/ontology/snap"} ],
+
+                "@type": "person",
                 "@id": url_for("notice", identifier=self.person_id, _external=True),
-                "schema:familyName": self.person_name,  # "foaf :lastName"
-                "schema:givenName": self.person_firstname,  # "foaf:firstName"
-                "foaf:surname": self.person_nickname, # je suis pas sure qu'on peut mettre des attributs foaf et schéma pour la même entité schema.org n'a pas d'attribut pour le surnom
-                "schema:gender": self.person_gender,  # "foaf:gender"
+                "schema:familyName": self.person_name,
+                "schema:givenName": self.person_firstname,
+                "foaf:surname": self.person_nickname,
+                "schema:gender": self.person_gender,
                 "schema:description": self.person_description,
                 "schema:sameAs": "https://www.wikidata.org/wiki/" + self.person_external_id,
                 # "nom dans la langue de la personne": self.person_nativename,
@@ -261,11 +258,11 @@ class Person(db.Model):
                 "schema:nationality": self.person_country,
                 # "langues parlées, écrites ou signées": self.person_language,
                 "schema:jobTitle": self.person_occupations,
-            },
-        "snap:isRelatedTo": [
-            lien.link_to_json()
-            for lien in self.link_pers1
-                   ]
+                "snap:isRelatedTo": [
+                lien.link_to_json()
+                for lien in self.link_pers1
+            ]
+
             }
 
         return dico
@@ -464,23 +461,18 @@ class Link(db.Model):
 
         """
         return {
-            "typeOfRelationship" : self.relations.relation_type_code,
-            "person": {
-                "@id": url_for("notice", identifier=self.person2.person_id, _external=True),
-                "schema:familyName": self.person2.person_name, # "foaf :lastName"
-                "schema:givenName": self.person2.person_firstname, #  "foaf:firstName"
-                "foaf:surname": self.person2.person_nickname, # je suis pas sure qu'on peut mettre des attributs foaf et schéma pour la même entité schema.org n'a pas d'attribut pour le surnom
-                "schema:gender": self.person2.person_gender, #  "foaf:gender"
-                "schema:description": self.person2.person_description,
-                "schema:identifier": self.person2.person_external_id,
-                #"nom dans la langue de la personne": self.person2.person_nativename,
-                "schema:birthDate": self.person2.person_birthdate,
-                "schema:deathDate": self.person2.person_deathdate,
-                "schema:nationality": self.person2.person_country,
-                #"langues parlées, écrites ou signées": self.person2.person_language,
-                "schema:jobTitle": self.person2.person_occupations,
-
-                },
+                    "@id": url_for("notice", identifier=self.person2.person_id, _external=True),
+                    "schema:familyName": self.person2.person_name,
+                    "schema:givenName": self.person2.person_firstname,
+                    "foaf:surname": self.person2.person_nickname,
+                    "schema:gender": self.person2.person_gender,
+                    "schema:description": self.person2.person_description,
+                    "schema:identifier": self.person2.person_external_id,
+                    "schema:birthDate": self.person2.person_birthdate,
+                    "schema:deathDate": self.person2.person_deathdate,
+                    "schema:nationality": self.person2.person_country,
+                    "schema:jobTitle": self.person2.person_occupations,
+                    "snap:#Link": self.relations.relation_type_code
             }
 
 
