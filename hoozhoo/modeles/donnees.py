@@ -224,7 +224,7 @@ class Person(db.Model):
             return False, [str(error_modification)]
 
     @staticmethod
-    def suprimer_personne(id_personne):
+    def supprimer_personne(id_personne):
         """
         Fonction qui supprime la notice
         :param id_personne: l'identifiant de la personne à récupérer dans l'adresse de la notice
