@@ -38,16 +38,17 @@ def json_recherche():
     else:
         query = Person.query
 
-    try:
-        resultats = query.all()
 
-    except Exception:
-        return Json_404()
+# vérification de la présence d'un résultat : s'il n'y en a pas, retourne une erreur 404
+    resultats = query.all()
 
-    dict_resultats = {
-        "resultats": [
-            personne.person_to_json()
-            for personne in resultats
+    if len(resultats) == 0 :
+    	return Json_404()
+    else :
+    	dict_resultats = {
+	        "resultats": [
+	            personne.person_to_json()
+	            for personne in resultats
         ]
     }
 
