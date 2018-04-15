@@ -521,7 +521,6 @@ class Link(db.Model):
                     "schema:deathDate": self.person2.person_deathdate,
                     "schema:nationality": self.person2.person_country,
                     "schema:jobTitle": self.person2.person_occupations,
-                    "snap:#Bond": "snap:"+self.relations.relation_type_code
             }
 
 
