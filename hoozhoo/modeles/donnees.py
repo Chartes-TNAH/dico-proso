@@ -509,6 +509,41 @@ class Link(db.Model):
         """
         Fonction qui retourne un dictionnaire à partir des éléments des la classe Link pour un export en JSON via l'API
         """
+        def link_to_json (self):
+        """
+        Fonction qui retourne un dictionnaire à partir des éléments des la classe Link pour un export en JSON via l'API
+        """
+
+        #imbrication des différents niveaux de relation vers la personne
+        bond = []
+        bond_5 = []
+        bond_4 = []
+        bond_3 = []
+        bond_2 = []
+
+        bond_5.append("snap:"+self.relations.relation_type_code)
+        if self.relations.relation_type_fourth_snap:
+            bond_4.append("snap:"+self.relations.relation_type_fourth_snap)
+        if self.relations.relation_type_third_snap:
+            bond_3.append("snap:"+self.relations.relation_type_third_snap)
+        if self.relations.relation_type_second_snap:
+            bond_2.append("snap:"+self.relations.relation_type_second_snap)
+
+        if len(bond_4) == 1:
+            bond_4.append(bond_5)
+            bond_3.append(bond_4)
+            bond_2.append(bond_3)
+            bond = bond_2
+        elif len(bond_3) == 1:
+            bond_3.append(bond_5)
+            bond_2.append(bond_3)
+            bond = bond_2
+        elif len(bond_2) == 1:
+            bond_2.append(bond_5)
+            bond = bond_2
+        else:
+            bond = bond_5
+            
         return {
                     "@id": url_for("notice", identifier=self.person2.person_id, _external=True),
                     "schema:familyName": self.person2.person_name,
@@ -521,6 +556,7 @@ class Link(db.Model):
                     "schema:deathDate": self.person2.person_deathdate,
                     "schema:nationality": self.person2.person_country,
                     "schema:jobTitle": self.person2.person_occupations,
+                    "snap:#Bond": bond
             }
 
 
