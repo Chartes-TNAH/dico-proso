@@ -76,7 +76,7 @@ def creer_personne():
 
 @app.route("/modification/<int:identifier>", methods=["POST", "GET"])
 @login_required
-def modification (identifier):
+def modification(identifier):
     """ Route permettant de modifier un formulaire avec les données d'une personne
     :param identifier: identifiant numérique de la personne récupéré depuis la page notice
     """
@@ -111,13 +111,13 @@ def modification (identifier):
             personne_origine = Person.query.get(identifier)
             return render_template("pages/modification_personne.html", personne_origine=personne_origine)
 
-@app.route("/delete/<int:nr_personne>")
+@app.route("/supprimer/<int:nr_personne>")
 @login_required
 def delete(nr_personne):
     """ Route pour gérer la suppresion d'une personne dans la base
     :param nr_person : identifiant numérique de la personne
     """
-    status = Person.suprimer_personne(id_personne=nr_personne)
+    status = Person.supprimer_personne(id_personne=nr_personne)
     flash("Suppression réussie !", "success")
     return redirect("/index")
 
@@ -151,7 +151,7 @@ def creer_lien():
     else:
         return render_template("pages/creer_lien.html", listRelation=listRelation)
 
-@app.route("/modifierlien/<int:identifier>", methods=["GET", "POST"])
+@app.route("/modifier-lien/<int:identifier>", methods=["GET", "POST"])
 @login_required
 def modification_lien(identifier):
     """ Route qui affiche un lien existant dans la base pour l'éditer
@@ -175,13 +175,13 @@ def modification_lien(identifier):
 
         if status is True :
             flash("Modification réussie !", "success")
-            return redirect("/person/" + str(personneOrigine) )
+            return redirect("/personne/" + str(personneOrigine) )
 
         else:
             flash("Les erreurs suivantes empêchent l'édition du lien : " + ",".join(data), "danger")
             return render_template("pages/modification_lien.html", unique=lienUnique, listRelation=listRelation)
 
-@app.route("/confirmer-supprimer/<int:identifier>", methods=["GET", "POST"])
+@app.route("/supprimer-lien/<int:identifier>", methods=["GET", "POST"])
 @login_required
 def suppression_lien(identifier):
     """ Route qui affiche les informations du lien à supprimer et qui demande confirmation
@@ -196,10 +196,10 @@ def suppression_lien(identifier):
         status = Link.delete_link(link_id=identifier)
         if status is True :
             flash("Lien supprimé !", "success")
-            return redirect("/person/" + str(lienUnique.link_person1_id))
+            return redirect("/personne/" + str(lienUnique.link_person1_id))
         else:
             flash("La suppression a échoué.", "danger")
-            return redirect("/person/" + str(lienUnique.link_person1_id))
+            return redirect("/personne/" + str(lienUnique.link_person1_id))
 
 
 
@@ -312,7 +312,7 @@ def index():
     personnes = Person.query.order_by(Person.person_name).paginate(page=page, per_page= PERSONNES_PAR_PAGES)
     return render_template("pages/index.html", personnes=personnes, titre=titre)
 
-@app.route("/person/<int:identifier>")
+@app.route("/personne/<int:identifier>")
 def notice(identifier):
     """ Route qui affiche la notice descriptive de la personne
     :param identifier: identifiant numérique de la personne
