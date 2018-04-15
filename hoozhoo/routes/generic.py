@@ -117,7 +117,7 @@ def delete(nr_personne):
     """ Route pour gérer la suppresion d'une personne dans la base
     :param nr_person : identifiant numérique de la personne
     """
-    status = Person.suprimer_personne(id_personne=nr_personne)
+    status = Person.supprimer_personne(id_personne=nr_personne)
     flash("Suppression réussie !", "success")
     return redirect("/index")
 
