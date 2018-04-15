@@ -44,10 +44,13 @@ def json_recherche():
     except Exception:
         return Json_404()
 
-    dict_resultats = {
-        "resultats": [
-            personne.person_to_json()
-            for personne in resultats
+    if len(resultats) == 0 :
+    	return Json_404()
+    else :
+    	dict_resultats = {
+	        "resultats": [
+	            personne.person_to_json()
+	            for personne in resultats
         ]
     }
 
