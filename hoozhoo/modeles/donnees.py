@@ -509,10 +509,6 @@ class Link(db.Model):
         """
         Fonction qui retourne un dictionnaire à partir des éléments des la classe Link pour un export en JSON via l'API
         """
-        def link_to_json (self):
-        """
-        Fonction qui retourne un dictionnaire à partir des éléments des la classe Link pour un export en JSON via l'API
-        """
 
         #imbrication des différents niveaux de relation vers la personne
         bond = []
