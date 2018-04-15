@@ -1,10 +1,12 @@
 from flask import url_for
 import datetime
-# ATTENTION
-# Ici on utilise la variable "db", comme dans le cours.
-# Il faut vérifier qu'elle est bien déclarée là où elle doit l'être (dans app.py ?).
+from flask_login import current_user
 from .. app import db
 
+
+##############################################################################################################
+#                                                 PERSON                                                     #
+##############################################################################################################
 
 class Person(db.Model):
     __tablename__ = "person"
@@ -107,6 +109,11 @@ class Person(db.Model):
             db.session.add(created_person)
             db.session.commit()
 
+            # Création d'un log dans authorship_person
+            creation = Person.query.filter(Person.person_external_id == id_externes).one()
+            authorship_person=Authorship_person.authorship(
+                updated=creation
+                )
             # Renvoie d'informations vers l'utilisateur :
             return True, created_person
 
@@ -205,6 +212,12 @@ class Person(db.Model):
             #ajout dans la base de données
             db.session.add(personne)
             db.session.commit()
+
+            # creation d'un log dans authorship_person
+            authorship_person=Authorship_person.authorship(
+                updated=Person.query.get(id)
+                )
+            # Renvoie d'informations vers l'utilisateur :
             return True, personne
 
         except Exception as error_modification:
@@ -227,13 +240,24 @@ class Person(db.Model):
         listLien2 = personneUnique.link_pers2
 
         for lien in listLien1:
+            Authorship_link.delete_logs(
+                id_link=lien.link_id
+                )
             db.session.delete(lien)
             db.session.commit()
         for lien in listLien2:
+            Authorship_link.delete_logs(
+                id_link=lien.link_id
+                )
             db.session.delete(lien)
             db.session.commit()
+
+        Authorship_person.delete_logs(
+            id_person=id_personne
+            )
         db.session.delete(personneUnique)
         db.session.commit()
+
 
     def person_to_json(self):
         """
@@ -269,6 +293,9 @@ class Person(db.Model):
         }
         return dico
 
+##############################################################################################################
+#                                            RELATION_TYPE                                                   #
+##############################################################################################################
 
 class Relation_type(db.Model):
     __tablename__ = "relation_type"
@@ -281,6 +308,11 @@ class Relation_type(db.Model):
     relation_type_fourth_snap = db.Column(db.String(45))
 # Jointure
     type_link = db.relationship("Link", back_populates="relations")
+
+
+##############################################################################################################
+#                                                    LINK                                                    #
+##############################################################################################################
 
 class Link(db.Model):
     __tablename__ = "link"
@@ -305,7 +337,6 @@ class Link(db.Model):
         """
 
         errors = []
-
         # On vérifie que les champs de toutes les lignes sont remplis
         if not( (len(link_person1) == len(link_person2)) and (len(link_person1) == len(link_relation_type)) and (len(link_person2) == len(link_relation_type)) ):
             errors.append("certains champs sont vides")
@@ -372,6 +403,13 @@ class Link(db.Model):
                 # Phase de création du lien :
                 db.session.add(created_link[row])
                 db.session.commit()
+                # Création d'un log dans authorship_link
+                creation = Link.query.filter(
+                db.and_(Link.link_person1_id == link_person1[row], Link.link_person2_id == link_person2[row], Link.link_relation_type_id == link_relation_type[row])
+                ).one()
+                authorship_link=Authorship_link.authorship_l(
+                    updated=creation
+                    )
             # Renvoie d'informations vers l'utilisateur :
             return True, created_link
 
@@ -436,6 +474,12 @@ class Link(db.Model):
             # ajout de la mise à jour du lien dans la base de données
             db.session.add(origin_link)
             db.session.commit()
+
+            # Création d'un log dans authorship_link
+            creation = Link.query.get(id)
+            authorship_link=Authorship_link.authorship_l(
+                updated=creation
+                )
             return True, origin_link
 
         except Exception as error_modification:
@@ -451,6 +495,9 @@ class Link(db.Model):
         lien = Link.query.get(link_id)
 
         try:
+            Authorship_link.delete_logs(
+                id_link=link_id
+                )
             db.session.delete(lien)
             db.session.commit()
             return True
@@ -487,6 +534,9 @@ class Link(db.Model):
         return dico_snap
 
 
+##############################################################################################################
+#                                            AUTHORSHIP_LINK                                                 #
+##############################################################################################################
 
 class Authorship_link(db.Model):
     __tablename__ = "authorship_link"
@@ -498,6 +548,40 @@ class Authorship_link(db.Model):
     user_link = db.relationship("User", back_populates="author_link")
     link_link = db.relationship("Link", back_populates="authorships_l")
 
+    @staticmethod
+    def authorship_l(updated):
+        """
+        crée l'inscription d'un événement (creation ou modification) concernant un objet de la table Link.
+        :param creation : identifiant numérique du lien concerné par l'événement
+        """
+        entry = Authorship_link(
+            authorship_link_user_id=current_user.get_id(),
+            authorship_link_link_id=updated.link_id
+            )
+
+        try:
+            db.session.add(entry)
+            db.session.commit()
+            return True
+
+        except Exception as why:
+            print(why)
+            return False
+
+    @staticmethod
+    def delete_logs(id_link):
+        """ supprime tous les logs concernant un lien à supprimer
+        :param id_link : identifiant numérique du lien à supprimer
+        """
+        logs = Authorship_link.query.filter(Authorship_link.authorship_link_link_id == id_link).all()
+        for log in logs:
+            db.session.delete(log)
+            db.session.commit()
+
+##############################################################################################################
+#                                            AUTHORSHIP_PERSON                                               #
+##############################################################################################################
+
 class Authorship_person(db.Model):
     __tablename__ = "authorship_person"
     authorship_person_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
@@ -507,3 +591,34 @@ class Authorship_person(db.Model):
 # Jointure
     person = db.relationship("Person", back_populates="authorships_p")
     user_person = db.relationship("User", back_populates="author_person")
+
+    @staticmethod
+    def authorship(updated):
+        """
+        crée l'inscription d'un événement (creation ou modification) concernant un objet de la table Person.
+        :param creation : identifiant numérique de la notice concernée par l'événement
+        """
+        entry = Authorship_person(
+            authorship_person_user_id=current_user.get_id(),
+            authorship_person_person_id=updated.person_id
+            )
+
+        try:
+            db.session.add(entry)
+            db.session.commit()
+            return True
+
+        except Exception as why:
+            print(why)
+            return False
+
+
+    @staticmethod
+    def delete_logs(id_person):
+        """ supprime tous les logs concernant une personne à supprimer
+        :param id_link : identifiant numérique de la personne à supprimer
+        """
+        logs = Authorship_person.query.filter(Authorship_person.authorship_person_person_id == id_person).all()
+        for log in logs:
+            db.session.delete(log)
+            db.session.commit()
