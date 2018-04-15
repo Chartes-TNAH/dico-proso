@@ -4,6 +4,10 @@ from flask_login import current_user
 from .. app import db
 
 
+##############################################################################################################
+#                                                 PERSON                                                     #
+##############################################################################################################
+
 class Person(db.Model):
     __tablename__ = "person"
     person_id = db.Column(db.Integer, unique=True, nullable=False, autoincrement=True, primary_key=True)
@@ -289,6 +293,9 @@ class Person(db.Model):
         }
         return dico
 
+##############################################################################################################
+#                                            RELATION_TYPE                                                   #
+##############################################################################################################
 
 class Relation_type(db.Model):
     __tablename__ = "relation_type"
@@ -301,6 +308,11 @@ class Relation_type(db.Model):
     relation_type_fourth_snap = db.Column(db.String(45))
 # Jointure
     type_link = db.relationship("Link", back_populates="relations")
+
+
+##############################################################################################################
+#                                                    LINK                                                    #
+##############################################################################################################
 
 class Link(db.Model):
     __tablename__ = "link"
@@ -522,6 +534,9 @@ class Link(db.Model):
         return dico_snap
 
 
+##############################################################################################################
+#                                            AUTHORSHIP_LINK                                                 #
+##############################################################################################################
 
 class Authorship_link(db.Model):
     __tablename__ = "authorship_link"
@@ -562,6 +577,10 @@ class Authorship_link(db.Model):
         for log in logs:
             db.session.delete(log)
             db.session.commit()
+
+##############################################################################################################
+#                                            AUTHORSHIP_PERSON                                               #
+##############################################################################################################
 
 class Authorship_person(db.Model):
     __tablename__ = "authorship_person"
