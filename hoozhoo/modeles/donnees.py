@@ -261,36 +261,36 @@ class Person(db.Model):
 
     def person_to_json(self):
         """
-        Fonction qui transforme les informations sur une personne en un dictionnaire pour un export en JSON via l'API
+        Fonction qui transforme les informations sur une personne en un dictionnaire pour un export en JsonLD via l'API
         :return:
         """
+
         dico = {
-        "type": "personne",
-        "id": self.person_id,
-        "informations" : {
-            "nom": self.person_name,
-            "prénom": self.person_firstname,
-            "surnom": self.person_nickname,
-            "genre": self.person_gender,
-            "description": self.person_description,
-            "wikidata ID": self.person_external_id,
-            "nom dans la langue de la personne": self.person_nativename,
-            "date de naissance": self.person_birthdate,
-            "date de décès": self.person_deathdate,
-            "pays de nationalité": self.person_country,
-            "langues parlées, écrites ou signées": self.person_language,
-            "fonctions/occupations": self.person_occupations
-            },
-        "liensUrl": {"self": url_for("notice", identifier=self.person_id, _external=True),
-                     "json": url_for("json_person", identifier=self.person_id, _external=True)
+            "@context": [
+                "https://schema.org/docs/jsonldcontext.json",
+                "http://xmlns.com/foaf/context",
+                {"snap": "http://data.snapdrgn.net/ontology/snap"} ],
 
-            },
+                "@type": "person",
+                "@id": url_for("notice", identifier=self.person_id, _external=True),
+                "schema:familyName": self.person_name,
+                "schema:givenName": self.person_firstname,
+                "foaf:surname": self.person_nickname,
+                "schema:gender": self.person_gender,
+                "schema:description": self.person_description,
+                "schema:sameAs": "https://www.wikidata.org/wiki/" + self.person_external_id,
+                # "nom dans la langue de la personne": self.person_nativename,
+                "schema:birthDate": self.person_birthdate,
+                "schema:deathDate": self.person_deathdate,
+                "schema:nationality": self.person_country,
+                # "langues parlées, écrites ou signées": self.person_language,
+                "schema:jobTitle": self.person_occupations,
+                "snap:#link-with": [
+                lien.link_to_json()
+                for lien in self.link_pers1
+            ]
 
-        "relations": [
-            lien.link_to_json()
-            for lien in self.link_pers1
-                      ]
-        }
+            }
         return dico
 
 ##############################################################################################################
@@ -509,17 +509,52 @@ class Link(db.Model):
         """
         Fonction qui retourne un dictionnaire à partir des éléments des la classe Link pour un export en JSON via l'API
         """
-        return {
-            "personneLiee": {"nom": self.person2.person_name, "prenom": self.person2.person_firstname, "surnom": self.person2.person_nickname},
-            "typeRelation": self.relations.relation_type_name,
-            "SNAPClasses" : self.class_snap(),
-            "liensUrl":
-                {
-                    "self": url_for("notice", identifier=self.person2.person_id, _external=True),
-                    "json": url_for("json_person", identifier=self.person2.person_id, _external=True)
-                }
 
-        }
+        #imbrication des différents niveaux de relation vers la personne
+        bond = []
+        bond_5 = []
+        bond_4 = []
+        bond_3 = []
+        bond_2 = []
+
+        bond_5.append("snap:"+self.relations.relation_type_code)
+        if self.relations.relation_type_fourth_snap:
+            bond_4.append("snap:"+self.relations.relation_type_fourth_snap)
+        if self.relations.relation_type_third_snap:
+            bond_3.append("snap:"+self.relations.relation_type_third_snap)
+        if self.relations.relation_type_second_snap:
+            bond_2.append("snap:"+self.relations.relation_type_second_snap)
+
+        if len(bond_4) == 1:
+            bond_4.append(bond_5)
+            bond_3.append(bond_4)
+            bond_2.append(bond_3)
+            bond = bond_2
+        elif len(bond_3) == 1:
+            bond_3.append(bond_5)
+            bond_2.append(bond_3)
+            bond = bond_2
+        elif len(bond_2) == 1:
+            bond_2.append(bond_5)
+            bond = bond_2
+        else:
+            bond = bond_5
+            
+        return {
+                    "@id": url_for("notice", identifier=self.person2.person_id, _external=True),
+                    "schema:familyName": self.person2.person_name,
+                    "schema:givenName": self.person2.person_firstname,
+                    "foaf:surname": self.person2.person_nickname,
+                    "schema:gender": self.person2.person_gender,
+                    "schema:description": self.person2.person_description,
+                    "schema:identifier": self.person2.person_external_id,
+                    "schema:birthDate": self.person2.person_birthdate,
+                    "schema:deathDate": self.person2.person_deathdate,
+                    "schema:nationality": self.person2.person_country,
+                    "schema:jobTitle": self.person2.person_occupations,
+                    "snap:#Bond": bond
+            }
+
 
     def class_snap(self):
         dico_snap = []
