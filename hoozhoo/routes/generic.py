@@ -318,5 +318,9 @@ def notice(identifier):
     :param identifier: identifiant numérique de la personne
     """
     personneUnique = Person.query.get(identifier)
-    listLien = personneUnique.link_pers1
-    return render_template("pages/notice.html", unique=personneUnique, listLien=listLien)
+    if not personneUnique:
+        flash("La personne que vous cherchez n'existe pas", "danger")
+        return redirect("/index")
+    else:
+        listLien = personneUnique.link_pers1
+        return render_template("pages/notice.html", unique=personneUnique, listLien=listLien)
