@@ -25,8 +25,17 @@
 	<div class="card-group">
 		<div class="card" style="width: 18rem;">
 		  <div class="card-body">
-		    <h5 class="card-title">{{personne.person_name}} {{personne.person_firstname}} {{personne.person_nickname}}</h5>
-		    <p class="card-text">{{personne.person_description}}</p>
+		    <h5 class="card-title font-weight-bold">{{personne.person_name}} {{personne.person_firstname}} {{personne.person_nickname}}</h5>
+		    {% if personne.person_birthdate or personne.person_deathdate %}
+		    <p class="card-text">{{personne.person_birthdate}}-{{personne.person_deathdate}}</p>
+		    {% else %}
+		    <p class="card-text">---</p>
+		    {% endif %}
+		    {% if personne.person_occupations %}
+		    <p class="card-text">{{personne.person_occupations}}</p>
+		    {% else %}
+		    <p class="card-text">---</p>
+		    {% endif %}
 		    <a href="{{url_for('notice', identifier=personne.person_id)}}" class="btn btn-secondary">Notice</a>
 		  </div>
 		</div>
