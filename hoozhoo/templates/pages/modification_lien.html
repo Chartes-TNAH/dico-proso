@@ -2,7 +2,7 @@
 {% block titre %}| Edition de liens{% endblock %}
 {% block corps %}
 
-<h1 class="mt-3">Editer un lien</h1>
+<h1 class="mb-3">Editer un lien</h1>
 <p>Modifier le formulaire ci-dessous et cliquez sur "Enregistrer" pour éditer un lien.</p>
 
 <form class="form container-fluid mt-3" id="new-link-container" method="POST" action="{{url_for('modification_lien', identifier=unique.link_id)}}">
