@@ -285,7 +285,7 @@ class Person(db.Model):
                 "schema:nationality": self.person_country,
                 # "langues parlées, écrites ou signées": self.person_language,
                 "schema:jobTitle": self.person_occupations,
-                "snap:#Links": [
+                "snap:#link-with": [
                 lien.link_to_json()
                 for lien in self.link_pers1
             ]
