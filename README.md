@@ -73,15 +73,17 @@ Vous devez avoir installé MySQL sur votre poste.
 
 #### Première utilisation  
 Vous aurez sûrement besoin d'installer **python3**, **virtualenv** et **pip**, pour cela, ouvrez un terminal et tapez :  
-`sudo apt-get install python3 libfreetype6-dev python3-pip python3-virtualenv`
+`sudo apt-get install python3 python3-pip python3-virtualenv python3-dev libmysqlclient-dev libfreetype6-dev`  
+puis :  
+`sudo apt install virtualenv`  
 
-Lancez le dossier **dico-proso/** dans un terminal et tapez :  
+Téléchargez le repository de l'application, lancez le dossier **dico-proso/** dans un terminal et tapez :  
 `virtualenv ~/.dicoproso -p python3`  
 Cela crée un environnement virtuel dans lequel pourront être installés les packages utilisés. Pour activer cet environnement virtuel, tapez :  
 `source ~/.dicoproso/bin/activate`  
 *Cette commande sera nécessaire à chaque fois que vous voudrez activer l'environnement virtuel pour utiliser l'application.*  
   
-Dans le même terminal, tapez :  
+Dans le même terminal et tapez :  
 `pip install -r requirements.txt`  
 Cela installe les packages requis pour faire fonctionner l'application.  
 
