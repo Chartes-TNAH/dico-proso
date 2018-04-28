@@ -83,7 +83,7 @@ Cela crée un environnement virtuel dans lequel pourront être installés les pa
 `source ~/.dicoproso/bin/activate`  
 *Cette commande sera nécessaire à chaque fois que vous voudrez activer l'environnement virtuel pour utiliser l'application.*  
   
-Dans le même terminal et tapez :  
+Dans le même terminal, tapez :  
 `pip install -r requirements.txt`  
 Cela installe les packages requis pour faire fonctionner l'application.  
 
