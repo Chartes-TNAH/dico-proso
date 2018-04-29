@@ -5,39 +5,46 @@
 {% block corps %}
 
 <h1>Index des personnes</h1>
-    {% if personnes %}
-    <p>Il y a {{personnes.total}} personnes enregistrées :</p>
-        <ul>
-            {% for personne in personnes.items %}
-                <li><a href="{{url_for("notice", identifier=personne.person_id)}}">{{personne.person_name}} {{personne.person_firstname}} {{personne.person_nickname}} </a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>La base de données est en cours de constitution</p>
-    {% endif %}
-    <nav aria-label="research-pagination">
-      <ul class="pagination">
-        {% for page in personnes.iter_pages() %}
-            {% if page %}
+{% if personnes|length > 0 %}
+  <p>Il y a {{personnes.total}} personnes enregistrées :</p>
+  <ul>
+    {% for personne in personnes.items %}
+      <li><a href="{{url_for('notice', identifier=personne.person_id)}}">{{personne.person_name}} {{personne.person_firstname}} {{personne.person_nickname}} </a></li>
+    {% endfor %}
+  </ul>
 
-                {% if page != personnes.page %}
-                  <li class="page-item">
-                      <a class="page-link" href="{{ url_for('index', page=page) }}">{{page}}</a>
-                  </li>
-                {% else %}
-                  <li class="page-item active disabled">
-                    <a class="page-link">{{page}} <span class="sr-only">(actuelle)</span></a>
-                  </li>
-                {% endif %}
+  <nav aria-label="research-pagination">
+    <ul class="pagination">
+      {% for page in personnes.iter_pages() %}
+      {% if page %}
 
-            {% else %}
-                <li class="page-item disabled">
-                  <a class="page-link">...</a>
-                </li>
-            {% endif %}
+      {% if page != personnes.page %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('index', page=page) }}">{{page}}</a>
+      </li>
+      {% else %}
+      <li class="page-item active disabled">
+        <a class="page-link">{{page}} <span class="sr-only">(actuelle)</span></a>
+      </li>
+      {% endif %}
 
-        {%- endfor %}
-      </ul>
-    </nav>
+      {% else %}
+      <li class="page-item disabled">
+        <a class="page-link">...</a>
+      </li>
+      {% endif %}
+
+      {% endfor %}
+    </ul>
+  </nav>
+
+{% else %}
+  {% if current_user.is_authenticated %}
+  <p>La base de données est vide. Pour commencer à entrer des informations dans la base, utiliser le <a href="{{url_for('creer_personne')}}">formulaire de création de personnes</a></p>
+  {% else %}
+  <p>La base de données est en cours de constitution.</p>
+  {% endif %}
+{% endif %}
+
 
 {% endblock %}
