@@ -67,7 +67,7 @@ class Person(db.Model):
 
         # vérifier que l'ID Wikidata commence par un 'Q' et ne comprend que des chiffres
         if re.search(r"^Q[0-9]+", id_externes) is None :
-            errors.append("L'ID Wikidata doit commencer par un 'Q' et doit seulement contenir des chiffres")
+            errors.append("L'ID Wikidata doit commencer par un 'Q' et doit seulement être suivi de chiffres")
         if len(errors) > 0:
             return False, errors
 
