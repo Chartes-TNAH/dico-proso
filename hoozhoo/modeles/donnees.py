@@ -2,7 +2,7 @@ from flask import url_for
 import datetime
 from flask_login import current_user
 from .. app import db
-
+import re
 
 ##############################################################################################################
 #                                                 PERSON                                                     #
@@ -65,9 +65,9 @@ class Person(db.Model):
         if len(errors) > 0:
             return False, errors
 
-        #vérifier que l'ID Wikidata commence par Q
-        if id_externes[0] != "Q" :
-            errors.append("L'ID Wikidata doit commencer par 'Q'")
+        # vérifier que l'ID Wikidata commence par un 'Q' et ne comprend que des chiffres
+        if re.search(r"^Q[0-9]+", id_externes) is None :
+            errors.append("L'ID Wikidata doit commencer par un 'Q' et doit seulement contenir des chiffres")
         if len(errors) > 0:
             return False, errors
 
@@ -187,11 +187,11 @@ class Person(db.Model):
         if len(id_externes) > 12 :
             erreurs.append("La taille des caractères du champs Wikidata ID a été dépassée")
 
-        #vérifier que l'ID Wikidata commence par Q
-        if id_externes[0] != "Q" :
-            erreurs.append("L'ID Wikidata doit commencer par 'Q'")
-        if len(erreurs) > 0:
-            return False, erreurs
+        # vérifier que l'ID Wikidata commence par un 'Q' et ne comprend que des chiffres
+        if re.search(r"^Q[0-9]+", id_externes) is None :
+            errors.append("L'ID Wikidata doit commencer par un 'Q' et doit seulement contenir des chiffres")
+        if len(errors) > 0:
+            return False, errors
 
         else:
             # mise à jour de la personne
