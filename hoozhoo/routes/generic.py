@@ -300,17 +300,23 @@ def recherche():
 def index():
     """ Route qui affiche la liste des personnes (Nom, prenom) de la base.
     """
-    page = request.args.get("page", 1)
-
-    if isinstance(page, str) and page.isdigit():
-        page = int(page)
-    else:
-        page = 1
-
     titre="Index"
-    #creation de la pagination avec la methode .paginate qui remplace le .all dans la requête sur la base
-    personnes = Person.query.order_by(Person.person_name).paginate(page=page, per_page= PERSONNES_PAR_PAGES)
-    return render_template("pages/index.html", personnes=personnes, titre=titre)
+    # vérification que la base de données n'est pas vide : 
+    personnes = Person.query.all()
+ 
+    if len(personnes) == 0:
+        return render_template("pages/index.html", personnes=personnes, titre=titre)
+    else : 
+        page = request.args.get("page", 1)
+
+        if isinstance(page, str) and page.isdigit():
+            page = int(page)
+        else:
+            page = 1
+
+        # creation de la pagination avec la methode .paginate qui remplace le .all dans la requête sur la base
+        personnes = Person.query.order_by(Person.person_name).paginate(page=page, per_page= PERSONNES_PAR_PAGES)
+        return render_template("pages/index.html", personnes=personnes, titre=titre)
 
 @app.route("/personne/<int:identifier>")
 def notice(identifier):
