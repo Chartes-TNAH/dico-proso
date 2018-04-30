@@ -5,7 +5,7 @@
 {% block corps %}
 
 <h1>Index des personnes</h1>
-{% if personnes|length > 0 %}
+{% if personnes %}
   <p>Il y a {{personnes.total}} personnes enregistrées :</p>
   <ul>
     {% for personne in personnes.items %}
